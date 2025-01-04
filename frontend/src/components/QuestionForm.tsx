@@ -1,3 +1,5 @@
+// frontend/src/components/QuestionForm.tsx
+
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useStore } from '../store/store';
@@ -9,7 +11,7 @@ interface FormData {
 
 export const QuestionForm: React.FC = () => {
     const { register, handleSubmit } = useForm<FormData>();
-    const setQuestions = useStore((state: { setQuestions: any; }) => state.setQuestions);
+    const setQuestions = useStore((state) => state.setQuestions);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -17,30 +19,41 @@ export const QuestionForm: React.FC = () => {
         setLoading(true);
         setError(null);
         try {
-        const response = await fetch(`http://localhost:3000/api/sb/${data.pk}`);
-        console.log("RESPONSE:", response);
-        if (!response.ok) throw new Error('Network response was not ok');
-        const result = await response.json();
-        setQuestions(result);
+            const questionResponse = await fetch(`http://localhost:3000/sb/question/${data.pk}`);
+            const optionsResponse = await fetch(`http://localhost:3000/sb/options/${data.pk}`);
+            if (!questionResponse.ok || !optionsResponse.ok) throw new Error('Network request failed');
+            const fetchedQuestion = await questionResponse.json();
+            const fetchedOptions = await optionsResponse.json();
+            console.log("FO:", fetchedQuestion);
+            const questionData = Array.isArray(fetchedQuestion) ? fetchedQuestion[0] : fetchedQuestion;
+            const optionsData = Array.isArray(fetchedOptions) ? fetchedOptions : [];
+            const item = {
+                nombre: questionData?.nombre,
+                descripcion: questionData?.descripcion,
+                tipo: questionData?.tipo,
+                categoria: questionData?.categoria,
+                opciones: optionsData,
+            };
+            setQuestions({ [questionData?.variable]: item });
         } catch (err) {
-        setError(err as string);
+            setError(err instanceof Error ? err.message : 'An unknown error occurred');
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
     };
 
     return (
         <motion.form
-        onSubmit={handleSubmit(onSubmit)}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+            onSubmit={handleSubmit(onSubmit)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
         >
-        <input type="number" {...register('pk')} placeholder="Enter question number" required />
-        <button type="submit" disabled={loading}>
-            {loading ? 'Loading...' : 'Fetch Questions'}
-        </button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+            <input type="number" {...register('pk')} placeholder="Enter question number" required />
+            <button type="submit" disabled={loading}>
+                {loading ? 'Loading...' : 'Fetch Questions'}
+            </button>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </motion.form>
     );
 };

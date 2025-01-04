@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// index.ts
+// backend/index.ts
 require('dotenv').config({ path: '.env' });
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
@@ -21,13 +21,40 @@ const supabaseClient_1 = require("./supabaseClient");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
-app.get('/api/sb/:pk', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/sb/questions', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let { data, error } = yield supabaseClient_1.supabase
+            .from('catalogo_variables')
+            .select('*');
+        if (error)
+            throw error;
+        res.status(200).json(data);
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Error comunicando Supabase' });
+    }
+}));
+app.get('/sb/question/:pk', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { pk } = req.params;
     try {
         let { data, error } = yield supabaseClient_1.supabase
             .from('catalogo_variables')
             .select('*')
             .eq('variable', 'var' + pk);
+        if (error)
+            throw error;
+        res.status(200).json(data);
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Error comunicando Supabase' });
+    }
+}));
+app.get('/sb/options/:pk', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { pk } = req.params;
+    try {
+        let { data, error } = yield supabaseClient_1.supabase
+            .from('tabla' + pk)
+            .select('*');
         if (error)
             throw error;
         res.status(200).json(data);

@@ -4,18 +4,23 @@ import { useStore } from './store/store';
 
 const App: React.FC = () => {
   const { questions } = useStore();
+  const latestKey = Object.keys(questions).pop();
+  const latestQuestion = latestKey ? questions[latestKey] : null;
+  const latestOptions = latestQuestion ? latestQuestion.opciones : null;
 
   return (
     <div>
       <h1>Questionnaire</h1>
       <QuestionForm />
-      {questions.length > 0 && (
+      {Object.keys(questions).length > 0 && (
         <div>
           <h2>Fetched Questions</h2>
+          <p>{ latestQuestion?.descripcion }</p>
           <ul>
-            {questions.map((question, index) => (
-              <li key={index}>{question.text}</li>
-            ))}
+            {Array.isArray(latestOptions) &&
+              latestOptions.map((option, index) => (
+                <li key={index}>{option.descripcion}</li>
+              ))}
           </ul>
         </div>
       )}

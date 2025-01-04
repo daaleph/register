@@ -1,4 +1,4 @@
-// index.ts
+// backend/index.ts
 require('dotenv').config({path: '.env'});
 import cors from 'cors';
 import express from 'express';
@@ -10,13 +10,38 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get('/api/sb/:pk', async (req, res) => {
+app.get('/sb/questions', async (_, res) => {
+  try {
+    let { data, error } = await supabase
+    .from('catalogo_variables')
+    .select('*');
+    if (error) throw error;
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: 'Error comunicando Supabase' });
+  }
+});
+
+app.get('/sb/question/:pk', async (req, res) => {
   const { pk } = req.params;
   try {
     let { data, error } = await supabase
     .from('catalogo_variables')
     .select('*')
     .eq('variable', 'var' + pk);
+    if (error) throw error;
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: 'Error comunicando Supabase' });
+  }
+});
+
+app.get('/sb/options/:pk', async (req, res) => {
+  const { pk } = req.params;
+  try {
+    let { data, error } = await supabase
+    .from('tabla' + pk)
+    .select('*');
     if (error) throw error;
     res.status(200).json(data);
   } catch (error) {
