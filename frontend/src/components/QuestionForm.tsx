@@ -24,7 +24,6 @@ export const QuestionForm: React.FC = () => {
             if (!questionResponse.ok || !optionsResponse.ok) throw new Error('Network request failed');
             const fetchedQuestion = await questionResponse.json();
             const fetchedOptions = await optionsResponse.json();
-            console.log("FO:", fetchedQuestion);
             const questionData = Array.isArray(fetchedQuestion) ? fetchedQuestion[0] : fetchedQuestion;
             const optionsData = Array.isArray(fetchedOptions) ? fetchedOptions : [];
             const item = {

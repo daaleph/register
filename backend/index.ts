@@ -14,7 +14,7 @@ app.get('/sb/questions', async (_, res) => {
   try {
     let { data, error } = await supabase
     .from('catalogo_variables')
-    .select('*');
+    .select('variable');
     if (error) throw error;
     res.status(200).json(data);
   } catch (error) {
