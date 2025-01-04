@@ -25,7 +25,7 @@ app.get('/sb/questions', (_, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         let { data, error } = yield supabaseClient_1.supabase
             .from('catalogo_variables')
-            .select('*');
+            .select('variable');
         if (error)
             throw error;
         res.status(200).json(data);

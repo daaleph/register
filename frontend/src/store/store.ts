@@ -1,27 +1,19 @@
 // frontend/src/store/store.ts
-import { create } from 'zustand';
 
-interface RegularOption {
+export interface RegularOption {
   id: number;
   descripcion: string;
+  otro?: boolean;
 }
 
-interface Questions {
-  [id: string] : {
-    nombre: string;
-    descripcion: string;
-    tipo: string;
-    categoria: number;
-    opciones: RegularOption[] | boolean
-  }
+export interface Question {
+  nombre: string;
+  descripcion: string;
+  tipo: string;
+  categoria: number;
+  opciones: RegularOption[] | boolean
 }
 
-interface Store {
-  questions: Questions;
-  setQuestions: (questions: Questions) => void;
+export interface Questions {
+  [id: string] : Question;
 }
-
-export const useStore = create<Store>((set) => ({
-  questions: {},
-  setQuestions: (questions) => set({ questions }),
-}));

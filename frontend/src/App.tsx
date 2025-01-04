@@ -1,31 +1,35 @@
-import React from 'react';
-import { QuestionForm } from './components/QuestionForm';
-import { useStore } from './store/store';
+import React, { useEffect, useState } from 'react';
+import UserForm from './components/UserForm';
+import QuestionForm from './components/QuestionForm';
+import { useUserStore } from './store/userStore';
+import User from './user/user'; // Import the User class
 
 const App: React.FC = () => {
-  const { questions } = useStore();
-  const latestKey = Object.keys(questions).pop();
-  const latestQuestion = latestKey ? questions[latestKey] : null;
-  const latestOptions = latestQuestion ? latestQuestion.opciones : null;
+  const userStore = useUserStore();
+  const user = userStore.user;
+  const [variables, setVariables] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchVariables = async () => {
+      const response = await fetch(`http://localhost:3000/sb/questions`);
+      const data = await response.json();
+      setVariables(data);
+    };
+    fetchVariables();
+  }, []);
+
+  const handleUserSubmit = (nombre_preferido: string, nombre_completo: string, email: string) => {
+    const newUser = new User(nombre_preferido, nombre_completo, email);
+    userStore.setUser(newUser);
+  };
 
   return (
     <div>
       <h1>Questionnaire</h1>
-      <QuestionForm />
-      { questions && (
-        <div>
-          <h2>Fetched Questions</h2>
-          <p>{ latestQuestion?.descripcion }</p>
-          <ul>
-            {
-              Array.isArray(latestOptions) &&
-                latestOptions.map((option, index) => (
-                  <li key={index}>{option.descripcion}</li>
-                )
-              )
-            }
-          </ul>
-        </div>
+      {!user ? (
+        <UserForm onSubmit={handleUserSubmit} />
+      ) : (
+        <QuestionForm variables={variables} />
       )}
     </div>
   );

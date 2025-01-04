@@ -5,7 +5,6 @@ import express from 'express';
 // import { fetchAIResponse } from './abacusService';
 import { supabase } from './supabaseClient';
 
-
 const app = express();
 app.use(express.json());
 app.use(cors());

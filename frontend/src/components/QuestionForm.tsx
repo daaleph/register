@@ -1,58 +1,77 @@
-// frontend/src/components/QuestionForm.tsx
+import React, { useEffect, useState } from 'react';
+import { useUserStore } from '../store/userStore';
+import { RegularOption } from '../store/store';
 
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useStore } from '../store/store';
-import { motion } from 'framer-motion';
-
-interface FormData {
-    pk: number;
+interface QuestionFormProps {
+    variables: string[];
 }
 
-export const QuestionForm: React.FC = () => {
-    const { register, handleSubmit } = useForm<FormData>();
-    const setQuestions = useStore((state) => state.setQuestions);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
+    const userStore = useUserStore();
+    const user = userStore.user;
+    const [question, setQuestion] = useState<any>(null);
+    const [selectedOptions, setSelectedOptions] = useState<RegularOption[] | boolean>([]);
 
-    const onSubmit = async (data: FormData) => {
-        setLoading(true);
-        setError(null);
-        try {
-            const questionResponse = await fetch(`http://localhost:3000/sb/question/${data.pk}`);
-            const optionsResponse = await fetch(`http://localhost:3000/sb/options/${data.pk}`);
-            if (!questionResponse.ok || !optionsResponse.ok) throw new Error('Network request failed');
-            const fetchedQuestion = await questionResponse.json();
-            const fetchedOptions = await optionsResponse.json();
-            const questionData = Array.isArray(fetchedQuestion) ? fetchedQuestion[0] : fetchedQuestion;
-            const optionsData = Array.isArray(fetchedOptions) ? fetchedOptions : [];
-            const item = {
-                nombre: questionData?.nombre,
-                descripcion: questionData?.descripcion,
-                tipo: questionData?.tipo,
-                categoria: questionData?.categoria,
-                opciones: optionsData,
-            };
-            setQuestions({ [questionData?.variable]: item });
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unknown error occurred');
-        } finally {
-            setLoading(false);
-        }
+    useEffect(() => {
+        const fetchQuestion = async () => {
+            if (user) {
+                const fetchedQuestion = await user.fetchesQuestion();
+                setQuestion(fetchedQuestion);
+            }
+        };
+        fetchQuestion();
+    }, [user?.current_question]);
+
+    const handleOptionSelect = (id: number) => {
+        setSelectedOptions((prev) => {
+            if (prev.includes(id)) {
+                return prev.filter(optionId => optionId !== id);
+            }
+            return [...prev, id];
+        });
     };
 
+    const handleNextQuestion = async () => {
+        if (selectedOptions.length === 0) {
+            alert('Please select an option before proceeding.');
+            return;
+        }
+        await user!.answer(variables, selectedOptions);
+        userStore.updateCurrentQuestion(user!.current_question);
+        userStore.storeQuestion(question.nombre, {
+            nombre: question.nombre,
+            descripcion: question.descripcion,
+            tipo: question.tipo,
+            categoria: question.categoria,
+            opciones: selectedOptions
+        });
+        setSelectedOptions([]);
+    };
+
+    if (!question) return <div>Loading...</div>;
+
     return (
-        <motion.form
-            onSubmit={handleSubmit(onSubmit)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-        >
-            <input type="number" {...register('pk')} placeholder="Enter question number" required />
-            <button type="submit" disabled={loading}>
-                {loading ? 'Loading...' : 'Fetch Questions'}
-            </button>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-        </motion.form>
+        <div>
+            <h2>{question.nombre}</h2>
+            <p>{question.descripcion}</p>
+            {question.opciones.map((option: any) => (
+                <button
+                    key={option.id}
+                    onClick={() => handleOptionSelect(option.id)}
+                    style={{
+                        backgroundColor: selectedOptions.includes(option.id) ? 'lightblue' : 'white',
+                        border: '1px solid black',
+                        margin: '5px',
+                        padding: '10px',
+                        cursor: 'pointer',
+                    }}
+                >
+                    {option.descripcion}
+                </button>
+            ))}
+            <button onClick={handleNextQuestion}>Next Question</button>
+        </div>
     );
 };
+
+export default QuestionForm;
