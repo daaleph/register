@@ -1,5 +1,7 @@
+// frontend/src/components/UserForm.tsx
+
 import React, { useState } from 'react';
-import User from '../user/user'; // Import the User class
+import User from '../user/user';
 
 const UserForm: React.FC<{ onSubmit: (nombre_preferido: string, nombre_completo: string, email: string) => void }> = ({ onSubmit }) => {
     const [nombre_preferido, setNombrePreferido] = useState('');

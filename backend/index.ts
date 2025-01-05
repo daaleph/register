@@ -38,9 +38,9 @@ app.get('/sb/question/:pk', async (req, res) => {
 app.get('/sb/options/:pk', async (req, res) => {
   const { pk } = req.params;
   try {
-    let { data, error } = await supabase
-    .from('tabla' + pk)
-    .select('*');
+    let { data, error } = pk != '35' ? await supabase
+      .from('tabla' + pk)
+      .select('*'): { data: false };
     if (error) throw error;
     res.status(200).json(data);
   } catch (error) {

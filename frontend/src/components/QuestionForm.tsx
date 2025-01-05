@@ -1,15 +1,25 @@
+// frontend/src/components/QuestionForm.tsx
+
 import React, { useEffect, useState } from 'react';
 import { useUserStore } from '../store/userStore';
-import { RegularOption } from '../store/store';
+import { Question, RegularOption } from '../store/store';
+import { optionIsRegular, optionsAreRegular } from '../user/user';
 
 interface QuestionFormProps {
     variables: string[];
 }
 
 const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
+    const [currentQuestion, setCurrentQuestion] = useState<number>(1)
     const userStore = useUserStore();
     const user = userStore.user;
-    const [question, setQuestion] = useState<any>(null);
+    const [question, setQuestion] = useState<Question>({ 
+        nombre: '',
+        descripcion: '',
+        tipo: 'unica',
+        categoria: 0,
+        opciones: false
+    });
     const [selectedOptions, setSelectedOptions] = useState<RegularOption[] | boolean>([]);
 
     useEffect(() => {
@@ -20,25 +30,47 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             }
         };
         fetchQuestion();
+        setCurrentQuestion(user?.current_question!);
     }, [user?.current_question]);
 
-    const handleOptionSelect = (id: number) => {
-        setSelectedOptions((prev) => {
-            if (prev.includes(id)) {
-                return prev.filter(optionId => optionId !== id);
-            }
-            return [...prev, id];
-        });
+    const filterOptionsForQuestion8 = (options: RegularOption[]) => {
+        const var1Answer = user?.questions['var1']?.opciones;
+        if (!Array.isArray(var1Answer)) return options;
+
+        const var1OptionId = var1Answer[0]?.id;
+        if (!var1OptionId) return options;
+
+        const maxAllowedId = (() => {
+            if (var1OptionId === 1) return 2;
+            if (var1OptionId === 2 || var1OptionId === 3) return 3;
+            if (var1OptionId === 4 || var1OptionId === 5) return 4;
+            return options.length;
+        })();
+
+        return options.filter(option => option.id <= maxAllowedId);
+    };
+
+    const handleOptionSelect = (option: RegularOption | boolean) => {
+        if (optionIsRegular(option)) {
+            const tempOption = option;
+            setSelectedOptions((prev) => {
+                const prevArray = Array.isArray(prev) ? prev : [];
+                if (prevArray.includes(tempOption)) return prevArray.filter(option => option !== tempOption);
+                return [...prevArray, tempOption];
+            });
+            return;
+        }
+        setSelectedOptions(option);
     };
 
     const handleNextQuestion = async () => {
-        if (selectedOptions.length === 0) {
+        if (optionsAreRegular(selectedOptions) && selectedOptions.length === 0) {
             alert('Please select an option before proceeding.');
             return;
         }
         await user!.answer(variables, selectedOptions);
         userStore.updateCurrentQuestion(user!.current_question);
-        userStore.storeQuestion(question.nombre, {
+        userStore.storeQuestion("var"+currentQuestion, {
             nombre: question.nombre,
             descripcion: question.descripcion,
             tipo: question.tipo,
@@ -48,28 +80,60 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
         setSelectedOptions([]);
     };
 
+    const buttonStyle = (isSelected: boolean) => ({
+        backgroundColor: isSelected ? 'lightblue' : 'blue',
+        border: '1px solid black',
+        margin: '5px',
+        padding: '10px',
+        cursor: 'pointer',
+        fontWeight: 'bold'
+    });
+
     if (!question) return <div>Loading...</div>;
 
     return (
         <div>
-            <h2>{question.nombre}</h2>
+            <h2>{question.tipo}</h2>
             <p>{question.descripcion}</p>
-            {question.opciones.map((option: any) => (
-                <button
-                    key={option.id}
-                    onClick={() => handleOptionSelect(option.id)}
-                    style={{
-                        backgroundColor: selectedOptions.includes(option.id) ? 'lightblue' : 'white',
-                        border: '1px solid black',
-                        margin: '5px',
-                        padding: '10px',
-                        cursor: 'pointer',
-                    }}
-                >
-                    {option.descripcion}
-                </button>
-            ))}
-            <button onClick={handleNextQuestion}>Next Question</button>
+            {
+                Array.isArray(question.opciones) && Array.isArray(selectedOptions) && (
+                    (currentQuestion === 8 ? 
+                        filterOptionsForQuestion8(question.opciones) : 
+                        question.opciones
+                    ).map((option: RegularOption) => (
+                        <button
+                            key={option.id}
+                            onClick={() => handleOptionSelect(option)}
+                            style={buttonStyle(selectedOptions.includes(option))}
+                        >
+                            {option.descripcion}
+                        </button>
+                    ))
+                )
+            }
+            {
+                typeof question.opciones === 'boolean' && (
+                    <div>
+                        {[
+                            { value: true, label: 'Sí' },
+                            { value: false, label: 'No' }
+                        ].map(({ value, label }) => (
+                            <button
+                                key={String(value)}
+                                onClick={() => handleOptionSelect(value)}
+                                style={buttonStyle(selectedOptions === value)}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
+                )
+            }
+            {
+                user?.current_question! < 47 ?
+                <button onClick={handleNextQuestion}>Siguiente</button> : 
+                <button onClick={handleNextQuestion}>¡FUEGO!</button>
+            }
         </div>
     );
 };

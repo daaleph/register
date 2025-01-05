@@ -52,9 +52,9 @@ app.get('/sb/question/:pk', (req, res) => __awaiter(void 0, void 0, void 0, func
 app.get('/sb/options/:pk', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { pk } = req.params;
     try {
-        let { data, error } = yield supabaseClient_1.supabase
+        let { data, error } = pk != '35' ? yield supabaseClient_1.supabase
             .from('tabla' + pk)
-            .select('*');
+            .select('*') : { data: false };
         if (error)
             throw error;
         res.status(200).json(data);

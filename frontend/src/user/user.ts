@@ -1,3 +1,5 @@
+// frontend/src/user/user.ts
+
 import { Question, Questions, RegularOption } from '../store/store';
 
 class User {
@@ -5,7 +7,7 @@ class User {
     nombre_completo: string;
     email: string;
     current_question: number = 1;
-    questions: Questions = {};
+    private _questions: Questions = {};
 
     constructor(nombre_preferido: string, nombre_completo: string, email: string) {
         this.nombre_completo = nombre_completo;
@@ -13,14 +15,34 @@ class User {
         this.email = email;
     }
 
-    async answer(variables: string[], check?: number[], otro?: string, uncheck?: false) {
-        const c_q = this.current_question;
+    // Add getter and setter for questions
+    get questions(): Questions {
+        return this._questions;
+    }
+
+    set questions(newQuestions: Questions) {
+        console.log('Questions updated:', {
+            previousQuestions: this._questions,
+            newQuestions: newQuestions,
+            timestamp: new Date().toISOString()
+        });
+        this._questions = newQuestions;
+    }
+
+    async answer(variables: string[], option: RegularOption[] | boolean, otro?: string) {
+        const currentQuestionId = this.current_question;
         let question = await this.fetchesQuestion();
-        question = this.selects(question, check, otro, uncheck);
-        this.storesQuestion(variables[c_q], question);
-        const options = question.opciones;
-        const next_question = c_q === 1 && optionsAreRegular(options) ? c_q + options[0].id : c_q + 1;
-        this.current_question = next_question;
+        question = this.selects(question, option, otro);
+        this.storesQuestion(variables[currentQuestionId], question);
+        let nextQuestionId;
+        if (currentQuestionId === 1 && optionsAreRegular(question.opciones)) {
+            nextQuestionId = currentQuestionId + question.opciones[0].id;
+        } else if (currentQuestionId < 7) {
+            nextQuestionId = 7;
+        } else {
+            nextQuestionId = currentQuestionId + 1;
+        }
+        this.current_question = nextQuestionId;
     }
 
     async fetchesQuestion() {
@@ -32,7 +54,7 @@ class User {
             const fetchedQuestion = await questionResponse.json();
             const fetchedOptions = await optionsResponse.json();
             const questionData = Array.isArray(fetchedQuestion) ? fetchedQuestion[0] : fetchedQuestion;
-            const optionsData = Array.isArray(fetchedOptions) ? fetchedOptions : [];
+            const optionsData = fetchedOptions;
             question = {
                 nombre: questionData?.nombre,
                 descripcion: questionData?.descripcion,
@@ -46,31 +68,43 @@ class User {
         return question;
     }
 
-    selects(current_question: Question, check?: number[], otro?: string, uncheck?: false) {
-        if (check && optionsAreRegular(current_question.opciones)) {
-            current_question.opciones = current_question.opciones.filter(item => check.includes(item.id));
+    selects(current_question: Question, option: RegularOption[] | boolean, otro?: string) {
+        if (optionsAreRegular(current_question.opciones) && optionsAreRegular(option)) {
+            current_question.opciones = current_question.opciones.filter(item => 
+                option.some(opt => opt.id === item.id)
+            );
             if (otro) {
                 current_question.opciones[0].descripcion = otro;
                 current_question.opciones[0].otro = true;
             }
-        } else if (uncheck !== undefined) {
-            current_question.opciones = uncheck;
+        } else {
+            current_question.opciones = option;
         }
         return current_question;
     }
 
     storesQuestion(questionName: string, question: Question): void {
-        this.questions[questionName] = question;
+        const updatedQuestions = { ...this._questions, [questionName]: question };
+        this.questions = updatedQuestions;
     }
 }
 
 export default User;
 
-function optionsAreRegular(option: any): option is RegularOption[] {
-    return (
+export function optionsAreRegular(option: RegularOption[] | boolean): option is RegularOption[] {
+    return typeof option === 'boolean' ? false : (
         typeof option === "object" &&
         option !== null &&
         typeof option[0].id === "number" &&
         typeof option[0].descripcion === "string"
-    );
+    )
+}
+
+export function optionIsRegular(option: RegularOption | boolean): option is RegularOption {
+    return typeof option === 'boolean' ? false : (
+        typeof option === "object" &&
+        option !== null &&
+        typeof option.id === "number" &&
+        typeof option.descripcion === "string"
+    )
 }
