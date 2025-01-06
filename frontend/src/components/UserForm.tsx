@@ -1,4 +1,5 @@
 // frontend/src/components/UserForm.tsx
+
 import React, { useState } from 'react';
 
 const UserForm: React.FC<{ onSubmit: (nombrePreferido: string, nombreCompleto: string, email: string, movil: string, telegram: string) => void }> = ({ onSubmit }) => {
@@ -19,9 +20,9 @@ const UserForm: React.FC<{ onSubmit: (nombrePreferido: string, nombreCompleto: s
                 body: JSON.stringify({
                     nombre_preferido: nombrePreferido,
                     nombre_completo: nombreCompleto,
-                    email: email,
-                    movil: movil,
-                    telegram: telegram
+                    email,
+                    movil,
+                    telegram
                 })
             });
             if (!response.ok) throw new Error('Error al enviar datos');

@@ -9,7 +9,7 @@ export interface RegularOption {
 export interface Question {
   nombre: string;
   descripcion: string;
-  tipo: 'unica' | 'multiple';
+  tipo: 'unica' | 'multiple' | 'bool';
   categoria: number;
   opciones: RegularOption[] | boolean
 }

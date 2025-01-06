@@ -9,7 +9,7 @@ interface QuestionFormProps {
     variables: string[];
 }
 
-const getValue = (x: boolean | RegularOption[]) => typeof x === 'boolean' ? x : Array.isArray(x) ? (x.length === 1 ? x[0].id : x.map(item => item.id)) : null;
+const getValue = (x: Question) => Array.isArray(x.opciones) ? (x.tipo === 'unica' ? x.opciones[0].id : x.opciones.map(item => item.id)) : x.opciones;
 
 const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
     const [currentQuestion, setCurrentQuestion] = useState<number>(1)
@@ -23,6 +23,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
         opciones: false
     });
     const [selectedOptions, setSelectedOptions] = useState<RegularOption[] | boolean>([]);
+    const [otherText, setOtherText] = useState<string>('');
 
     useEffect(() => {
         const fetchQuestion = async () => {
@@ -55,9 +56,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
     const handleOptionSelect = (option: RegularOption | boolean) => {
         if (optionIsRegular(option)) {
             const tempOption = option;
+            if (option.descripcion === "Otro") {
+                setOtherText('');
+            }
             setSelectedOptions((prev) => {
                 const prevArray = Array.isArray(prev) ? prev : [];
-                if (prevArray.includes(tempOption)) return prevArray.filter(option => option !== tempOption);
+                if (prevArray.includes(tempOption)) return prevArray.filter(opt => opt !== tempOption);
                 return [...prevArray, tempOption];
             });
             return;
@@ -70,6 +74,15 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             alert('Please select an option before proceeding.');
             return;
         }
+
+        const hasOtherOption = Array.isArray(selectedOptions) && 
+            selectedOptions.some(opt => opt.descripcion === "Otro");
+        
+        if (hasOtherOption && !otherText.trim()) {
+            alert('Please specify the "Otro" option before proceeding.');
+            return;
+        }
+
         await user!.answer(variables, selectedOptions);
         userStore.updateCurrentQuestion(user!.current_question);
         userStore.storeQuestion("var"+currentQuestion, {
@@ -79,6 +92,13 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             categoria: question.categoria,
             opciones: selectedOptions
         });
+        question.opciones = selectedOptions;
+        uploadAnswers();
+        setSelectedOptions([]);
+        setOtherText('');
+    };
+
+    const uploadAnswers = async () => {
         try {
             const response = await fetch('http://localhost:3000/sb/vars', {
                 method: 'POST',
@@ -88,7 +108,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
                 body: JSON.stringify({
                     email: user?.email,
                     variable: currentQuestion,
-                    options: getValue(selectedOptions)
+                    options: getValue(question)
                 })
             });
             if (!response.ok) throw new Error('Error al enviar datos');
@@ -97,8 +117,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
         } catch (error) {
             console.error('Error:', error);
         }
-        setSelectedOptions([]);
-    };
+    }
 
     const buttonStyle = (isSelected: boolean) => ({
         backgroundColor: isSelected ? 'lightblue' : 'blue',
@@ -116,44 +135,62 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             <h2>{question.tipo}</h2>
             <p>{question.descripcion}</p>
             {
-                Array.isArray(question.opciones) && Array.isArray(selectedOptions) && (
-                    (currentQuestion === 8 ? 
-                        filterOptionsForQuestion8(question.opciones) : 
-                        question.opciones
-                    ).map((option: RegularOption) => (
-                        <button
-                            key={option.id}
-                            onClick={() => handleOptionSelect(option)}
-                            style={buttonStyle(selectedOptions.includes(option))}
-                        >
-                            {option.descripcion}
-                        </button>
-                    ))
-                )
-            }
-            {
-                typeof question.opciones === 'boolean' && (
+                Array.isArray(question.opciones) ? (
                     <div>
-                        {[
-                            { value: true, label: 'Sí' },
-                            { value: false, label: 'No' }
-                        ].map(({ value, label }) => (
+                        {(currentQuestion === 8 ? filterOptionsForQuestion8(question.opciones) : question.opciones)
+                            .map(option => (
+                                <div key={option.id}>
+                                    <button
+                                        onClick={() => question.tipo === 'unica' 
+                                            ? setSelectedOptions([option]) 
+                                            : handleOptionSelect(option)}
+                                        style={buttonStyle(Array.isArray(selectedOptions) && selectedOptions.includes(option))}
+                                    >
+                                        {option.descripcion}
+                                    </button>
+                                    {option.descripcion === "Otro" && 
+                                     Array.isArray(selectedOptions) && 
+                                     selectedOptions.includes(option) && (
+                                        <input
+                                            type="text"
+                                            value={otherText}
+                                            onChange={(e) => setOtherText(e.target.value)}
+                                            placeholder="Especifique aquí..."
+                                            style={{
+                                                margin: '5px',
+                                                padding: '5px',
+                                                width: '200px'
+                                            }}
+                                        />
+                                    )}
+                                </div>
+                            ))
+                        }
+                    </div>
+                ) : (
+                    ['Sí', 'No'].map((label, index) => {
+                        const value = index === 0;
+                        return (
                             <button
-                                key={String(value)}
+                                key={label}
                                 onClick={() => handleOptionSelect(value)}
                                 style={buttonStyle(selectedOptions === value)}
                             >
                                 {label}
                             </button>
-                        ))}
-                    </div>
+                        );
+                    })
                 )
             }
-            {
-                user?.current_question! < 47 ?
-                <button onClick={handleNextQuestion}>Siguiente</button> : 
-                <button onClick={handleNextQuestion}>¡FUEGO!</button>
-            }
+            <button 
+                onClick={handleNextQuestion}
+                style={buttonStyle(false)}
+                disabled={Array.isArray(selectedOptions) && 
+                         selectedOptions.some(opt => opt.descripcion === "Otro") && 
+                         !otherText.trim()}
+            >
+                {user?.current_question! < 47 ? 'Siguiente' : '¡FUEGO!'}
+            </button>
         </div>
     );
 };
