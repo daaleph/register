@@ -25,6 +25,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
     const [selectedOptions, setSelectedOptions] = useState<RegularOption[] | boolean>([]);
     const [texto, setText] = useState<string>('');
     const [perfil, setPerfil] = useState<string>('');
+    const [totalOptions, setTotalOptions] = useState<number>();
+    const [selectionOrder, setSelectionOrder] = useState<Map<number, number>>(new Map());
 
     useEffect(() => {
         const fetchQuestion = async () => {
@@ -34,8 +36,19 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             }
         };
         fetchQuestion();
+        if (Array.isArray(question.opciones)) setTotalOptions(question.opciones.length);
         setCurrentQuestion(user?.current_question!);
     }, [user?.current_question]);
+
+    const calculateWeight = (option: RegularOption, selectedCount: number) => {
+        if (!Array.isArray(selectedOptions) || !selectedOptions.includes(option)) return 1;
+        
+        // Get the selection order (1-based index)
+        const order = selectionOrder.get(option.id) || 0;
+        
+        // Scale the weight to be between 0.2 and 0.8 to maintain strong visibility
+        return 0.2 + (0.6 * (order - 1) / (selectedCount - 1 || 1));
+    };
 
     const filterOptionsForQuestion8 = (options: RegularOption[]) => {
         const var1Answer = user?.questions['var1']?.opciones;
@@ -62,8 +75,42 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             }
             setSelectedOptions((prev) => {
                 const prevArray = Array.isArray(prev) ? prev : [];
-                if (prevArray.includes(tempOption)) return prevArray.filter(opt => opt !== tempOption);
-                return [...prevArray, tempOption];
+                if (prevArray.includes(tempOption)) {
+                    // When unselecting an option
+                    const newSelectedOptions = prevArray.filter(opt => opt !== tempOption);
+                    
+                    // Immediately update selection order
+                    setSelectionOrder(current => {
+                        const newOrder = new Map();
+                        const removedOrder = current.get(tempOption.id);
+                        
+                        // Rebuild the order map for remaining options
+                        newSelectedOptions.forEach((opt, index) => {
+                            const currentOrder = current.get(opt.id);
+                            if (currentOrder && currentOrder > removedOrder!) {
+                                newOrder.set(opt.id, currentOrder - 1);
+                            } else {
+                                newOrder.set(opt.id, currentOrder || index + 1);
+                            }
+                        });
+                        
+                        return newOrder;
+                    });
+                    
+                    return newSelectedOptions;
+                }
+                
+                // When selecting a new option
+                const newSelectedOptions = [...prevArray, tempOption];
+                
+                // Immediately update selection order
+                setSelectionOrder(current => {
+                    const newOrder = new Map(current);
+                    newOrder.set(tempOption.id, newSelectedOptions.length);
+                    return newOrder;
+                });
+                
+                return newSelectedOptions;
             });
             return;
         }
@@ -75,18 +122,14 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             alert('Please select an option before proceeding.');
             return;
         }
-
-        const hasOtherOption = Array.isArray(selectedOptions) && 
-            selectedOptions.some(opt => opt.descripcion === "Otro");
-        
+        const hasOtherOption = Array.isArray(selectedOptions) && selectedOptions.some(opt => opt.descripcion === "Otro");
         if (hasOtherOption && !texto.trim()) {
             alert('Please specify the "Otro" option before proceeding.');
             return;
         }
-
         await user!.answer(variables, selectedOptions);
         userStore.updateCurrentQuestion(user!.current_question);
-        userStore.storeQuestion("var"+currentQuestion, {
+        userStore.storeQuestion(`var${currentQuestion}`, {
             nombre: question.nombre,
             descripcion: question.descripcion,
             tipo: question.tipo,
@@ -94,13 +137,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             opciones: selectedOptions
         });
         question.opciones = selectedOptions;
-        question.tipo === 'unica'  && texto ? uploadOtherAnswer(): uploadAnswers();
-        if (question.tipo === 'multiple' && Array.isArray(selectedOptions)) {
-            texto ?? uploadOtherAnswer();
-            if (selectedOptions.length != 0) uploadAnswers();
-        }
+        if (texto) uploadOtherAnswer();
+        if (question.tipo === 'multiple' && Array.isArray(selectedOptions) && selectedOptions.length > 0) uploadAnswers();
+        if (question.tipo === 'unica' && !texto) uploadAnswers();
         setSelectedOptions([]);
         setText('');
+        setSelectionOrder(new Map());
     };
 
     const uploadAnswers = async () => {
@@ -126,15 +168,15 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
 
     const uploadOtherAnswer = async () => {
         try {
-            const variable = question.nombre;
-            await fetchesLuuid(user?.email!);
+            const variable = 'var' + currentQuestion;
+            const luuidperfil = await fetchesLuuid(user?.email!);
             const response = await fetch('http://localhost:3000/sb/other', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    perfil,
+                    perfil: luuidperfil,
                     variable,
                     texto
                 })
@@ -147,26 +189,58 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
         }
     }
 
-    const fetchesLuuid = async (email: string) => {
+    const fetchesLuuid = async (email: string): Promise<string> => {
         try {
-            const perfil = await fetch(`http://localhost:3000/sb/perfil/${email}`);
-            if (!perfil.ok) throw new Error('Network request failed');
-            const perfilResponse = await perfil.json();
-            console.log(perfilResponse[0].id);
-            setPerfil(perfilResponse[0].id);
+            const uuid = await fetch(`http://localhost:3000/sb/perfil/${email}`);
+            if (!uuid.ok) throw new Error('Network request failed');
+            let uuidResponse = await uuid.json();
+            uuidResponse = uuidResponse[0].id;
+            setPerfil(uuidResponse);
+            return uuidResponse;
         } catch (err) {
             throw new Error('An unknown error occurred');
         }
     }
 
-    const buttonStyle = (isSelected: boolean) => ({
-        backgroundColor: isSelected ? 'lightblue' : 'blue',
-        border: '1px solid black',
-        margin: '5px',
-        padding: '10px',
-        cursor: 'pointer',
-        fontWeight: 'bold'
-    });
+    const buttonStyle = (option: RegularOption | boolean, isSelected: boolean) => {
+        if (!optionIsRegular(option) || question.tipo !== 'multiple') {
+            return {
+                backgroundColor: isSelected ? 'lightblue' : 'blue',
+                color: isSelected ? 'black' : 'white',
+                border: '1px solid black',
+                margin: '5px',
+                padding: '10px',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+            };
+        }
+    
+        // For multiple selection questions
+        const selectedCount = Array.isArray(selectedOptions) ? selectedOptions.length : 0;
+        const weight = calculateWeight(option, selectedCount);
+        
+        // Adjusted color ranges for stronger contrast
+        const baseColor = [173, 216, 230];  // lighter blue RGB
+        const targetColor = [0, 0, 139];    // darker blue RGB
+        
+        const interpolatedColor = baseColor.map((start, index) => {
+            const end = targetColor[index];
+            return Math.round(start + (end - start) * weight);
+        });
+    
+        return {
+            backgroundColor: isSelected 
+                ? `rgb(${interpolatedColor.join(',')})` 
+                : 'blue',
+            border: '1px solid black',
+            margin: '5px',
+            padding: '10px',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            color: isSelected ? 'black' : 'white',
+            transition: 'background-color 0.3s ease'
+        };
+    };
 
     if (!question) return <div>Loading...</div>;
 
@@ -184,7 +258,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
                                         onClick={() => question.tipo === 'unica' 
                                             ? setSelectedOptions([option]) 
                                             : handleOptionSelect(option)}
-                                        style={buttonStyle(Array.isArray(selectedOptions) && selectedOptions.includes(option))}
+                                        style={buttonStyle(option, Array.isArray(selectedOptions) && selectedOptions.includes(option))}
                                     >
                                         {option.descripcion}
                                     </button>
@@ -214,7 +288,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
                             <button
                                 key={label}
                                 onClick={() => handleOptionSelect(value)}
-                                style={buttonStyle(selectedOptions === value)}
+                                style={buttonStyle(value, selectedOptions === value)}
                             >
                                 {label}
                             </button>
@@ -224,7 +298,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             }
             <button 
                 onClick={handleNextQuestion}
-                style={buttonStyle(false)}
+                style={buttonStyle(false, false)}
                 disabled={Array.isArray(selectedOptions) && 
                          selectedOptions.some(opt => opt.descripcion === "Otro") && 
                          !texto.trim()}

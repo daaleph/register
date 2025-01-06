@@ -117,7 +117,6 @@ app.post('/sb/vars', async (req, res) => {
 app.post('/sb/other', async (req, res) => {
   try {
     const { perfil, variable, texto } = req.body;
-    console.log(req.body);
     const { data, error } = await supabase
       .from('otros')
       .insert([{

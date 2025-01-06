@@ -130,7 +130,6 @@ app.post('/sb/vars', (req, res) => __awaiter(void 0, void 0, void 0, function* (
 app.post('/sb/other', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { perfil, variable, texto } = req.body;
-        console.log(req.body);
         const { data, error } = yield supabaseClient_1.supabase
             .from('otros')
             .insert([{
