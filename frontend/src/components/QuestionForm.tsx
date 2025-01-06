@@ -25,7 +25,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
     const [selectedOptions, setSelectedOptions] = useState<RegularOption[] | boolean>([]);
     const [texto, setText] = useState<string>('');
     const [perfil, setPerfil] = useState<string>('');
-    const [totalOptions, setTotalOptions] = useState<number>();
     const [selectionOrder, setSelectionOrder] = useState<Map<number, number>>(new Map());
 
     useEffect(() => {
@@ -36,17 +35,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             }
         };
         fetchQuestion();
-        if (Array.isArray(question.opciones)) setTotalOptions(question.opciones.length);
         setCurrentQuestion(user?.current_question!);
     }, [user?.current_question]);
 
     const calculateWeight = (option: RegularOption, selectedCount: number) => {
         if (!Array.isArray(selectedOptions) || !selectedOptions.includes(option)) return 1;
-        
-        // Get the selection order (1-based index)
         const order = selectionOrder.get(option.id) || 0;
-        
-        // Scale the weight to be between 0.2 and 0.8 to maintain strong visibility
         return 0.2 + (0.6 * (order - 1) / (selectedCount - 1 || 1));
     };
 
@@ -76,15 +70,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             setSelectedOptions((prev) => {
                 const prevArray = Array.isArray(prev) ? prev : [];
                 if (prevArray.includes(tempOption)) {
-                    // When unselecting an option
                     const newSelectedOptions = prevArray.filter(opt => opt !== tempOption);
-                    
-                    // Immediately update selection order
                     setSelectionOrder(current => {
                         const newOrder = new Map();
                         const removedOrder = current.get(tempOption.id);
-                        
-                        // Rebuild the order map for remaining options
                         newSelectedOptions.forEach((opt, index) => {
                             const currentOrder = current.get(opt.id);
                             if (currentOrder && currentOrder > removedOrder!) {
@@ -93,23 +82,16 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
                                 newOrder.set(opt.id, currentOrder || index + 1);
                             }
                         });
-                        
                         return newOrder;
                     });
-                    
                     return newSelectedOptions;
                 }
-                
-                // When selecting a new option
                 const newSelectedOptions = [...prevArray, tempOption];
-                
-                // Immediately update selection order
                 setSelectionOrder(current => {
                     const newOrder = new Map(current);
                     newOrder.set(tempOption.id, newSelectedOptions.length);
                     return newOrder;
                 });
-                
                 return newSelectedOptions;
             });
             return;
@@ -124,7 +106,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
         }
         const hasOtherOption = Array.isArray(selectedOptions) && selectedOptions.some(opt => opt.descripcion === "Otro");
         if (hasOtherOption && !texto.trim()) {
-            alert('Please specify the "Otro" option before proceeding.');
+            alert('Por favor escriba la opción "Otro".');
             return;
         }
         await user!.answer(variables, selectedOptions);
@@ -160,7 +142,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             });
             if (!response.ok) throw new Error('Error al enviar datos');
             const data = await response.json();
-            console.log('Pregunta arriba:', data);
+            console.log('Question uploaded:', data);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -183,7 +165,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             });
             if (!response.ok) throw new Error('Error al enviar datos');
             const data = await response.json();
-            console.log('Opción abierta arriba:', data);
+            console.log('Open option uploaded:', data);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -214,20 +196,14 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
                 fontWeight: 'bold'
             };
         }
-    
-        // For multiple selection questions
         const selectedCount = Array.isArray(selectedOptions) ? selectedOptions.length : 0;
         const weight = calculateWeight(option, selectedCount);
-        
-        // Adjusted color ranges for stronger contrast
-        const baseColor = [173, 216, 230];  // lighter blue RGB
-        const targetColor = [0, 0, 139];    // darker blue RGB
-        
+        const baseColor = [173, 216, 230];
+        const targetColor = [0, 0, 139];
         const interpolatedColor = baseColor.map((start, index) => {
             const end = targetColor[index];
             return Math.round(start + (end - start) * weight);
         });
-    
         return {
             backgroundColor: isSelected 
                 ? `rgb(${interpolatedColor.join(',')})` 

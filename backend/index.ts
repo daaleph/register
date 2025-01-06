@@ -36,6 +36,13 @@ app.get('/sb/questions', async (_, res) => {
 app.get('/sb/question/:pk', async (req, res) => {
   const { pk } = req.params;
   try {
+    const previousAnswers = req.query.previousAnswers ? 
+      JSON.parse(decodeURIComponent(req.query.previousAnswers as string)) : 
+      null;
+  } catch (parseError) {
+    console.error('Error parsing previousAnswers:', parseError);
+  }
+  try {
     let { data, error } = await supabase
     .from('catalogo_variables')
     .select('*')
@@ -49,6 +56,15 @@ app.get('/sb/question/:pk', async (req, res) => {
 
 app.get('/sb/options/:pk', async (req, res) => {
   const { pk } = req.params;
+
+  try {
+    const previousAnswers = req.query.previousAnswers ? 
+      JSON.parse(decodeURIComponent(req.query.previousAnswers as string)) : 
+      null;
+  } catch (parseError) {
+    console.error('Error parsing previousAnswers:', parseError);
+  }
+
   try {
     let { data, error } = pk != '35' ? await supabase
       .from('tabla' + pk)
@@ -88,7 +104,6 @@ app.post('/sb/user', async (req, res) => {
           telegram
         }
       ]);
-
     if (error) throw error;
     res.status(201).json({ message: 'Usuario creado exitosamente', data });
   } catch (error) {

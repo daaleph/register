@@ -44,6 +44,24 @@ app.get('/sb/questions', (_, res) => __awaiter(void 0, void 0, void 0, function*
 }));
 app.get('/sb/question/:pk', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { pk } = req.params;
+    // Log user data if present in query params
+    try {
+        const previousAnswers = req.query.previousAnswers ?
+            JSON.parse(decodeURIComponent(req.query.previousAnswers)) :
+            null;
+        if (previousAnswers) {
+            console.log('Question endpoint - Previous answers for question', pk, ':', {
+                timestamp: new Date().toISOString(),
+                questionId: pk,
+                previousAnswers,
+                endpoint: '/sb/question'
+            });
+        }
+    }
+    catch (parseError) {
+        console.error('Error parsing previousAnswers:', parseError);
+    }
+    // Original endpoint logic
     try {
         let { data, error } = yield supabaseClient_1.supabase
             .from('catalogo_variables')
@@ -59,6 +77,24 @@ app.get('/sb/question/:pk', (req, res) => __awaiter(void 0, void 0, void 0, func
 }));
 app.get('/sb/options/:pk', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { pk } = req.params;
+    // Log user data if present in query params
+    try {
+        const previousAnswers = req.query.previousAnswers ?
+            JSON.parse(decodeURIComponent(req.query.previousAnswers)) :
+            null;
+        if (previousAnswers) {
+            console.log('Options endpoint - Previous answers for question', pk, ':', {
+                timestamp: new Date().toISOString(),
+                questionId: pk,
+                previousAnswers,
+                endpoint: '/sb/options'
+            });
+        }
+    }
+    catch (parseError) {
+        console.error('Error parsing previousAnswers:', parseError);
+    }
+    // Original endpoint logic
     try {
         let { data, error } = pk != '35' ? yield supabaseClient_1.supabase
             .from('tabla' + pk)

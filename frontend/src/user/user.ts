@@ -51,9 +51,41 @@ class User {
     async fetchesQuestion() {
         let question: Question;
         try {
-            const questionResponse = await fetch(`http://localhost:3000/sb/question/${this.current_question}`);
-            const optionsResponse = await fetch(`http://localhost:3000/sb/options/${this.current_question}`);
-            if (!questionResponse.ok || !optionsResponse.ok) throw new Error('Network request failed');
+            console.log('Fetching question - Current state:', {
+                timestamp: new Date().toISOString(),
+                questionId: this.current_question,
+                previousAnswers: this._questions
+            });
+            const params = new URLSearchParams({ previousAnswers: JSON.stringify(this._questions) });
+            const questionResponse = await fetch(
+                `http://localhost:3000/sb/question/${this.current_question}?${params.toString()}`, 
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+            const optionsResponse = await fetch(
+                `http://localhost:3000/sb/options/${this.current_question}?${params.toString()}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+            if (!questionResponse.ok || !optionsResponse.ok) {
+                console.error('Network request failed:', {
+                    timestamp: new Date().toISOString(),
+                    questionStatus: questionResponse.status,
+                    optionsStatus: optionsResponse.status,
+                    questionStatusText: questionResponse.statusText,
+                    optionsStatusText: optionsResponse.statusText
+                });
+                throw new Error('Network request failed');
+            }
+    
             const fetchedQuestion = await questionResponse.json();
             const fetchedOptions = await optionsResponse.json();
             const questionData = Array.isArray(fetchedQuestion) ? fetchedQuestion[0] : fetchedQuestion;
@@ -65,7 +97,19 @@ class User {
                 categoria: questionData?.categoria,
                 opciones: optionsData,
             };
+            console.log('Processed question:', {
+                timestamp: new Date().toISOString(),
+                questionId: this.current_question,
+                processedQuestion: question
+            });
+    
         } catch (err) {
+            console.error('Error in fetchesQuestion:', {
+                timestamp: new Date().toISOString(),
+                questionId: this.current_question,
+                error: err instanceof Error ? err.message : 'Unknown error',
+                stack: err instanceof Error ? err.stack : undefined
+            });
             throw new Error('An unknown error occurred');
         }
         return question;
