@@ -94,7 +94,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             opciones: selectedOptions
         });
         question.opciones = selectedOptions;
-        question.tipo === 'unica' && texto ? uploadOtherAnswer(): uploadAnswers();
+        question.tipo === 'unica'  && texto ? uploadOtherAnswer(): uploadAnswers();
         if (question.tipo === 'multiple' && Array.isArray(selectedOptions)) {
             texto ?? uploadOtherAnswer();
             if (selectedOptions.length != 0) uploadAnswers();
