@@ -20,15 +20,13 @@ const express_1 = __importDefault(require("express"));
 const supabaseClient_1 = require("./supabaseClient");
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: ['http://localhost:5173', 'http://localhost:5174'], // Add your frontend URLs
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-    credentials: true, // Enable credentials (cookies, authorization headers, etc)
-    optionsSuccessStatus: 200 // Some legacy browsers (IE11) choke on 204
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    optionsSuccessStatus: 200
 };
-// Apply CORS middleware with options
 app.use((0, cors_1.default)(corsOptions));
-// Body parser middleware
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.get('/sb/questions', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -73,6 +71,21 @@ app.get('/sb/options/:pk', (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(500).json({ error: 'Error comunicando Supabase' });
     }
 }));
+app.get('/sb/perfil/:email', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.params;
+    try {
+        let { data, error } = yield supabaseClient_1.supabase
+            .from('perfil')
+            .select('id')
+            .eq('email', email);
+        if (error)
+            throw error;
+        res.status(200).json(data);
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Error comunicando Supabase' });
+    }
+}));
 app.post('/sb/user', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nombre_preferido, nombre_completo, email, movil, telegram } = req.body;
@@ -99,16 +112,35 @@ app.post('/sb/vars', (req, res) => __awaiter(void 0, void 0, void 0, function* (
     let question;
     try {
         question = req.body;
-        // Update the specific column dynamically
         const { data, error } = yield supabaseClient_1.supabase
             .from('perfil')
             .update({
-            [`var${question.variable}`]: question.options, // Update only the specific variable column
+            [`var${question.variable}`]: question.options,
         })
-            .eq('email', question.email); // Match the row by email
+            .eq('email', question.email);
         if (error)
             throw error;
         res.status(200).json({ message: 'Variable actualizada exitosamente', data });
+    }
+    catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Error al actualizar variable' });
+    }
+}));
+app.post('/sb/other', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { perfil, variable, texto } = req.body;
+        console.log(req.body);
+        const { data, error } = yield supabaseClient_1.supabase
+            .from('otros')
+            .insert([{
+                perfil,
+                variable,
+                texto
+            }]);
+        if (error)
+            throw error;
+        res.status(200).json({ message: 'Opción abierta arriba', data });
     }
     catch (error) {
         console.error('Error:', error);

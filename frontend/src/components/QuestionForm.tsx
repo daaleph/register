@@ -23,7 +23,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
         opciones: false
     });
     const [selectedOptions, setSelectedOptions] = useState<RegularOption[] | boolean>([]);
-    const [otherText, setOtherText] = useState<string>('');
+    const [texto, setText] = useState<string>('');
+    const [perfil, setPerfil] = useState<string>('');
 
     useEffect(() => {
         const fetchQuestion = async () => {
@@ -57,7 +58,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
         if (optionIsRegular(option)) {
             const tempOption = option;
             if (option.descripcion === "Otro") {
-                setOtherText('');
+                setText('');
             }
             setSelectedOptions((prev) => {
                 const prevArray = Array.isArray(prev) ? prev : [];
@@ -78,7 +79,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
         const hasOtherOption = Array.isArray(selectedOptions) && 
             selectedOptions.some(opt => opt.descripcion === "Otro");
         
-        if (hasOtherOption && !otherText.trim()) {
+        if (hasOtherOption && !texto.trim()) {
             alert('Please specify the "Otro" option before proceeding.');
             return;
         }
@@ -93,9 +94,13 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             opciones: selectedOptions
         });
         question.opciones = selectedOptions;
-        uploadAnswers();
+        question.tipo === 'unica' && texto ? uploadOtherAnswer(): uploadAnswers();
+        if (question.tipo === 'multiple' && Array.isArray(selectedOptions)) {
+            texto ?? uploadOtherAnswer();
+            if (selectedOptions.length != 0) uploadAnswers();
+        }
         setSelectedOptions([]);
-        setOtherText('');
+        setText('');
     };
 
     const uploadAnswers = async () => {
@@ -119,6 +124,41 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
         }
     }
 
+    const uploadOtherAnswer = async () => {
+        try {
+            const variable = question.nombre;
+            await fetchesLuuid(user?.email!);
+            const response = await fetch('http://localhost:3000/sb/other', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    perfil,
+                    variable,
+                    texto
+                })
+            });
+            if (!response.ok) throw new Error('Error al enviar datos');
+            const data = await response.json();
+            console.log('Opción abierta arriba:', data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    const fetchesLuuid = async (email: string) => {
+        try {
+            const perfil = await fetch(`http://localhost:3000/sb/perfil/${email}`);
+            if (!perfil.ok) throw new Error('Network request failed');
+            const perfilResponse = await perfil.json();
+            console.log(perfilResponse[0].id);
+            setPerfil(perfilResponse[0].id);
+        } catch (err) {
+            throw new Error('An unknown error occurred');
+        }
+    }
+
     const buttonStyle = (isSelected: boolean) => ({
         backgroundColor: isSelected ? 'lightblue' : 'blue',
         border: '1px solid black',
@@ -136,7 +176,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             <p>{question.descripcion}</p>
             {
                 Array.isArray(question.opciones) ? (
-                    <div>
+                    <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
                         {(currentQuestion === 8 ? filterOptionsForQuestion8(question.opciones) : question.opciones)
                             .map(option => (
                                 <div key={option.id}>
@@ -153,8 +193,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
                                      selectedOptions.includes(option) && (
                                         <input
                                             type="text"
-                                            value={otherText}
-                                            onChange={(e) => setOtherText(e.target.value)}
+                                            value={texto}
+                                            onChange={(e) => setText(e.target.value)}
                                             placeholder="Especifique aquí..."
                                             style={{
                                                 margin: '5px',
@@ -187,7 +227,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
                 style={buttonStyle(false)}
                 disabled={Array.isArray(selectedOptions) && 
                          selectedOptions.some(opt => opt.descripcion === "Otro") && 
-                         !otherText.trim()}
+                         !texto.trim()}
             >
                 {user?.current_question! < 47 ? 'Siguiente' : '¡FUEGO!'}
             </button>

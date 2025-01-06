@@ -60,6 +60,20 @@ app.get('/sb/options/:pk', async (req, res) => {
   }
 });
 
+app.get('/sb/perfil/:email', async (req, res) => {
+  const { email } = req.params;
+  try {
+    let { data, error } = await supabase
+      .from('perfil')
+      .select('id')
+      .eq('email', email);
+    if (error) throw error;
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: 'Error comunicando Supabase' });
+  }
+});
+
 app.post('/sb/user', async (req, res) => {
   try {
     const { nombre_preferido, nombre_completo, email, movil, telegram } = req.body;
@@ -94,6 +108,25 @@ app.post('/sb/vars', async (req, res) => {
       .eq('email', question.email);
     if (error) throw error;
     res.status(200).json({ message: 'Variable actualizada exitosamente', data });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Error al actualizar variable' });
+  }
+});
+
+app.post('/sb/other', async (req, res) => {
+  try {
+    const { perfil, variable, texto } = req.body;
+    console.log(req.body);
+    const { data, error } = await supabase
+      .from('otros')
+      .insert([{
+        perfil,
+        variable,
+        texto
+      }]);
+    if (error) throw error;
+    res.status(200).json({ message: 'Opción abierta arriba', data });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Error al actualizar variable' });
