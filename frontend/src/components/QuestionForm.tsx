@@ -9,6 +9,8 @@ interface QuestionFormProps {
     variables: string[];
 }
 
+const getValue = (x: boolean | RegularOption[]) => typeof x === 'boolean' ? x : Array.isArray(x) ? (x.length === 1 ? x[0].id : x.map(item => item.id)) : null;
+
 const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
     const [currentQuestion, setCurrentQuestion] = useState<number>(1)
     const userStore = useUserStore();
@@ -77,6 +79,24 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             categoria: question.categoria,
             opciones: selectedOptions
         });
+        try {
+            const response = await fetch('http://localhost:3000/sb/vars', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: user?.email,
+                    variable: currentQuestion,
+                    options: getValue(selectedOptions)
+                })
+            });
+            if (!response.ok) throw new Error('Error al enviar datos');
+            const data = await response.json();
+            console.log('Pregunta arriba:', data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
         setSelectedOptions([]);
     };
 

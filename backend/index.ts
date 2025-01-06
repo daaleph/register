@@ -1,4 +1,5 @@
 // backend/index.ts
+
 require('dotenv').config({path: '.env'});
 import cors from 'cors';
 import express from 'express';
@@ -6,8 +7,19 @@ import express from 'express';
 import { supabase } from './supabaseClient';
 
 const app = express();
+
+const corsOptions = {
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/sb/questions', async (_, res) => {
   try {
@@ -45,6 +57,46 @@ app.get('/sb/options/:pk', async (req, res) => {
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ error: 'Error comunicando Supabase' });
+  }
+});
+
+app.post('/sb/user', async (req, res) => {
+  try {
+    const { nombre_preferido, nombre_completo, email, movil, telegram } = req.body;
+    let { data, error } = await supabase
+      .from('perfil')
+      .insert([
+        { 
+          nombre_preferido, 
+          nombre_completo, 
+          email,
+          movil,
+          telegram
+        }
+      ]);
+
+    if (error) throw error;
+    res.status(201).json({ message: 'Usuario creado exitosamente', data });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear usuario' });
+  }
+});
+
+app.post('/sb/vars', async (req, res) => {
+  let question;
+  try {
+    question = req.body;
+    const { data, error } = await supabase
+      .from('perfil')
+      .update({
+        [`var${question.variable}`]: question.options,
+      })
+      .eq('email', question.email);
+    if (error) throw error;
+    res.status(200).json({ message: 'Variable actualizada exitosamente', data });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Error al actualizar variable' });
   }
 });
 

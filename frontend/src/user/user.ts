@@ -6,16 +6,19 @@ class User {
     nombre_preferido: string;
     nombre_completo: string;
     email: string;
+    movil: string;
+    telegram: string;
     current_question: number = 1;
     private _questions: Questions = {};
 
-    constructor(nombre_preferido: string, nombre_completo: string, email: string) {
+    constructor(nombre_preferido: string, nombre_completo: string, email: string, movil: string, telegram: string) {
         this.nombre_completo = nombre_completo;
         this.nombre_preferido = nombre_preferido;
         this.email = email;
+        this.movil = movil;
+        this.telegram = telegram;
     }
-
-    // Add getter and setter for questions
+    
     get questions(): Questions {
         return this._questions;
     }

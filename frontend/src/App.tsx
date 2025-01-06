@@ -20,8 +20,8 @@ const App: React.FC = () => {
     fetchVariables();
   }, []);
 
-  const handleUserSubmit = (nombre_preferido: string, nombre_completo: string, email: string) => {
-    const newUser = new User(nombre_preferido, nombre_completo, email);
+  const handleUserSubmit = (nombrePreferido: string, nombreCompleto: string, email: string, movil: string, telegram: string) => {
+    const newUser = new User(nombrePreferido, nombreCompleto, email, movil, telegram);
     userStore.setUser(newUser);
   };
 
