@@ -3,7 +3,7 @@
 export interface RegularOption {
   id: number;
   descripcion: string;
-  otro?: boolean;
+  otro?: string;
 }
 
 export interface Question {

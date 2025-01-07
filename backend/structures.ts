@@ -3,11 +3,17 @@
 export interface RegularOption {
     id: number;
     descripcion: string;
-    otro?: boolean;
+    otro?: string;
 }
   
 export interface Question {
-    email: string;
-    variable: number;
-    options: RegularOption[] | boolean;
+    nombre: string;
+    descripcion: string;
+    tipo: 'unica' | 'multiple' | 'bool';
+    categoria: number;
+    opciones: RegularOption[] | boolean;
+}
+  
+export default interface Questions {
+    [id: string] : Question;
 }

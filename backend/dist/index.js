@@ -44,24 +44,18 @@ app.get('/sb/questions', (_, res) => __awaiter(void 0, void 0, void 0, function*
 }));
 app.get('/sb/question/:pk', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { pk } = req.params;
-    // Log user data if present in query params
+    let previousAnswers;
     try {
-        const previousAnswers = req.query.previousAnswers ?
+        previousAnswers = req.query.previousAnswers ?
             JSON.parse(decodeURIComponent(req.query.previousAnswers)) :
             null;
-        if (previousAnswers) {
-            console.log('Question endpoint - Previous answers for question', pk, ':', {
-                timestamp: new Date().toISOString(),
-                questionId: pk,
-                previousAnswers,
-                endpoint: '/sb/question'
-            });
-        }
     }
     catch (parseError) {
         console.error('Error parsing previousAnswers:', parseError);
     }
-    // Original endpoint logic
+    previousAnswers = introContext(previousAnswers);
+    previousAnswers = promptForIntroContext(previousAnswers);
+    console.log("PREVIOUS ANSWERS:", previousAnswers);
     try {
         let { data, error } = yield supabaseClient_1.supabase
             .from('catalogo_variables')
@@ -77,24 +71,14 @@ app.get('/sb/question/:pk', (req, res) => __awaiter(void 0, void 0, void 0, func
 }));
 app.get('/sb/options/:pk', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { pk } = req.params;
-    // Log user data if present in query params
     try {
         const previousAnswers = req.query.previousAnswers ?
             JSON.parse(decodeURIComponent(req.query.previousAnswers)) :
             null;
-        if (previousAnswers) {
-            console.log('Options endpoint - Previous answers for question', pk, ':', {
-                timestamp: new Date().toISOString(),
-                questionId: pk,
-                previousAnswers,
-                endpoint: '/sb/options'
-            });
-        }
     }
     catch (parseError) {
         console.error('Error parsing previousAnswers:', parseError);
     }
-    // Original endpoint logic
     try {
         let { data, error } = pk != '35' ? yield supabaseClient_1.supabase
             .from('tabla' + pk)
@@ -186,3 +170,25 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
+const introContext = (questions) => {
+    const keys = Object.keys(questions);
+    const filteredKeys = keys.filter((key) => {
+        const numericPart = parseInt(key.substring(3));
+        return numericPart < 10;
+    });
+    const filteredQuestions = filteredKeys.reduce((acc, key) => {
+        acc[key] = questions[key];
+        return acc;
+    }, {});
+    return filteredQuestions;
+};
+const promptForIntroContext = (questions) => {
+    console.log("PROMPT");
+    console.dir(questions, { depth: null });
+    return Object.values(questions).map((question) => {
+        const opciones = Array.isArray(question.opciones) ?
+            question.opciones.map((opcion) => opcion.otro ? opcion.otro : opcion.descripcion).join(" & ") :
+            question.opciones;
+        return `${question.descripcion} (${question.nombre}): ${opciones}`;
+    });
+};

@@ -1,6 +1,7 @@
 // frontend/src/user/user.ts
 
 import { Question, Questions, RegularOption } from '../store/store';
+import CONTEXT from '../contextualizer';
 
 class User {
     nombre_preferido: string;
@@ -56,7 +57,20 @@ class User {
                 questionId: this.current_question,
                 previousAnswers: this._questions
             });
-            const params = new URLSearchParams({ previousAnswers: JSON.stringify(this._questions) });
+
+            const filteredQuestions = Object.entries(this._questions)
+            .filter(([key, _]) => {
+                const match = key.match(/^var(\d+)$/);
+                return match ? CONTEXT.has(Number(match[1])) : false;
+            })
+            .reduce((acc, [key, value]) => {
+                acc[key] = value;
+                return acc;
+            }, {} as Questions);
+            const params = new URLSearchParams({
+                previousAnswers: JSON.stringify(filteredQuestions),
+            });
+
             const questionResponse = await fetch(
                 `http://localhost:3000/sb/question/${this.current_question}?${params.toString()}`, 
                 {
@@ -121,8 +135,8 @@ class User {
                 option.some(opt => opt.id === item.id)
             );
             if (otro) {
-                current_question.opciones[0].descripcion = otro;
-                current_question.opciones[0].otro = true;
+                current_question.opciones[0].descripcion = "Otr@";
+                current_question.opciones[0].otro = otro;
             }
         } else {
             current_question.opciones = option;
@@ -134,6 +148,7 @@ class User {
         const updatedQuestions = { ...this._questions, [questionName]: question };
         this.questions = updatedQuestions;
     }
+    
 }
 
 export default User;

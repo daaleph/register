@@ -3,6 +3,7 @@
 require('dotenv').config({path: '.env'});
 import cors from 'cors';
 import express from 'express';
+import Questions from './structures'; 
 // import { fetchAIResponse } from './abacusService';
 import { supabase } from './supabaseClient';
 
@@ -15,7 +16,6 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200
 };
-
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -35,13 +35,17 @@ app.get('/sb/questions', async (_, res) => {
 
 app.get('/sb/question/:pk', async (req, res) => {
   const { pk } = req.params;
+  let previousAnswers;
   try {
-    const previousAnswers = req.query.previousAnswers ? 
+    previousAnswers = req.query.previousAnswers ? 
       JSON.parse(decodeURIComponent(req.query.previousAnswers as string)) : 
       null;
   } catch (parseError) {
     console.error('Error parsing previousAnswers:', parseError);
   }
+  previousAnswers = introContext(previousAnswers);
+  previousAnswers = promptForIntroContext(previousAnswers);
+  console.log("PREVIOUS ANSWERS:", previousAnswers);
   try {
     let { data, error } = await supabase
     .from('catalogo_variables')
@@ -56,7 +60,6 @@ app.get('/sb/question/:pk', async (req, res) => {
 
 app.get('/sb/options/:pk', async (req, res) => {
   const { pk } = req.params;
-
   try {
     const previousAnswers = req.query.previousAnswers ? 
       JSON.parse(decodeURIComponent(req.query.previousAnswers as string)) : 
@@ -151,3 +154,25 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
+
+const introContext = (questions: Questions) => {
+  const keys = Object.keys(questions);
+  const filteredKeys = keys.filter((key) => {
+    const numericPart = parseInt(key.substring(3));
+    return numericPart < 11;
+  });
+  const filteredQuestions: Questions = filteredKeys.reduce((acc, key) => {
+    acc[key] = questions[key];
+    return acc;
+  }, {} as Questions);
+  return filteredQuestions;
+};
+
+const promptForIntroContext = (questions: Questions) => {
+  return Object.values(questions).map((question) => {
+    const opciones = Array.isArray(question.opciones) ?
+      question.opciones.map((opcion) => opcion.otro ? opcion.otro : opcion.descripcion).join(" & ") :
+      question.opciones;
+    return `${question.descripcion} (${question.nombre}): ${opciones}`;
+  });
+};

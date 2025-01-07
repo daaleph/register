@@ -104,10 +104,17 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
             alert('Please select an option before proceeding.');
             return;
         }
-        const hasOtherOption = Array.isArray(selectedOptions) && selectedOptions.some(opt => opt.descripcion === "Otro");
+        const hasOtherOption = Array.isArray(selectedOptions) && selectedOptions.some(option => option.descripcion.startsWith("Otr"));
         if (hasOtherOption && !texto.trim()) {
             alert('Por favor escriba la opción "Otro".');
             return;
+        }
+        if (hasOtherOption && texto.trim()) {
+            Array.isArray(selectedOptions) && selectedOptions.forEach(option => {
+                if (option.descripcion.substring(0, 3) === "Otr") {
+                    option.otro = texto;
+                }
+            });
         }
         await user!.answer(variables, selectedOptions);
         userStore.updateCurrentQuestion(user!.current_question);
@@ -238,7 +245,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ variables }) => {
                                     >
                                         {option.descripcion}
                                     </button>
-                                    {option.descripcion === "Otro" && 
+                                    {option.descripcion.substring(0,3) === "Otr" && 
                                      Array.isArray(selectedOptions) && 
                                      selectedOptions.includes(option) && (
                                         <input
