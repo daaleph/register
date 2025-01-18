@@ -1,5 +1,4 @@
 // src/entities/profile.entity.ts
-
 export class ProfileEntity {
     id: string;
     preferredName: string;
@@ -7,5 +6,6 @@ export class ProfileEntity {
     email: string;
     movil: string;
     telegram: string;
-    var01?: number[];
-} // [source](search_result_11)
+    [key: `var${number}`]: number[] | number;
+} // [source](search_result_13)
+

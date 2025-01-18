@@ -18,7 +18,7 @@ export class SupabaseService {
         return this.supabase;
     }
 
-    async query(query: string, params?: any[]): Promise<any> {
+    async query(query: string, params?: any): Promise<any> {
         return await this.supabase.rpc(query, params);
     }
 } // [source](search_result_11)
