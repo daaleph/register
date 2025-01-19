@@ -25,8 +25,9 @@ let ProfileQuestionsController = class ProfileQuestionsController {
         return { profileQuestion, profileOptions };
     }
     async getProfileQuestion(questionId) {
-        const profileQuestionsService = await this.profileQuestionsService.getQuestionById(questionId);
-        return profileQuestionsService;
+        const profileQuestion = await this.profileQuestionsService.getQuestionById(questionId);
+        const profileOptions = await this.profileQuestionsService.getOptionsById(questionId);
+        return { profileQuestion, profileOptions };
     }
     async submitProfileAnswer(questionId, data) {
         return await this.profileQuestionsService.handleProfileAnswer(questionId, data.profileId, data.variable, data.answer);

@@ -27,6 +27,9 @@ let ProfileQuestionsService = class ProfileQuestionsService {
     async getQuestionById(id) {
         return this.profileQuestionsRepository.findQuestion(id);
     }
+    async getOptionsById(id) {
+        return this.profileQuestionsRepository.findOptions(id);
+    }
     async handleProfileAnswer(questionId, profileId, variable, answer) {
         const response = await this.storeAnswer(profileId, variable, answer, new Date());
         const nextQuestion = await this.getNextQuestion(questionId, answer);

@@ -19,7 +19,6 @@ export class SupabaseService {
   }
 
   async query(table: string, params?: any): Promise<any> {
-    console.log("TABLE:" + table, "PARAMS:" + params);
     return this.client.from(table).select().match(params);
   }
 
