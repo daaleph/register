@@ -30,30 +30,6 @@ let ProfileQuestionsService = class ProfileQuestionsService {
     async getOptionsById(id) {
         return this.profileQuestionsRepository.findOptions(id);
     }
-    async handleProfileAnswer(questionId, profileId, variable, answer) {
-        const response = await this.storeAnswer(profileId, variable, answer, new Date());
-        const nextQuestion = await this.getNextQuestion(questionId, answer);
-        return {
-            nextQuestion,
-            response
-        };
-    }
-    async getNextQuestion(currentId, previousAnswer) {
-        if (currentId < 7) {
-            return this.profileQuestionsRepository.findNextQuestionBasedOnAnswer(currentId, previousAnswer);
-        }
-        const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(currentId);
-        const personalizedQuestion = await this.abacusPersonalizationService.personalizesProfileQuestion(currentId, previousResponses);
-        return this.profileQuestionsRepository.findAndCustomizeQuestion(currentId, personalizedQuestion);
-    }
-    async storeAnswer(profileId, variable, answer, dateAnswer) {
-        return this.profileQuestionsRepository.saveProfileResponse({
-            profile: profileId,
-            variable,
-            answerOptions: Array.isArray(answer) ? answer : [answer],
-            dateAnswer: dateAnswer
-        });
-    }
 };
 exports.ProfileQuestionsService = ProfileQuestionsService;
 exports.ProfileQuestionsService = ProfileQuestionsService = __decorate([

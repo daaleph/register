@@ -7,7 +7,6 @@ export declare class ProfileQuestionsRepository {
     constructor(supabaseService?: SupabaseService);
     findQuestion(id: number): Promise<ProfileQuestionsEntity>;
     findOptions(id: number): Promise<ProfileOptionsEntity>;
-    findNextQuestionBasedOnAnswer(currentId: number, previousAnswer: number[] | number): Promise<ProfileQuestionsEntity>;
     getPreviousResponses(currentId: number): Promise<any[]>;
     findAndCustomizeQuestion(id: number, personalizedQuestion: any): Promise<ProfileQuestionsEntity>;
     saveProfileResponse(response: ProfileResponsesEntity): Promise<ProfileResponsesEntity>;

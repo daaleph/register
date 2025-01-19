@@ -14,7 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProfileController = void 0;
 const common_1 = require("@nestjs/common");
-const profile_service_1 = require("./profile.service");
+const service_1 = require("./service");
 const profile_entity_1 = require("../entities/profile.entity");
 let ProfileController = class ProfileController {
     constructor(profileService) {
@@ -29,7 +29,7 @@ let ProfileController = class ProfileController {
 };
 exports.ProfileController = ProfileController;
 __decorate([
-    (0, common_1.Get)(':id'),
+    (0, common_1.Get)('id/:id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -44,6 +44,6 @@ __decorate([
 ], ProfileController.prototype, "updateProfile", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)('profile'),
-    __metadata("design:paramtypes", [profile_service_1.ProfileService])
+    __metadata("design:paramtypes", [service_1.ProfileService])
 ], ProfileController);
-//# sourceMappingURL=profile.controllers.js.map
+//# sourceMappingURL=controllers.js.map

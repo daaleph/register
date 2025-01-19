@@ -30,13 +30,8 @@ let ProfileQuestionsRepository = class ProfileQuestionsRepository {
         });
         return data;
     }
-    async findNextQuestionBasedOnAnswer(currentId, previousAnswer) {
-        const { data } = await this.supabaseService.query('profile_questions', {
-            id: currentId + 1,
-        });
-        return data;
-    }
     async getPreviousResponses(currentId) {
+        const variable = `var${String(currentId).padStart(2, '0')}`;
         const { data } = await this.supabaseService.query('profile_responses', {});
         return data;
     }

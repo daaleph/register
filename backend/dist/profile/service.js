@@ -28,4 +28,4 @@ exports.ProfileService = ProfileService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [profile_repository_1.ProfileRepository])
 ], ProfileService);
-//# sourceMappingURL=profile.service.js.map
+//# sourceMappingURL=service.js.map

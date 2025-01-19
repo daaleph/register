@@ -1,7 +1,7 @@
 // profile.module.ts
 import { Module } from '@nestjs/common';
-import { ProfileController } from './profile.controllers';
-import { ProfileService } from './profile.service';
+import { ProfileController } from './controllers';
+import { ProfileService } from './service';
 import { ProfileRepository } from '../repositories/profile.repository';
 import { SupabaseModule } from '../supabase/supabase.module';
 

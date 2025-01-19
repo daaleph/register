@@ -29,18 +29,10 @@ export class ProfileQuestionsRepository {
     return data;
   }
 
-  async findNextQuestionBasedOnAnswer(currentId: number, previousAnswer: number[] | number): Promise<ProfileQuestionsEntity> {
-    // Query logic for questions 2-6 based on first question's answer
-    const { data } = await this.supabaseService.query('profile_questions', {
-      id: currentId + 1,
-      // Add any additional filtering based on previousAnswer
-    });
-    return data;
-  }
-
   async getPreviousResponses(currentId: number): Promise<any[]> {
+    const variable = `var${String(currentId).padStart(2, '0')}`;
     const { data } = await this.supabaseService.query('profile_responses', {
-      // Query to get all previous responses up to currentId
+      
     });
     return data;
   }
@@ -57,4 +49,5 @@ export class ProfileQuestionsRepository {
     const { data } = await this.supabaseService.query('profile_responses', response);
     return data;
   }
+
 }

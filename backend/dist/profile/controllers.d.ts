@@ -1,4 +1,4 @@
-import { ProfileService } from './profile.service';
+import { ProfileService } from './service';
 import { ProfileEntity } from '../entities/profile.entity';
 export declare class ProfileController {
     private readonly profileService;

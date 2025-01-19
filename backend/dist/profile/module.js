@@ -8,8 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProfileModule = void 0;
 const common_1 = require("@nestjs/common");
-const profile_controllers_1 = require("./profile.controllers");
-const profile_service_1 = require("./profile.service");
+const controllers_1 = require("./controllers");
+const service_1 = require("./service");
 const profile_repository_1 = require("../repositories/profile.repository");
 const supabase_module_1 = require("../supabase/supabase.module");
 let ProfileModule = class ProfileModule {
@@ -18,9 +18,9 @@ exports.ProfileModule = ProfileModule;
 exports.ProfileModule = ProfileModule = __decorate([
     (0, common_1.Module)({
         imports: [supabase_module_1.SupabaseModule],
-        controllers: [profile_controllers_1.ProfileController],
-        providers: [profile_service_1.ProfileService, profile_repository_1.ProfileRepository],
-        exports: [profile_service_1.ProfileService],
+        controllers: [controllers_1.ProfileController],
+        providers: [service_1.ProfileService, profile_repository_1.ProfileRepository],
+        exports: [service_1.ProfileService],
     })
 ], ProfileModule);
-//# sourceMappingURL=profile.module.js.map
+//# sourceMappingURL=module.js.map

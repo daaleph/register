@@ -10,12 +10,4 @@ export declare class ProfileQuestionsController {
         profileQuestion: import("../../entities").ProfileQuestionsEntity;
         profileOptions: import("../../entities/profile-options.entity").ProfileOptionsEntity;
     }>;
-    submitProfileAnswer(questionId: number, data: {
-        profileId: string;
-        variable: string;
-        answer: number[] | number;
-    }): Promise<{
-        nextQuestion: import("../../entities").ProfileQuestionsEntity;
-        response: import("../../entities").ProfileResponsesEntity;
-    }>;
 }

@@ -1,7 +1,7 @@
 // profile-questions.controller.ts
 
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { ProfileQuestionsService } from './questions.service';
+import { ProfileQuestionsService } from './service';
 
 @Controller('questions/profile')
 export class ProfileQuestionsController {
@@ -23,20 +23,20 @@ export class ProfileQuestionsController {
         return { profileQuestion, profileOptions };
     }
 
-    @Post(':questionId/answer')
-    async submitProfileAnswer(
-        @Param('questionId') questionId: number,
-        @Body() data: {
-        profileId: string;
-        variable: string;
-        answer: number[] | number;
-        }
-    ) {
-        return await this.profileQuestionsService.handleProfileAnswer(
-            questionId,
-            data.profileId,
-            data.variable,
-            data.answer
-        );
-    }
+    // @Post(':questionId/answer')
+    // async submitProfileAnswer(
+    //     @Param('questionId') questionId: number,
+    //     @Body() data: {
+    //     profileId: string;
+    //     variable: string;
+    //     answer: number[] | number;
+    //     }
+    // ) {
+    //     return await this.profileQuestionsService.handleProfileAnswer(
+    //         questionId,
+    //         data.profileId,
+    //         data.variable,
+    //         data.answer
+    //     );
+    // }
 }

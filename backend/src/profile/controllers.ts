@@ -1,13 +1,13 @@
 // controllers/profile.controller.ts
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { ProfileService } from './profile.service';
+import { ProfileService } from './service';
 import { ProfileEntity } from '../entities/profile.entity';
 
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  @Get(':id')
+  @Get('id/:id')
   async getProfile(@Param('id') id: string): Promise<ProfileEntity> {
     return this.profileService.retrieveProfile(id);
   }

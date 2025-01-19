@@ -29,9 +29,6 @@ let ProfileQuestionsController = class ProfileQuestionsController {
         const profileOptions = await this.profileQuestionsService.getOptionsById(questionId);
         return { profileQuestion, profileOptions };
     }
-    async submitProfileAnswer(questionId, data) {
-        return await this.profileQuestionsService.handleProfileAnswer(questionId, data.profileId, data.variable, data.answer);
-    }
 };
 exports.ProfileQuestionsController = ProfileQuestionsController;
 __decorate([
@@ -47,14 +44,6 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ProfileQuestionsController.prototype, "getProfileQuestion", null);
-__decorate([
-    (0, common_1.Post)(':questionId/answer'),
-    __param(0, (0, common_1.Param)('questionId')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
-    __metadata("design:returntype", Promise)
-], ProfileQuestionsController.prototype, "submitProfileAnswer", null);
 exports.ProfileQuestionsController = ProfileQuestionsController = __decorate([
     (0, common_1.Controller)('questions/profile'),
     __metadata("design:paramtypes", [questions_service_1.ProfileQuestionsService])

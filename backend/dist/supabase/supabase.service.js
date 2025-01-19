@@ -20,7 +20,6 @@ let SupabaseService = class SupabaseService {
         return this.client;
     }
     async query(table, params) {
-        console.log("TABLE:" + table, "PARAMS:" + params);
         return this.client.from(table).select().match(params);
     }
 };
