@@ -11,7 +11,6 @@ export class ProductQuestionsService {
   ) {}
 
   async getQuestion(questionId: number, previousResponses: any[]) {
-    const question = await this.repository.findQuestion(questionId);
     const personalizedQuestion = await this.abacusService.personalizesProductQuestion(
       questionId,
       previousResponses

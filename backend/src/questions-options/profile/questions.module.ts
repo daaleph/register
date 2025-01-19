@@ -1,14 +1,14 @@
 // src/questions/profile-questions/profile-questions.module.ts
 import { Module } from '@nestjs/common';
-import { ProfileQuestionsController } from './profile-questions.controller';
-import { ProfileQuestionsService } from './profile-questions.service';
+import { ProfileQuestionsController } from './questions.controller';
+import { ProfileQuestionsService } from './questions.service';
 import { ProfileQuestionsRepository } from '../../repositories/profile-questions.repository';
 import { AbacusModule } from '../../abacus/abacus.module';
 import { SupabaseModule } from 'src/supabase/supabase.module';
 
 @Module({
   imports: [
-    SupabaseModule,  // Add this import
+    SupabaseModule,
     AbacusModule
   ],
   controllers: [ProfileQuestionsController],

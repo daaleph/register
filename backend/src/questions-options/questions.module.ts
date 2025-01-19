@@ -1,8 +1,8 @@
-// src/questions/questions.module.ts
+// src/questions-options/questions.module.ts
 import { Module } from '@nestjs/common';
-import { ProfileQuestionsModule } from './profile-questions/profile-questions.module';
-import { BfiQuestionsModule } from './bfi-questions/bfi-questions.module';
-import { ProductQuestionsModule } from './product-questions/product-questions.module';
+import { ProfileQuestionsModule } from './profile/questions.module';
+import { BfiQuestionsModule } from './bfi/bfi-questions.module';
+import { ProductQuestionsModule } from './product/product-questions.module';
 import { AbacusModule } from '../abacus/abacus.module';
 
 @Module({

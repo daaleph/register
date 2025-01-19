@@ -5,6 +5,7 @@ import { ProfileQuestionsRepository } from '../../repositories/profile-questions
 import { AbacusPersonalizationService } from '../../abacus/abacus-personalization.service';
 import { ProfileQuestionsEntity } from '../../entities/profile-questions.entity';
 import { ProfileResponsesEntity } from '../../entities/profile-responses.entity';
+import { ProfileOptionsEntity } from 'src/entities/profile-options.entity';
 
 @Injectable()
 export class ProfileQuestionsService {
@@ -14,7 +15,11 @@ export class ProfileQuestionsService {
   ) {}
 
   async getInitialQuestion(): Promise<ProfileQuestionsEntity> {
-    return this.profileQuestionsRepository.findQuestion(1); // First question
+    return this.profileQuestionsRepository.findQuestion(1);
+  }
+
+  async getInitialOptions(): Promise<ProfileOptionsEntity> {
+    return this.profileQuestionsRepository.findOptions(1);
   }
 
   async getQuestionById(id: number): Promise<ProfileQuestionsEntity> {
@@ -27,7 +32,7 @@ export class ProfileQuestionsService {
     variable: string,
     answer: number[] | number
   ): Promise<{nextQuestion: ProfileQuestionsEntity, response: ProfileResponsesEntity}> {
-    // Store the answer
+
     const response = await this.storeAnswer(
       profileId,
       variable,
@@ -35,7 +40,6 @@ export class ProfileQuestionsService {
       new Date()
     );
 
-    // Get next question based on the answer
     const nextQuestion = await this.getNextQuestion(questionId, answer);
 
     return {
