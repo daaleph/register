@@ -10,13 +10,14 @@ import { ProfileQuestionsEntity } from 'src/entities/profile-questions.entity';
 export class ProfileQuestionsRepository {
 
   constructor(
-    private readonly supabaseService: SupabaseService
+    private readonly supabaseService: SupabaseService = new SupabaseService()
   ) {}
 
   async findQuestion(id: number): Promise<ProfileQuestionsEntity> {
     const { data } = await this.supabaseService.query('profile_questions', {
       id,
     });
+    console.log("DATA:", data);
     return data;
   }
 

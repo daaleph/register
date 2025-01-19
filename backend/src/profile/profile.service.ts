@@ -6,6 +6,7 @@ import { ProfileRepository } from 'src/repositories/profile.repository';
 
 @Injectable()
 export class ProfileService {
+  
   constructor(private readonly profileRepository: ProfileRepository) {}
 
   async retrieveProfile(id: string): Promise<ProfileEntity> {
@@ -15,4 +16,5 @@ export class ProfileService {
   async updateProfileData(profile: ProfileEntity): Promise<void> {
     await this.profileRepository.saveProfile(profile);
   }
+
 } // [source](search_result_11)

@@ -1,6 +1,6 @@
 // controllers/profile.controller.ts
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { ProfileService } from '../services/profile.service';
+import { ProfileService } from './profile.service';
 import { ProfileEntity } from '../entities/profile.entity';
 
 @Controller('profile')

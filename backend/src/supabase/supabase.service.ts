@@ -1,24 +1,25 @@
-// src/supabase/supabase.service.ts
-
+// services/supabase.service.ts
 import { Injectable } from '@nestjs/common';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class SupabaseService {
-  private supabase: SupabaseClient;
+  
+  private client: SupabaseClient;
 
   constructor() {
-    this.supabase = createClient(
+    this.client = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_KEY,
     );
   }
 
-  getConnection(): SupabaseClient {
-    return this.supabase;
+  getConnection() {
+    return this.client;
   }
 
-  async query(query: string, params?: any): Promise<any> {
-    return await this.supabase.rpc(query, params);
+  async query(table: string, params?: any): Promise<any> {
+    return this.client.from(table).select().match(params);
   }
-} // [source](search_result_11)
+
+} // [source](search_result_13)

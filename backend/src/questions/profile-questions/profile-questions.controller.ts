@@ -11,7 +11,8 @@ export class ProfileQuestionsController {
 
     @Get('initial')
     async getInitialProfileQuestion() {
-        return await this.profileQuestionsService.getQuestionById(1);
+        const profileQuestionsService = await this.profileQuestionsService.getQuestionById(1);
+        return profileQuestionsService;
     }
 
     @Get(':questionId')
