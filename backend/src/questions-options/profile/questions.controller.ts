@@ -18,8 +18,9 @@ export class ProfileQuestionsController {
 
     @Get('questionId/:questionId')
     async getProfileQuestion(@Param('questionId') questionId: number) {
-        const profileQuestionsService = await this.profileQuestionsService.getQuestionById(questionId);
-        return profileQuestionsService;
+        const profileQuestion = await this.profileQuestionsService.getQuestionById(questionId);
+        const profileOptions = await this.profileQuestionsService.getOptionsById(questionId);
+        return { profileQuestion, profileOptions };
     }
 
     @Post(':questionId/answer')

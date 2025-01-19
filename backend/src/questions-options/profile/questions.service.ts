@@ -26,6 +26,10 @@ export class ProfileQuestionsService {
     return this.profileQuestionsRepository.findQuestion(id);
   }
 
+  async getOptionsById(id: number): Promise<ProfileOptionsEntity> {
+    return this.profileQuestionsRepository.findOptions(id);
+  }
+
   async handleProfileAnswer(
     questionId: number,
     profileId: string,

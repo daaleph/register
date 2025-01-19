@@ -10,6 +10,7 @@ export declare class ProfileQuestionsService {
     getInitialQuestion(): Promise<ProfileQuestionsEntity>;
     getInitialOptions(): Promise<ProfileOptionsEntity>;
     getQuestionById(id: number): Promise<ProfileQuestionsEntity>;
+    getOptionsById(id: number): Promise<ProfileOptionsEntity>;
     handleProfileAnswer(questionId: number, profileId: string, variable: string, answer: number[] | number): Promise<{
         nextQuestion: ProfileQuestionsEntity;
         response: ProfileResponsesEntity;
