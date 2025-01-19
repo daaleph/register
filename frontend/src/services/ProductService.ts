@@ -1,5 +1,6 @@
 // src/services/ProductService.ts
 
+import { Question } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class ProductService {

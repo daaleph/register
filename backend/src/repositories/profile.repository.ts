@@ -5,14 +5,14 @@ import { ProfileEntity } from '../entities/profile.entity';
 
 @Injectable()
 export class ProfileRepository {
-    constructor(private readonly supabaseService: SupabaseService) {}
+  constructor(private readonly supabaseService: SupabaseService) {}
 
-    async findProfileById(id: string): Promise<ProfileEntity> {
-        const { data } = await this.supabaseService.query('profile', { id });
-        return data;
-    }
+  async findProfileById(id: string): Promise<ProfileEntity> {
+    const { data } = await this.supabaseService.query('profile', { id });
+    return data;
+  }
 
-    async saveProfile(profile: ProfileEntity): Promise<void> {
-        await this.supabaseService.query('profile', profile);
-    }
+  async saveProfile(profile: ProfileEntity): Promise<void> {
+    await this.supabaseService.query('profile', profile);
+  }
 } // [source](search_result_11)

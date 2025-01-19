@@ -1,9 +1,19 @@
 // src/services/HttpUtility.ts
+import axios from 'axios';
 
 export class HttpUtility {
+    private static getAuthHeader(): Record<string, string> {
+        const token = localStorage.getItem('auth_token');
+        return token ? { Authorization: `Bearer ${token}` } : {};
+    }
+
     static async get(url: string, params?: any): Promise<any> {
         try {
-            const response = await axios.get(url, { params });
+            const headers = this.getAuthHeader();
+            const response = await axios.get(url, { 
+                params,
+                headers 
+            });
             return this.handleResponse(response);
         } catch (error) {
             return this.handleError(error);
@@ -12,7 +22,8 @@ export class HttpUtility {
 
     static async post(url: string, data: any): Promise<any> {
         try {
-            const response = await axios.post(url, data);
+            const headers = this.getAuthHeader();
+            const response = await axios.post(url, data, { headers });
             return this.handleResponse(response);
         } catch (error) {
             return this.handleError(error);
@@ -26,4 +37,4 @@ export class HttpUtility {
     private static handleError(error: any): any {
         throw error;
     }
-} // [source](search_result_6)
+}

@@ -1,5 +1,6 @@
 // src/services/ProfileService.ts
 
+import { Question } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class ProfileService {

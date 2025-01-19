@@ -1,4 +1,12 @@
+// src/abacus/abacus.module.ts
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
+import { AbacusPersonalizationService } from './abacus-personalization.service';
+import { AbacusContextService } from './abacus-context.service';
 
-@Module({})
+@Module({
+  imports: [HttpModule],
+  providers: [AbacusPersonalizationService, AbacusContextService],
+  exports: [AbacusPersonalizationService]
+})
 export class AbacusModule {}
