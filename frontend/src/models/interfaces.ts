@@ -1,5 +1,6 @@
 // models/interfaces.ts
-interface UserProfile {
+
+export interface UserProfile {
     id: string;
     preferredName: string;
     completeName: string;
@@ -8,7 +9,7 @@ interface UserProfile {
     telegram: string;
 }
   
-interface Question {
+export interface Question {
     id: number;
     variable: string;
     text_en: string;
@@ -19,7 +20,7 @@ interface Question {
     options?: QuestionOption[];
 }
   
-interface QuestionOption {
+export interface QuestionOption {
     opcionId: number;
     description_en: string;
     description_es: string;

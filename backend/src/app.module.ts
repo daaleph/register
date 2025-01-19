@@ -21,7 +21,9 @@ import { SharedModule } from './shared/shared.module';
     ResponsesModule,
     AbacusModule,
     SupabaseModule,
-    SharedModule,
+    SharedModule
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {} // [source](search_result_2)

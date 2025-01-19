@@ -6,10 +6,9 @@ import { ProfileRepository } from '../repositories/profile.repository';
 import { SupabaseModule } from '../supabase/supabase.module';
 
 @Module({
-    imports: [SupabaseModule],
-    controllers: [ProfileController],
-    providers: [ProfileService, ProfileRepository],
-    exports: [ProfileService]
+  imports: [SupabaseModule],
+  controllers: [ProfileController],
+  providers: [ProfileService, ProfileRepository],
+  exports: [ProfileService],
 }) // [source](search_result_11)
-
 export class ProfileModule {}

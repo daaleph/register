@@ -5,15 +5,15 @@ import { ProfileEntity } from '../entities/profile.entity';
 
 @Controller('profile')
 export class ProfileController {
-    constructor(private readonly profileService: ProfileService) {}
+  constructor(private readonly profileService: ProfileService) {}
 
-    @Get(':id')
-    async getProfile(@Param('id') id: string): Promise<ProfileEntity> {
-        return this.profileService.retrieveProfile(id);
-    }
+  @Get(':id')
+  async getProfile(@Param('id') id: string): Promise<ProfileEntity> {
+    return this.profileService.retrieveProfile(id);
+  }
 
-    @Post()
-    async updateProfile(@Body() profile: ProfileEntity): Promise<void> {
-        await this.profileService.updateProfileData(profile);
-    }
+  @Post()
+  async updateProfile(@Body() profile: ProfileEntity): Promise<void> {
+    await this.profileService.updateProfileData(profile);
+  }
 } // [source](search_result_11)

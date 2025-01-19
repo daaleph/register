@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useUser } from '../context/UserContext';
 import { AuthService } from '../services/AuthService';
 import { ProfileService } from '../services/ProfileService';
-import { Question } from '../models/types';
+import { Question } from '../models/interfaces';
 import { QuestionForm } from '../components/common/QuestionForm';
 import { ProgressBar } from '../components/common/ProgressBar';
 
@@ -14,6 +14,7 @@ const ProfilePage: React.FC = () => {
   const profileService = new ProfileService();
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentProgress, setCurrentProgress] = useState<number>(0);
 
   useEffect(() => {
     const loadInitialQuestion = async () => {
@@ -35,27 +36,31 @@ const ProfilePage: React.FC = () => {
   const handleAnswerSelection = async (answer: number[] | number) => {
     try {
       if (!currentQuestion) return;
-
+  
       setIsLoading(true);
       
       // Store the response in context
       setResponses(currentQuestion.variable, answer);
-
+  
       // Submit the answer to backend
       await profileService.submitProfileAnswer(
-        'temp-profile-id', // This will be replaced with actual profile ID in Phase 3
+        'temp-profile-id',
         currentQuestion.variable,
         answer
       );
-
+  
       // Get next question
       const nextQuestion = await profileService.getNextProfileQuestion(
         currentQuestion.id,
         answer
       );
       
+      // Update both local and global progress
+      const newProgress = currentProgress + 10;
+      setCurrentProgress(newProgress);
+      setProgress(newProgress);
+      
       setCurrentQuestion(nextQuestion);
-      setProgress((prev) => prev + 10); // Arbitrary progress increment
     } catch (error) {
       console.error('Error handling answer:', error);
     } finally {
