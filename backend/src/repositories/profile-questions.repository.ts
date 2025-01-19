@@ -14,10 +14,18 @@ export class ProfileQuestionsRepository {
   ) {}
 
   async findQuestion(id: number): Promise<ProfileQuestionsEntity> {
+    const variable = `var${String(id).padStart(2, '0')}`;
     const { data } = await this.supabaseService.query('profile_questions', {
-      id,
+      variable,
     });
-    console.log("DATA:", data);
+    return data;
+  }
+
+  async findOptions(id: number): Promise<ProfileOptionsEntity> {
+    const variable = `var${String(id).padStart(2, '0')}`;
+    const { data } = await this.supabaseService.query('profile_options', {
+      variable,
+    });
     return data;
   }
 
