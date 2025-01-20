@@ -1,5 +1,8 @@
+// src/abacus/context.ts
+
 import { Injectable } from '@nestjs/common';
 import { ProfileQuestionsEntity, ProfileResponsesEntity } from 'src/entities';
+import { AbacusContextEntity } from 'src/entities/abacus-context';
 
 @Injectable()
 export class AbacusContextService {
@@ -7,15 +10,18 @@ export class AbacusContextService {
     previousQuestions: ProfileQuestionsEntity[],
     previousResponses: ProfileResponsesEntity[],
     questionType: string
-  ): { [key: string]: any } {
+  ): AbacusContextEntity {
     const context = previousQuestions.reduce((acc, question) => {
       const response = previousResponses.find(resp => resp.variable === question.variable);
-      acc[question.variable] = {
+      response ? acc[question.variable] = {
         type: question.type,
-        name: question.name_es,
-        description: question.description_en,
-        answer: response ? response.answer_options : undefined
-      };
+        name_en: question.name_en,
+        name_es: question.name_en,
+        description_en: question.description_en,
+        description_es: question.description_es,
+        answer_es: response.answer_options_es,
+        answer_en: response.answer_options_es
+      }: null;
       return acc;
     }, {});
     switch (questionType) {

@@ -3,6 +3,6 @@ export class ProfileOptionsEntity {
   id: number;
   variable: string;
   opcionId: number;
-  descriptionEs: string;
-  descriptionEn: string;
+  description_es: string;
+  description_en: string;
 } // [source](search_result_16)

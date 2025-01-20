@@ -1,13 +1,18 @@
-export declare class AbacusContextEntity {
-    question: {
-        variable: string;
-        text_en: string;
-        text_es: string;
+interface Context {
+    [key: `var${number}`]: {
+        type: 'multiple' | 'unique';
+        name_es: string;
+        name_en: string;
         description_en: string;
         description_es: string;
-        type: string;
+        answer_es: string[];
+        answer_en: string[];
+        date_answer: string;
     };
-    answer: string[];
-    date_answer: Date;
+}
+export declare class AbacusContextEntity {
+    type: 'profile' | 'bfi' | 'product' | 'unknown';
+    context: Context;
     order: number;
 }
+export {};

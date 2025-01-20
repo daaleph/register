@@ -21,12 +21,11 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
     }
     async personalizesProfileQuestion(question, previousQuestions, previousResponses) {
         const context = this.contextService.buildContext(previousQuestions, previousResponses, 'profile');
-        console.log("CONTEXT FOR QUESTION:", context);
-        return this.personalizeQuestion(question, context, 'profile');
+        const personalizedQuestion = await this.personalizeQuestion(question, context, 'profile');
+        return personalizedQuestion;
     }
     async personalizesProfileOptions(options, previousQuestions, previousResponses) {
         const context = this.contextService.buildContext(previousQuestions, previousResponses, 'profile');
-        console.log("CONTEXT FOR OPTIONS:", context);
         return this.personalizeOptions(options, context, 'profile');
     }
     async personalizesBFIQuestion(question, previousQuestions, previousResponses) {
@@ -38,15 +37,57 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
         return this.personalizeQuestion(question, context, 'product');
     }
     async personalizeQuestion(question, context, type) {
-        const response = await (0, rxjs_1.firstValueFrom)(this.httpService.post('https://api.abacus.ai/personalize/question', {
-            question,
-            type,
-            context
-        }));
-        return response.data;
+        const messages = [
+            {
+                is_user: true,
+                text: `
+          context: {"type":"${type}",
+          "context":${JSON.stringify(context)},"order":4},
+          question:
+            {"id":${question.id},
+            "variable:${question.variable},
+            "name_es":${question.name_es},
+            "name_en":${question.name_en},
+            "description_es":${question.description_es},
+            "description_en":${question.description_es}"
+          }`
+            }
+        ];
+        const payload = {
+            messages,
+            llmName: null,
+            numCompletionTokens: null,
+            systemMessage: null,
+            temperature: 0.0,
+            filterKeyValues: null,
+            searchScoreCutoff: null,
+            chatConfig: null
+        };
+        try {
+            const response = await (0, rxjs_1.firstValueFrom)(this.httpService.post(`https://pa002.abacus.ai/api/v0/getChatResponse?deploymentToken=${process.env.CUSTOMIZE_QUESTION_TOKEN}&deploymentId=${process.env.CUSTOMIZE_QUESTION_PROJECT}`, payload, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }));
+            return response.data;
+        }
+        catch (error) {
+            console.error("Error occurred while personalizing question:", {
+                message: error.message,
+                status: error.response?.status,
+                statusText: error.response?.statusText,
+                data: error.response?.data,
+                config: error.config,
+                payload,
+                question,
+                context,
+                type
+            });
+            throw error;
+        }
     }
     async personalizeOptions(options, context, type) {
-        const response = await (0, rxjs_1.firstValueFrom)(this.httpService.post('https://api.abacus.ai/personalize/question', {
+        const response = await (0, rxjs_1.firstValueFrom)(this.httpService.post('https://api.abacus.ai/personalize/option', {
             options,
             type,
             context
