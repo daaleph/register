@@ -1,7 +1,7 @@
 // src/questions/bfi-questions/bfi-questions.repository.ts
 import { Injectable } from '@nestjs/common';
-import { SupabaseService } from '../../supabase/supabase.service';
-import { BfiQuestionsEntity } from '../../entities/question.entity';
+import { SupabaseService } from '../../supabase/service';
+import { BfiQuestionsEntity } from '../../entities/question';
 
 @Injectable()
 export class BfiQuestionsRepository {

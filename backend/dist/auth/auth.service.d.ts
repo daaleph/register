@@ -1,5 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
-import { SupabaseService } from '../supabase/supabase.service';
+import { SupabaseService } from '../supabase/service';
 export declare class AuthService {
     private readonly jwtService;
     private readonly supabaseService;

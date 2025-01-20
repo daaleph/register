@@ -14,9 +14,8 @@ const app_service_1 = require("./app.service");
 const auth_module_1 = require("./auth/auth.module");
 const module_1 = require("./profile/module");
 const questions_module_1 = require("./questions-options/questions.module");
-const responses_module_1 = require("./responses/responses.module");
-const abacus_module_1 = require("./abacus/abacus.module");
-const supabase_module_1 = require("./supabase/supabase.module");
+const module_2 = require("./abacus/module");
+const module_3 = require("./supabase/module");
 const shared_module_1 = require("./shared/shared.module");
 let AppModule = class AppModule {
 };
@@ -28,9 +27,8 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             module_1.ProfileModule,
             questions_module_1.QuestionsModule,
-            responses_module_1.ResponsesModule,
-            abacus_module_1.AbacusModule,
-            supabase_module_1.SupabaseModule,
+            module_2.AbacusModule,
+            module_3.SupabaseModule,
             shared_module_1.SharedModule
         ],
         controllers: [app_controller_1.AppController],

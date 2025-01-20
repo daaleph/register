@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
-const supabase_service_1 = require("../supabase/supabase.service");
+const service_1 = require("../supabase/service");
 let AuthService = class AuthService {
     constructor(jwtService, supabaseService) {
         this.jwtService = jwtService;
@@ -49,6 +49,6 @@ exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [jwt_1.JwtService,
-        supabase_service_1.SupabaseService])
+        service_1.SupabaseService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

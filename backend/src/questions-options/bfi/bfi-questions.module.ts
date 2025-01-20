@@ -3,8 +3,8 @@ import { Module } from '@nestjs/common';
 import { BfiQuestionsController } from './bif-questions.controller';
 import { BfiQuestionsService } from './bfi-questions.service';
 import { BfiQuestionsRepository } from './bfi-questions.repository';
-import { AbacusModule } from '../../abacus/abacus.module';
-import { SupabaseModule } from 'src/supabase/supabase.module';
+import { AbacusModule } from '../../abacus/module';
+import { SupabaseModule } from 'src/supabase/module';
 
 @Module({
   imports: [AbacusModule, SupabaseModule],

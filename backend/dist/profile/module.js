@@ -10,16 +10,16 @@ exports.ProfileModule = void 0;
 const common_1 = require("@nestjs/common");
 const controllers_1 = require("./controllers");
 const service_1 = require("./service");
-const profile_repository_1 = require("../repositories/profile.repository");
-const supabase_module_1 = require("../supabase/supabase.module");
+const profile_1 = require("../repositories/profile");
+const module_1 = require("../supabase/module");
 let ProfileModule = class ProfileModule {
 };
 exports.ProfileModule = ProfileModule;
 exports.ProfileModule = ProfileModule = __decorate([
     (0, common_1.Module)({
-        imports: [supabase_module_1.SupabaseModule],
+        imports: [module_1.SupabaseModule],
         controllers: [controllers_1.ProfileController],
-        providers: [service_1.ProfileService, profile_repository_1.ProfileRepository],
+        providers: [service_1.ProfileService, profile_1.ProfileRepository],
         exports: [service_1.ProfileService],
     })
 ], ProfileModule);

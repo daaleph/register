@@ -1,8 +1,8 @@
 // services/profile.service.ts
 
 import { Injectable } from '@nestjs/common';
-import { ProfileEntity } from 'src/entities/profile.entity';
-import { ProfileRepository } from 'src/repositories/profile.repository';
+import { ProfileEntity } from 'src/entities/profile';
+import { ProfileRepository } from 'src/repositories/profile';
 
 @Injectable()
 export class ProfileService {

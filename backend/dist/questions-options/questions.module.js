@@ -8,22 +8,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QuestionsModule = void 0;
 const common_1 = require("@nestjs/common");
-const questions_module_1 = require("./profile/questions.module");
+const module_1 = require("./profile/module");
 const bfi_questions_module_1 = require("./bfi/bfi-questions.module");
 const product_questions_module_1 = require("./product/product-questions.module");
-const abacus_module_1 = require("../abacus/abacus.module");
+const module_2 = require("../abacus/module");
 let QuestionsModule = class QuestionsModule {
 };
 exports.QuestionsModule = QuestionsModule;
 exports.QuestionsModule = QuestionsModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            questions_module_1.ProfileQuestionsModule,
+            module_1.ProfileQuestionsModule,
             bfi_questions_module_1.BfiQuestionsModule,
             product_questions_module_1.ProductQuestionsModule,
-            abacus_module_1.AbacusModule
+            module_2.AbacusModule
         ],
-        exports: [questions_module_1.ProfileQuestionsModule, bfi_questions_module_1.BfiQuestionsModule, product_questions_module_1.ProductQuestionsModule]
+        exports: [module_1.ProfileQuestionsModule, bfi_questions_module_1.BfiQuestionsModule, product_questions_module_1.ProductQuestionsModule]
     })
 ], QuestionsModule);
 //# sourceMappingURL=questions.module.js.map

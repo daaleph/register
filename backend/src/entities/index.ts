@@ -1,4 +1,5 @@
 // src/entities/index.ts
-export * from './question.entity';
-export * from './profile-questions.entity';
-export * from './profile-responses.entity';
+export * from './question';
+export * from './profile-questions';
+export * from './profile-responses';
+export * from './profile-options';

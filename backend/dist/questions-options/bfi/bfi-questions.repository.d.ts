@@ -1,5 +1,5 @@
-import { SupabaseService } from '../../supabase/supabase.service';
-import { BfiQuestionsEntity } from '../../entities/question.entity';
+import { SupabaseService } from '../../supabase/service';
+import { BfiQuestionsEntity } from '../../entities/question';
 export declare class BfiQuestionsRepository {
     private readonly supabaseService;
     constructor(supabaseService: SupabaseService);

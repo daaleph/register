@@ -2,8 +2,8 @@
 import { Module } from '@nestjs/common';
 import { ProfileController } from './controllers';
 import { ProfileService } from './service';
-import { ProfileRepository } from '../repositories/profile.repository';
-import { SupabaseModule } from '../supabase/supabase.module';
+import { ProfileRepository } from '../repositories/profile';
+import { SupabaseModule } from '../supabase/module';
 
 @Module({
   imports: [SupabaseModule],
