@@ -39,13 +39,14 @@ export class ProfileQuestionsRepository {
     return data;
 }
 
-  async getPreviousResponses(currentId: number): Promise<any[]> {
+  async getPreviousResponses(uuid: string, currentId: number): Promise<any[]> {
     const variables = Array.from({ length: currentId }, (_, i) => `var${String(i + 1).padStart(2, '0')}`);
     const { data } = await this.supabaseService
       .getConnection()
       .from('profile_responses_with_descriptions')
       .select()
-      .in('variable', variables);
+      .in('variable', variables)
+      .eq('profile', uuid);
     return data;
   }
 

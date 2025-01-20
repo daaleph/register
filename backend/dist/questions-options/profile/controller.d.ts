@@ -6,7 +6,7 @@ export declare class ProfileQuestionsController {
         profileQuestion: import("../../entities").ProfileQuestionsEntity;
         profileOptions: import("../../entities").ProfileOptionsEntity[];
     }>;
-    getProfileQuestion(questionId: number): Promise<{
+    getProfileQuestion(uuid: string, questionId: number): Promise<{
         profileQuestion: import("../../entities").ProfileQuestionsEntity;
         profileOptions: import("../../entities").ProfileOptionsEntity[];
     }>;

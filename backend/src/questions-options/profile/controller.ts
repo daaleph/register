@@ -1,9 +1,9 @@
-// profile-questions.controller.ts
+// src/questions-options/profile/controller.ts
 
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ProfileQuestionsService } from './service';
 
-@Controller('questions/profile')
+@Controller('questions/profile/:uuid')
 export class ProfileQuestionsController {
     constructor(
         private readonly profileQuestionsService: ProfileQuestionsService
@@ -17,9 +17,9 @@ export class ProfileQuestionsController {
     }
 
     @Get('questionId/:questionId')
-    async getProfileQuestion(@Param('questionId') questionId: number) {
-        const profileQuestion = await this.profileQuestionsService.getContextualizedQuestionById(questionId);
-        const profileOptions = await this.profileQuestionsService.getContextualizedOptionsById(questionId);
+    async getProfileQuestion(@Param('uuid') uuid: string, @Param('questionId') questionId: number) {
+        const profileQuestion = await this.profileQuestionsService.getContextualizedQuestionById(uuid, questionId);
+        const profileOptions = await this.profileQuestionsService.getContextualizedOptionsById(uuid, questionId);
         return { profileQuestion, profileOptions };
     }
 

@@ -8,7 +8,7 @@ export declare class ProfileQuestionsRepository {
     findQuestion(id: number): Promise<ProfileQuestionsEntity>;
     findOptions(id: number): Promise<ProfileOptionsEntity[]>;
     getPreviousQuestions(currentId: number): Promise<any[]>;
-    getPreviousResponses(currentId: number): Promise<any[]>;
+    getPreviousResponses(uuid: string, currentId: number): Promise<any[]>;
     findAndCustomizeQuestion(id: number, personalizedQuestion: any): Promise<ProfileQuestionsEntity>;
     saveProfileResponse(response: ProfileResponsesEntity): Promise<ProfileResponsesEntity>;
 }

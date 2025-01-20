@@ -10,6 +10,6 @@ export declare class ProfileQuestionsService {
     getInitialOptions(): Promise<ProfileOptionsEntity[]>;
     getQuestionById(id: number): Promise<ProfileQuestionsEntity>;
     getOptionsById(id: number): Promise<ProfileOptionsEntity[]>;
-    getContextualizedQuestionById(id: number): Promise<ProfileQuestionsEntity>;
-    getContextualizedOptionsById(id: number): Promise<ProfileOptionsEntity[]>;
+    getContextualizedQuestionById(uuid: string, id: number): Promise<ProfileQuestionsEntity>;
+    getContextualizedOptionsById(uuid: string, id: number): Promise<ProfileOptionsEntity[]>;
 }

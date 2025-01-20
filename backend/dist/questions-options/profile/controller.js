@@ -24,12 +24,9 @@ let ProfileQuestionsController = class ProfileQuestionsController {
         const profileOptions = await this.profileQuestionsService.getInitialOptions();
         return { profileQuestion, profileOptions };
     }
-    async getProfileQuestion(questionId) {
-        console.log("AAAAAAAAAAAAAAAA");
-        const profileQuestion = await this.profileQuestionsService.getContextualizedQuestionById(questionId);
-        console.log("PROFILE QUESTION:", profileQuestion);
-        const profileOptions = await this.profileQuestionsService.getContextualizedOptionsById(questionId);
-        console.log("PROFILE OPTIONS:", profileOptions);
+    async getProfileQuestion(uuid, questionId) {
+        const profileQuestion = await this.profileQuestionsService.getContextualizedQuestionById(uuid, questionId);
+        const profileOptions = await this.profileQuestionsService.getContextualizedOptionsById(uuid, questionId);
         return { profileQuestion, profileOptions };
     }
 };
@@ -42,13 +39,14 @@ __decorate([
 ], ProfileQuestionsController.prototype, "getInitialProfileQuestion", null);
 __decorate([
     (0, common_1.Get)('questionId/:questionId'),
-    __param(0, (0, common_1.Param)('questionId')),
+    __param(0, (0, common_1.Param)('uuid')),
+    __param(1, (0, common_1.Param)('questionId')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [String, Number]),
     __metadata("design:returntype", Promise)
 ], ProfileQuestionsController.prototype, "getProfileQuestion", null);
 exports.ProfileQuestionsController = ProfileQuestionsController = __decorate([
-    (0, common_1.Controller)('questions/profile'),
+    (0, common_1.Controller)('questions/profile/:uuid'),
     __metadata("design:paramtypes", [service_1.ProfileQuestionsService])
 ], ProfileQuestionsController);
 //# sourceMappingURL=controller.js.map
