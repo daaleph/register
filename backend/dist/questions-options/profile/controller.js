@@ -25,10 +25,11 @@ let ProfileQuestionsController = class ProfileQuestionsController {
         return { profileQuestion, profileOptions };
     }
     async getProfileQuestion(questionId) {
+        console.log("AAAAAAAAAAAAAAAA");
         const profileQuestion = await this.profileQuestionsService.getContextualizedQuestionById(questionId);
-        console.log("PROFILE QUESTION:");
-        console.dir(profileQuestion, { depth: null });
+        console.log("PROFILE QUESTION:", profileQuestion);
         const profileOptions = await this.profileQuestionsService.getContextualizedOptionsById(questionId);
+        console.log("PROFILE OPTIONS:", profileOptions);
         return { profileQuestion, profileOptions };
     }
 };

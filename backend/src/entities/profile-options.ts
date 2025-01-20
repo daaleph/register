@@ -1,8 +1,7 @@
 // src/entities/profile-options.ts
 export class ProfileOptionsEntity {
-  id: number;
   variable: string;
-  opcionId: number;
+  option_id: number;
   description_es: string;
   description_en: string;
 } // [source](search_result_16)

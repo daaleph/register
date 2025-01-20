@@ -31,13 +31,14 @@ let ProfileQuestionsService = class ProfileQuestionsService {
         return this.profileQuestionsRepository.findOptions(id);
     }
     async getContextualizedQuestionById(id) {
-        let question = await this.getQuestionById(id);
+        const question = await this.getQuestionById(id);
         const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
         const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(id);
         return await this.abacusPersonalizationService.personalizesProfileQuestion(question, previousQuestions, previousResponses);
     }
     async getContextualizedOptionsById(id) {
-        let options = await this.getOptionsById(id);
+        const question = await this.getQuestionById(id);
+        const options = await this.getOptionsById(id);
         const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
         const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(id);
         return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses);

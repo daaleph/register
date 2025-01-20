@@ -19,8 +19,6 @@ export class ProfileQuestionsController {
     @Get('questionId/:questionId')
     async getProfileQuestion(@Param('questionId') questionId: number) {
         const profileQuestion = await this.profileQuestionsService.getContextualizedQuestionById(questionId);
-        console.log("PROFILE QUESTION:");
-        console.dir(profileQuestion, {depth: null});
         const profileOptions = await this.profileQuestionsService.getContextualizedOptionsById(questionId);
         return { profileQuestion, profileOptions };
     }

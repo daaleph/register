@@ -21,7 +21,7 @@ let ProfileQuestionsRepository = class ProfileQuestionsRepository {
         const { data } = await this.supabaseService.query('profile_questions', {
             variable,
         });
-        return data;
+        return Array.isArray(data) ? data[0] : data;
     }
     async findOptions(id) {
         const variable = `var${String(id).padStart(2, '0')}`;

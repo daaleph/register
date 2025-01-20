@@ -16,11 +16,11 @@ export class AbacusContextService {
       response ? acc[question.variable] = {
         type: question.type,
         name_en: question.name_en,
-        name_es: question.name_en,
+        name_es: question.name_es,
         description_en: question.description_en,
         description_es: question.description_es,
         answer_es: response.answer_options_es,
-        answer_en: response.answer_options_es
+        answer_en: response.answer_options_en
       }: null;
       return acc;
     }, {});

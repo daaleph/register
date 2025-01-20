@@ -1,7 +1,6 @@
 export declare class ProfileOptionsEntity {
-    id: number;
     variable: string;
-    opcionId: number;
-    descriptionEs: string;
-    descriptionEn: string;
+    option_id: number;
+    description_es: string;
+    description_en: string;
 }

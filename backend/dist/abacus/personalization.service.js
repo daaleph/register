@@ -21,12 +21,15 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
     }
     async personalizesProfileQuestion(question, previousQuestions, previousResponses) {
         const context = this.contextService.buildContext(previousQuestions, previousResponses, 'profile');
-        const personalizedQuestion = await this.personalizeQuestion(question, context, 'profile');
-        return personalizedQuestion;
+        let personalizedQuestion = await this.personalizeQuestion(question, context, 'profile');
+        personalizedQuestion = personalizedQuestion.result.messages[1];
+        return JSON.parse(personalizedQuestion.text);
     }
     async personalizesProfileOptions(options, previousQuestions, previousResponses) {
         const context = this.contextService.buildContext(previousQuestions, previousResponses, 'profile');
-        return this.personalizeOptions(options, context, 'profile');
+        let personalizedOptions = await this.personalizeOptions(options, context, 'profile');
+        personalizedOptions = personalizedOptions.result.messages[1];
+        return JSON.parse(personalizedOptions.text);
     }
     async personalizesBFIQuestion(question, previousQuestions, previousResponses) {
         const context = this.contextService.buildContext(previousQuestions, previousResponses, 'bfi');
@@ -37,12 +40,11 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
         return this.personalizeQuestion(question, context, 'product');
     }
     async personalizeQuestion(question, context, type) {
-        const messages = [
+        const payload = createPayload([
             {
                 is_user: true,
                 text: `
-          context: {"type":"${type}",
-          "context":${JSON.stringify(context)},"order":4},
+          generalContext: {"type":"${type}", "context":${JSON.stringify(context)},"order":${question.id}},
           question:
             {"id":${question.id},
             "variable:${question.variable},
@@ -52,17 +54,7 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
             "description_en":${question.description_es}"
           }`
             }
-        ];
-        const payload = {
-            messages,
-            llmName: null,
-            numCompletionTokens: null,
-            systemMessage: null,
-            temperature: 0.0,
-            filterKeyValues: null,
-            searchScoreCutoff: null,
-            chatConfig: null
-        };
+        ]);
         try {
             const response = await (0, rxjs_1.firstValueFrom)(this.httpService.post(`https://pa002.abacus.ai/api/v0/getChatResponse?deploymentToken=${process.env.CUSTOMIZE_QUESTION_TOKEN}&deploymentId=${process.env.CUSTOMIZE_QUESTION_PROJECT}`, payload, {
                 headers: {
@@ -87,12 +79,36 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
         }
     }
     async personalizeOptions(options, context, type) {
-        const response = await (0, rxjs_1.firstValueFrom)(this.httpService.post('https://api.abacus.ai/personalize/option', {
-            options,
-            type,
-            context
-        }));
-        return response.data;
+        const payload = createPayload([
+            {
+                is_user: true,
+                text: `
+          generalContext: {"type":"${type}", "context":${JSON.stringify(context)},"order":4},
+          options: ${options}`
+            }
+        ]);
+        try {
+            const response = await (0, rxjs_1.firstValueFrom)(this.httpService.post(`https://pa002.abacus.ai/api/v0/getChatResponse?deploymentToken=${process.env.CUSTOMIZE_OPTIONS_TOKEN}&deploymentId=${process.env.CUSTOMIZE_OPTIONS_PROJECT}`, payload, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }));
+            return response.data;
+        }
+        catch (error) {
+            console.error("Error occurred while personalizing question:", {
+                message: error.message,
+                status: error.response?.status,
+                statusText: error.response?.statusText,
+                data: error.response?.data,
+                config: error.config,
+                payload,
+                options,
+                context,
+                type
+            });
+            throw error;
+        }
     }
 };
 exports.AbacusPersonalizationService = AbacusPersonalizationService;
@@ -101,4 +117,16 @@ exports.AbacusPersonalizationService = AbacusPersonalizationService = __decorate
     __metadata("design:paramtypes", [axios_1.HttpService,
         context_service_1.AbacusContextService])
 ], AbacusPersonalizationService);
+const createPayload = (messages) => {
+    return {
+        messages,
+        llmName: null,
+        numCompletionTokens: null,
+        systemMessage: null,
+        temperature: 0.0,
+        filterKeyValues: null,
+        searchScoreCutoff: null,
+        chatConfig: null
+    };
+};
 //# sourceMappingURL=personalization.service.js.map
