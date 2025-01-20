@@ -12,21 +12,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BfiQuestionsService = void 0;
 const common_1 = require("@nestjs/common");
 const bfi_questions_repository_1 = require("./bfi-questions.repository");
-const abacus_personalization_service_1 = require("../../abacus/abacus-personalization.service");
+const personalization_service_1 = require("../../abacus/personalization.service");
 let BfiQuestionsService = class BfiQuestionsService {
     constructor(repository, abacusService) {
         this.repository = repository;
         this.abacusService = abacusService;
     }
     async getQuestion(questionId, previousResponses) {
-        const question = await this.repository.findQuestion(questionId);
-        return this.abacusService.personalizesBFIQuestion(questionId, previousResponses);
     }
 };
 exports.BfiQuestionsService = BfiQuestionsService;
 exports.BfiQuestionsService = BfiQuestionsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [bfi_questions_repository_1.BfiQuestionsRepository,
-        abacus_personalization_service_1.AbacusPersonalizationService])
+        personalization_service_1.AbacusPersonalizationService])
 ], BfiQuestionsService);
 //# sourceMappingURL=bfi-questions.service.js.map

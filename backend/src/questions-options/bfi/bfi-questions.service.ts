@@ -1,7 +1,7 @@
 // src/questions/bfi-questions/bfi-questions.service.ts
 import { Injectable } from '@nestjs/common';
 import { BfiQuestionsRepository } from './bfi-questions.repository';
-import { AbacusPersonalizationService } from '../../abacus/abacus-personalization.service';
+import { AbacusPersonalizationService } from '../../abacus/personalization.service';
 
 @Injectable()
 export class BfiQuestionsService {
@@ -11,10 +11,10 @@ export class BfiQuestionsService {
   ) {}
 
   async getQuestion(questionId: number, previousResponses: any[]) {
-    const question = await this.repository.findQuestion(questionId);
-    return this.abacusService.personalizesBFIQuestion(
-      questionId,
-      previousResponses
-    );
+    // const question = await this.repository.findQuestion(questionId);
+    // return this.abacusService.personalizesBFIQuestion(
+    //   questionId,
+    //   previousResponses
+    // );
   }
 }

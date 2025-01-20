@@ -11,14 +11,14 @@ const common_1 = require("@nestjs/common");
 const bif_questions_controller_1 = require("./bif-questions.controller");
 const bfi_questions_service_1 = require("./bfi-questions.service");
 const bfi_questions_repository_1 = require("./bfi-questions.repository");
-const abacus_module_1 = require("../../abacus/abacus.module");
-const supabase_module_1 = require("../../supabase/supabase.module");
+const module_1 = require("../../abacus/module");
+const module_2 = require("../../supabase/module");
 let BfiQuestionsModule = class BfiQuestionsModule {
 };
 exports.BfiQuestionsModule = BfiQuestionsModule;
 exports.BfiQuestionsModule = BfiQuestionsModule = __decorate([
     (0, common_1.Module)({
-        imports: [abacus_module_1.AbacusModule, supabase_module_1.SupabaseModule],
+        imports: [module_1.AbacusModule, module_2.SupabaseModule],
         controllers: [bif_questions_controller_1.BfiQuestionsController],
         providers: [bfi_questions_service_1.BfiQuestionsService, bfi_questions_repository_1.BfiQuestionsRepository],
         exports: [bfi_questions_service_1.BfiQuestionsService]

@@ -12,15 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductQuestionsService = void 0;
 const common_1 = require("@nestjs/common");
 const product_questions_repository_1 = require("./product-questions.repository");
-const abacus_personalization_service_1 = require("../../abacus/abacus-personalization.service");
+const personalization_service_1 = require("../../abacus/personalization.service");
 let ProductQuestionsService = class ProductQuestionsService {
     constructor(repository, abacusService) {
         this.repository = repository;
         this.abacusService = abacusService;
     }
     async getQuestion(questionId, previousResponses) {
-        const personalizedQuestion = await this.abacusService.personalizesProductQuestion(questionId, previousResponses);
-        return personalizedQuestion;
     }
     async storeAnswer(profileId, variable, answer) {
         await this.repository.saveResponse({
@@ -35,6 +33,6 @@ exports.ProductQuestionsService = ProductQuestionsService;
 exports.ProductQuestionsService = ProductQuestionsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [product_questions_repository_1.ProductQuestionsRepository,
-        abacus_personalization_service_1.AbacusPersonalizationService])
+        personalization_service_1.AbacusPersonalizationService])
 ], ProductQuestionsService);
 //# sourceMappingURL=product-questions.service.js.map

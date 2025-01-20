@@ -1,7 +1,7 @@
 // src/questions/product-questions/product-questions.service.ts
 import { Injectable } from '@nestjs/common';
 import { ProductQuestionsRepository } from './product-questions.repository';
-import { AbacusPersonalizationService } from '../../abacus/abacus-personalization.service';
+import { AbacusPersonalizationService } from '../../abacus/personalization.service';
 
 @Injectable()
 export class ProductQuestionsService {
@@ -11,11 +11,11 @@ export class ProductQuestionsService {
   ) {}
 
   async getQuestion(questionId: number, previousResponses: any[]) {
-    const personalizedQuestion = await this.abacusService.personalizesProductQuestion(
-      questionId,
-      previousResponses
-    );
-    return personalizedQuestion;
+    // const personalizedQuestion = await this.abacusService.personalizesProductQuestion(
+    //   questionId,
+    //   previousResponses
+    // );
+    // return personalizedQuestion;
   }
 
   async storeAnswer(profileId: string, variable: string, answer: number[]) {

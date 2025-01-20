@@ -1,7 +1,7 @@
 // src/questions/product-questions/product-questions.repository.ts
 import { Injectable } from '@nestjs/common';
-import { SupabaseService } from '../../supabase/supabase.service';
-import { ProductQuestionsEntity } from '../../entities/question.entity';
+import { SupabaseService } from '../../supabase/service';
+import { ProductQuestionsEntity } from '../../entities/question';
 
 @Injectable()
 export class ProductQuestionsRepository {

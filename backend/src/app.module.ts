@@ -5,11 +5,10 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { ProfileModule } from './profile/profile.module';
+import { ProfileModule } from './profile/module';
 import { QuestionsModule } from './questions-options/questions.module';
-import { ResponsesModule } from './responses/responses.module';
-import { AbacusModule } from './abacus/abacus.module';
-import { SupabaseModule } from './supabase/supabase.module';
+import { AbacusModule } from './abacus/module';
+import { SupabaseModule } from './supabase/module';
 import { SharedModule } from './shared/shared.module';
 
 @Module({
@@ -18,7 +17,6 @@ import { SharedModule } from './shared/shared.module';
     AuthModule,
     ProfileModule,
     QuestionsModule,
-    ResponsesModule,
     AbacusModule,
     SupabaseModule,
     SharedModule
