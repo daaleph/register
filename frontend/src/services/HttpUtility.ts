@@ -1,40 +1,83 @@
-// src/services/HttpUtility.ts
+// frontend/src/services/HttpUtility.ts
 import axios from 'axios';
 
 export class HttpUtility {
+    private static readonly MAX_RETRIES = 3;
+    private static readonly TIMEOUT = 5000;
+    private static readonly RETRY_DELAY = 1000;
+
     private static getAuthHeader(): Record<string, string> {
         const token = localStorage.getItem('auth_token');
         return token ? { Authorization: `Bearer ${token}` } : {};
     }
 
-    static async get(url: string, params?: any): Promise<any> {
+    static async get<T>(url: string, params?: any, retryCount = 0): Promise<T> {
         try {
             const headers = this.getAuthHeader();
-            const response = await axios.get(url, { 
+            const response = await axios.get<T>(url, { 
                 params,
-                headers 
+                headers,
+                timeout: this.TIMEOUT
             });
-            return this.handleResponse(response);
+            return this.handleResponse<T>(response);
         } catch (error) {
-            return this.handleError(error);
+            return this.handleError<T>(error, () => this.get(url, params, retryCount + 1), retryCount);
         }
     }
 
-    static async post(url: string, data: any): Promise<any> {
-        try {
-            const headers = this.getAuthHeader();
-            const response = await axios.post(url, data, { headers });
-            return this.handleResponse(response);
-        } catch (error) {
-            return this.handleError(error);
+    static async post(url: string, data: any, config = {}): Promise<any> {
+        const defaultConfig = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        };
+        
+        const finalConfig = { 
+            ...defaultConfig, 
+            ...config,
+            headers: {
+                ...defaultConfig.headers
+            }
+        };
+        
+        return axios.post(url, data, finalConfig)
+            .then(response => response.data)
+            .catch(error => {
+                throw error;
+            });
+    }
+
+    private static handleResponse<T>(response: any): T {
+        if (response.status >= 200 && response.status < 300) {
+            return response.data;
         }
+        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
     }
 
-    private static handleResponse(response: any): any {
-        return response.data;
-    }
+    private static async handleError<T>(
+        error: any, 
+        retryFn: () => Promise<T>, 
+        retryCount: number
+    ): Promise<T> {
+        // Handle authentication errors
+        if (error.response?.status === 401) {
+            localStorage.removeItem('auth_token');
+            window.location.href = '/';
+            throw new Error('Authentication failed');
+        }
 
-    private static handleError(error: any): any {
-        throw error;
+        // Implement retry logic for network errors or 5xx responses
+        if (retryCount < this.MAX_RETRIES && 
+            (error.code === 'ECONNABORTED' || 
+             error.response?.status >= 500 || 
+             !error.response)) {
+            await new Promise(resolve => setTimeout(resolve, this.RETRY_DELAY));
+            return retryFn();
+        }
+
+        // Handle other errors
+        const errorMessage = error.response?.data?.message || error.message || 'An error occurred';
+        throw new Error(errorMessage);
     }
 }

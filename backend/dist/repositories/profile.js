@@ -16,8 +16,27 @@ let ProfileRepository = class ProfileRepository {
     constructor(supabaseService) {
         this.supabaseService = supabaseService;
     }
+    async createProfile(profile) {
+        const { data, error } = await this.supabaseService.getConnection()
+            .from('profile')
+            .insert([{
+                ...profile,
+                id: crypto.randomUUID()
+            }])
+            .select('id')
+            .single();
+        if (error)
+            throw error;
+        return data.id;
+    }
     async findProfileById(id) {
-        const { data } = await this.supabaseService.query('profile', { id });
+        const { data, error } = await this.supabaseService.getConnection()
+            .from('profile')
+            .select('*')
+            .eq('id', id)
+            .single();
+        if (error)
+            throw error;
         return data;
     }
     async saveProfile(profile) {

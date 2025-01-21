@@ -1,23 +1,14 @@
 // src/components/common/ErrorDisplay.tsx
 import React from 'react';
 
-interface ErrorDisplayProps {
-  error: string;
-  onRetry?: () => void;
+export interface ErrorDisplayProps {
+  message: string;
 }
 
-export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({ error, onRetry }) => {
+export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({ message }) => {
   return (
     <div className="error-display">
-      <p className="error-message">{error}</p>
-      {onRetry && (
-        <button 
-          className="retry-button"
-          onClick={onRetry}
-        >
-          Retry
-        </button>
-      )}
+      <p className="error-message">{message}</p>
     </div>
   );
 };

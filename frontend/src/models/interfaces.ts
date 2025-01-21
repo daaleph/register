@@ -2,8 +2,8 @@
 
 export interface UserProfile {
     id: string;
-    preferredName: string;
-    completeName: string;
+    preferred_name: string;
+    complete_name: string;
     email: string;
     movil: string;
     telegram: string;

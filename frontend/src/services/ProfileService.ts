@@ -1,28 +1,35 @@
-// src/services/ProfileService.ts
+// frontend/src/services/ProfileService.ts
 
-import { Question } from "@/models/interfaces";
+import { Question, UserProfile } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class ProfileService {
     private baseUrl: string;
 
     constructor() {
-        this.baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+        this.baseUrl = process.env.NEXT_PUBLIC_NEST_URL || '';
     }
 
-    async getInitialProfileQuestion(): Promise<Question> {
-        return HttpUtility.get(`${this.baseUrl}/questions/profile/initial`);
+    async createInitialProfile(data: UserProfile): Promise<{ id: string }> {
+        return HttpUtility.post(`${this.baseUrl}profile/create`, data, {
+            headers: {'Content-Type': 'application/json'},
+            withCredentials: true
+        });
     }
 
-    async getNextProfileQuestion(questionId: number, answer: number[] | number): Promise<Question> {
-        return HttpUtility.get(`${this.baseUrl}/questions/profile/${questionId}`, { answer });
+    async getInitialProfileQuestion(id: string): Promise<Question> {
+        return HttpUtility.get(`${this.baseUrl}questions/profile/${id}/initial`);
+    }
+
+    async getNextProfileQuestion(uuid: string, questionId: number, answer: number[] | number): Promise<Question> {
+        return HttpUtility.get(`${this.baseUrl}questions/profile/${uuid}/questionId/${questionId}`, { answer });
     }
 
     async submitProfileAnswer(profileId: string, variable: string, answer: number[] | number): Promise<void> {
-        return HttpUtility.post(`${this.baseUrl}/questions/profile/answer`, {
+        return HttpUtility.post(`${this.baseUrl}questions/profile/answer`, {
             profileId,
             variable,
             answer
         });
     }
-} // [source](search_result_3)[source](search_result_14)
+}
