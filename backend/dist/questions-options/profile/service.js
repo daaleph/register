@@ -30,18 +30,17 @@ let ProfileQuestionsService = class ProfileQuestionsService {
     async getOptionsById(id) {
         return this.profileQuestionsRepository.findOptions(id);
     }
-    async getContextualizedQuestionById(id) {
+    async getContextualizedQuestionById(uuid, id) {
         const question = await this.getQuestionById(id);
         const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
-        const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(id);
+        const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(uuid, id);
         return await this.abacusPersonalizationService.personalizesProfileQuestion(question, previousQuestions, previousResponses);
     }
-    async getContextualizedOptionsById(id) {
-        const question = await this.getQuestionById(id);
+    async getContextualizedOptionsById(uuid, id) {
         const options = await this.getOptionsById(id);
         const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
-        const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(id);
-        return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses);
+        const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(uuid, id);
+        return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses, id);
     }
 };
 exports.ProfileQuestionsService = ProfileQuestionsService;

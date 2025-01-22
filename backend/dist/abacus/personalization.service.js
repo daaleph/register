@@ -21,15 +21,13 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
     }
     async personalizesProfileQuestion(question, previousQuestions, previousResponses) {
         const context = this.contextService.buildContext(previousQuestions, previousResponses, 'profile');
-        let personalizedQuestion = await this.personalizeQuestion(question, context, 'profile');
-        personalizedQuestion = personalizedQuestion.result.messages[1];
-        return JSON.parse(personalizedQuestion.text);
+        const personalizedQuestion = await this.personalizeQuestion(question, context, 'profile');
+        return JSON.parse(personalizedQuestion.result.messages[1].text);
     }
-    async personalizesProfileOptions(options, previousQuestions, previousResponses) {
+    async personalizesProfileOptions(options, previousQuestions, previousResponses, id) {
         const context = this.contextService.buildContext(previousQuestions, previousResponses, 'profile');
-        let personalizedOptions = await this.personalizeOptions(options, context, 'profile');
-        personalizedOptions = personalizedOptions.result.messages[1];
-        return JSON.parse(personalizedOptions.text);
+        const personalizedOptions = await this.personalizeOptions(options, context, 'profile', id);
+        return JSON.parse(personalizedOptions.result.messages[1].text).options;
     }
     async personalizesBFIQuestion(question, previousQuestions, previousResponses) {
         const context = this.contextService.buildContext(previousQuestions, previousResponses, 'bfi');
@@ -78,13 +76,13 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
             throw error;
         }
     }
-    async personalizeOptions(options, context, type) {
+    async personalizeOptions(options, context, type, id) {
         const payload = createPayload([
             {
                 is_user: true,
                 text: `
-          generalContext: {"type":"${type}", "context":${JSON.stringify(context)},"order":4},
-          options: ${options}`
+          generalContext: {"type":"${type}", "context":${JSON.stringify(context)},"order":${id}},
+          options: ${JSON.stringify(options)}`
             }
         ]);
         try {

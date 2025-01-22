@@ -1,8 +1,8 @@
-// src/abacus/service.ts
+// backend/src/abacus/personalization.service.ts
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AbacusContextService } from './context.service';
-import { ProfileOptionsEntity, ProfileQuestionsEntity, ProfileResponsesEntity } from 'src/entities';
+import { ProfileOptionsEntity, ProfileQuestionsEntity, ProfilePreviousResponsesEntity } from 'src/entities';
 import { firstValueFrom } from 'rxjs';
 import { AbacusContextEntity } from 'src/entities/abacus-context';
 
@@ -16,23 +16,22 @@ export class AbacusPersonalizationService {
   async personalizesProfileQuestion(
     question: ProfileQuestionsEntity,
     previousQuestions: ProfileQuestionsEntity[],
-    previousResponses: ProfileResponsesEntity[]
+    previousResponses: ProfilePreviousResponsesEntity[]
   ): Promise<ProfileQuestionsEntity> {
     const context = this.contextService.buildContext(previousQuestions, previousResponses, 'profile');
-    let personalizedQuestion = await this.personalizeQuestion(question, context, 'profile');
-    personalizedQuestion = personalizedQuestion.result.messages[1];
-    return JSON.parse(personalizedQuestion.text);
+    const personalizedQuestion = await this.personalizeQuestion(question, context, 'profile');
+    return JSON.parse(personalizedQuestion.result.messages[1].text);
   }
 
   async personalizesProfileOptions(
     options: ProfileOptionsEntity[],
     previousQuestions: ProfileQuestionsEntity[],
-    previousResponses: ProfileResponsesEntity[]
+    previousResponses: ProfilePreviousResponsesEntity[],
+    id: number
   ): Promise<ProfileOptionsEntity[]> {
     const context = this.contextService.buildContext(previousQuestions, previousResponses, 'profile');
-    let personalizedOptions = await this.personalizeOptions(options, context, 'profile');
-    personalizedOptions = personalizedOptions.result.messages[1];
-    return JSON.parse(personalizedOptions.text);
+    const personalizedOptions = await this.personalizeOptions(options, context, 'profile', id);
+    return JSON.parse(personalizedOptions.result.messages[1].text).options;
   }
 
   async personalizesBFIQuestion(question: ProfileQuestionsEntity, previousQuestions: any[], previousResponses: any[]) {
@@ -99,15 +98,16 @@ export class AbacusPersonalizationService {
   private async personalizeOptions(
     options: ProfileOptionsEntity[],
     context: AbacusContextEntity,
-    type: string
+    type: string,
+    id: number
   ) {
 
     const payload = createPayload([
       {
         is_user: true,
         text: `
-          generalContext: {"type":"${type}", "context":${JSON.stringify(context)},"order":4},
-          options: ${options}`
+          generalContext: {"type":"${type}", "context":${JSON.stringify(context)},"order":${id}},
+          options: ${JSON.stringify(options)}`
       }
     ]);
 

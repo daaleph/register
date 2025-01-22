@@ -1,4 +1,4 @@
-// services/service.ts
+// backend/src/supabase/service.ts
 import { Injectable } from '@nestjs/common';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
@@ -22,4 +22,4 @@ export class SupabaseService {
     return this.client.from(table).select().match(params);
   }
 
-} // [source](search_result_13)
+}

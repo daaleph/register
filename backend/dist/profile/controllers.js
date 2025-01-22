@@ -20,6 +20,10 @@ let ProfileController = class ProfileController {
     constructor(profileService) {
         this.profileService = profileService;
     }
+    async createProfile(profile) {
+        const id = await this.profileService.createProfile(profile);
+        return { id };
+    }
     async getProfile(id) {
         return this.profileService.retrieveProfile(id);
     }
@@ -29,7 +33,14 @@ let ProfileController = class ProfileController {
 };
 exports.ProfileController = ProfileController;
 __decorate([
-    (0, common_1.Get)('id/:id'),
+    (0, common_1.Post)('create'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [profile_1.ProfileEntity]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "createProfile", null);
+__decorate([
+    (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

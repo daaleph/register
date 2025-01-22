@@ -2,8 +2,8 @@
 
 export interface UserProfile {
     id: string;
-    preferredName: string;
-    completeName: string;
+    preferred_name: string;
+    complete_name: string;
     email: string;
     movil: string;
     telegram: string;
@@ -12,16 +12,21 @@ export interface UserProfile {
 export interface Question {
     id: number;
     variable: string;
-    text_en: string;
-    text_es: string;
-    description_en?: string;
-    description_es?: string;
-    type?: string;
-    options?: QuestionOption[];
+    name_es: string;
+    name_en: string;
+    description_es: string;
+    description_en: string;
+    type: string;
 }
   
 export interface QuestionOption {
-    opcionId: number;
-    description_en: string;
+    variable: string;
+    option_id: number;
     description_es: string;
+    description_en: string;
+}
+
+export interface QuestionWithOptions {
+    question: Question;
+    options: QuestionOption[];
 }

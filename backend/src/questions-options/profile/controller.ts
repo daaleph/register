@@ -1,26 +1,30 @@
-// profile-questions.controller.ts
+// backend/src/questions-options/profile/controller.ts
 
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ProfileQuestionsService } from './service';
 
-@Controller('questions/profile')
+@Controller('questions/profile/:uuid')
 export class ProfileQuestionsController {
+    
     constructor(
         private readonly profileQuestionsService: ProfileQuestionsService
     ) {}
 
     @Get('initial')
-    async getInitialProfileQuestion() {
-        const profileQuestion = await this.profileQuestionsService.getInitialQuestion();
-        const profileOptions = await this.profileQuestionsService.getInitialOptions();
-        return { profileQuestion, profileOptions };
+    async getInitialProfileQuestion(): Promise<string> {
+        const question = await this.profileQuestionsService.getInitialQuestion();
+        const options = await this.profileQuestionsService.getInitialOptions();
+        return JSON.stringify({ question, options });
     }
 
     @Get('questionId/:questionId')
-    async getProfileQuestion(@Param('questionId') questionId: number) {
-        const profileQuestion = await this.profileQuestionsService.getContextualizedQuestionById(questionId);
-        const profileOptions = await this.profileQuestionsService.getContextualizedOptionsById(questionId);
-        return { profileQuestion, profileOptions };
+    async getProfiledQuestion(
+        @Param('uuid') uuid: string,
+        @Param('questionId') questionId: number
+    ): Promise<string> {
+        const question = await this.profileQuestionsService.getContextualizedQuestionById(uuid, questionId);
+        const options = await this.profileQuestionsService.getContextualizedOptionsById(uuid, questionId);
+        return JSON.stringify({ question, options });
     }
 
 }

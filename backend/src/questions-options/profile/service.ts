@@ -1,10 +1,9 @@
-// src/questions/profile-questions/profile-questions.service.ts
+// backend/src/questions/profile-questions/profile-questions.service.ts
 
 import { Injectable } from '@nestjs/common';
 import { ProfileQuestionsRepository } from '../../repositories/profile-questions';
 import { AbacusPersonalizationService } from '../../abacus/personalization.service';
-import { ProfileQuestionsEntity } from '../../entities/profile-questions';
-import { ProfileOptionsEntity } from 'src/entities/profile-options';
+import { ProfileQuestionsEntity, ProfileOptionsEntity } from '../../entities';
 
 @Injectable()
 export class ProfileQuestionsService {
@@ -29,18 +28,18 @@ export class ProfileQuestionsService {
     return this.profileQuestionsRepository.findOptions(id);
   }
 
-  async getContextualizedQuestionById(id: number): Promise<ProfileQuestionsEntity> {
+  async getContextualizedQuestionById(uuid: string, id: number): Promise<ProfileQuestionsEntity> {
     const question: ProfileQuestionsEntity = await this.getQuestionById(id);
     const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
-    const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(id);
+    const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(uuid, id);
     return await this.abacusPersonalizationService.personalizesProfileQuestion(question, previousQuestions, previousResponses);
   }
 
-  async getContextualizedOptionsById(id: number): Promise<ProfileOptionsEntity[]> {
+  async getContextualizedOptionsById(uuid: string, id: number): Promise<ProfileOptionsEntity[]> {
     const options: ProfileOptionsEntity[] = await this.getOptionsById(id);
     const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
-    const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(id);
-    return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses);
+    const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(uuid, id);
+    return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses, id);
   }
 
 }

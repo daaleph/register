@@ -1,28 +1,54 @@
-// src/services/ProfileService.ts
+// frontend/src/services/ProfileService.ts
 
-import { Question } from "@/models/interfaces";
+import { QuestionWithOptions, UserProfile } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class ProfileService {
     private baseUrl: string;
 
     constructor() {
-        this.baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+        this.baseUrl = process.env.NEXT_PUBLIC_NEST_URL || '';
     }
 
-    async getInitialProfileQuestion(): Promise<Question> {
-        return HttpUtility.get(`${this.baseUrl}/questions/profile/initial`);
+    async createInitialProfile(data: UserProfile): Promise<{ id: string }> {
+        return HttpUtility.post(`${this.baseUrl}profile/create`, data, {
+            headers: {'Content-Type': 'application/json'},
+            withCredentials: true
+        });
     }
 
-    async getNextProfileQuestion(questionId: number, answer: number[] | number): Promise<Question> {
-        return HttpUtility.get(`${this.baseUrl}/questions/profile/${questionId}`, { answer });
+    async getInitialProfileQuestionWithOptions(id: string): Promise<QuestionWithOptions> {
+      return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/${id}/initial`);
+    }
+
+    async getProfileQuestionWithAnswers(
+        uuid: string,
+        questionId: number
+    ): Promise<QuestionWithOptions> {
+      return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/${uuid}/questionId/${questionId}`);
     }
 
     async submitProfileAnswer(profileId: string, variable: string, answer: number[] | number): Promise<void> {
-        return HttpUtility.post(`${this.baseUrl}/questions/profile/answer`, {
-            profileId,
-            variable,
-            answer
-        });
+      return HttpUtility.post(`${this.baseUrl}responses/profile/`, {
+        profileId,
+        variable,
+        answer
+      });
     }
-} // [source](search_result_3)[source](search_result_14)
+
+    async verifyProfileAccess(profileId: string): Promise<boolean> {
+      try {
+        const response = await fetch(`${this.baseUrl}profile/${profileId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        });
+        if (!response.ok) return false;
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
+}

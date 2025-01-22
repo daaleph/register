@@ -4,65 +4,82 @@ import { Question, QuestionOption } from '../../models/interfaces';
 
 interface QuestionFormProps {
   question: Question;
+  options: QuestionOption[];
   onAnswerSelected: (answer: number[] | number) => void;
   isMultiSelect?: boolean;
+  isLoading?: boolean;
 }
 
 export const QuestionForm: React.FC<QuestionFormProps> = ({
   question,
+  options,
   onAnswerSelected,
-  isMultiSelect = false
+  isMultiSelect = false,
+  isLoading = false
 }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [otherText, setOtherText] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+
+  // Reset form when question changes
+  useEffect(() => {
+    setSelectedAnswers([]);
+    setOtherText('');
+    setError(null);
+  }, [question.id]);
 
   const handleOptionSelect = (optionId: number) => {
-    if (isMultiSelect) {
-      const newAnswers = selectedAnswers.includes(optionId)
-        ? selectedAnswers.filter(id => id !== optionId)
-        : [...selectedAnswers, optionId];
-      setSelectedAnswers(newAnswers);
-      onAnswerSelected(newAnswers);
-    } else {
-      setSelectedAnswers([optionId]);
-      onAnswerSelected(optionId);
+    if (isLoading) return;
+    
+    try {
+      setError(null);
+      if (isMultiSelect) {
+        const newAnswers = selectedAnswers.includes(optionId)
+          ? selectedAnswers.filter(id => id !== optionId)
+          : [...selectedAnswers, optionId];
+        if (newAnswers.length === 0) throw new Error('Please select at least one option');
+        setSelectedAnswers(newAnswers);
+        onAnswerSelected(newAnswers);
+      } else {
+        setSelectedAnswers([optionId]);
+        onAnswerSelected(optionId);
+      }
+    } catch (err: any) {
+      setError(err.message);
     }
   };
 
   const handleOtherInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOtherText(e.target.value);
+    const otherOptionId = options?.find(opt => opt.description_en.toLowerCase().includes('other'))?.option_id;
+    if (otherOptionId && e.target.value) handleOptionSelect(otherOptionId);
   };
+
+  if (isLoading) {
+    return <div className="question-form-loading">Loading...</div>;
+  }
 
   return (
     <div className="question-form">
-      <h2>{question.text_en}</h2>
-      {question.description_en && <p>{question.description_en}</p>}
-      
+      <h2>{question.name_es}</h2>
+      <p>{question.description_es}</p>
       <div className="options-container">
-        {question.options?.map((option: QuestionOption) => (
-          <div key={option.opcionId} className="option">
+        {options?.map((option) => (
+          <div key={option.option_id} className="option">
             <label>
               <input
                 type={isMultiSelect ? "checkbox" : "radio"}
-                name="question-option"
-                checked={selectedAnswers.includes(option.opcionId)}
-                onChange={() => handleOptionSelect(option.opcionId)}
+                name={`question-${question.id}`}
+                checked={selectedAnswers.includes(option.option_id)}
+                onChange={() => handleOptionSelect(option.option_id)}
+                disabled={isLoading}
               />
-              {option.description_en}
+                { option.description_es }
             </label>
-            
-            {option.description_en.toLowerCase().includes('other') && (
-              <input
-                type="text"
-                value={otherText}
-                onChange={handleOtherInput}
-                placeholder="Please specify"
-                className="other-input"
-              />
-            )}
           </div>
         ))}
       </div>
+      {error && <div className="error-message">{error}</div>}
     </div>
   );
 };

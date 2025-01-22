@@ -1,15 +1,24 @@
 // src/pages/_app.tsx
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import { UserProvider } from "../context/UserContext";
-import { AuthGuard } from "../components/auth/AuthGuard";
+import type { AppProps } from 'next/app';
+import { UserProvider } from '../context/UserContext';
+import { AuthGuard } from '../components/auth/AuthGuard.tsx';
+import '../styles/globals.css';
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
+  // Pages that don't require authentication
+  const isPublicPage = Component.displayName === 'Home'; // Add other public pages as needed
+
   return (
     <UserProvider>
-      <AuthGuard>
+      {isPublicPage ? (
         <Component {...pageProps} />
-      </AuthGuard>
+      ) : (
+        <AuthGuard>
+          <Component {...pageProps} />
+        </AuthGuard>
+      )}
     </UserProvider>
   );
 }
+
+export default App;

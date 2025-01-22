@@ -1,7 +1,6 @@
 import { ProfileQuestionsRepository } from '../../repositories/profile-questions';
 import { AbacusPersonalizationService } from '../../abacus/personalization.service';
-import { ProfileQuestionsEntity } from '../../entities/profile-questions';
-import { ProfileOptionsEntity } from 'src/entities/profile-options';
+import { ProfileQuestionsEntity, ProfileOptionsEntity } from '../../entities';
 export declare class ProfileQuestionsService {
     private readonly profileQuestionsRepository;
     private readonly abacusPersonalizationService;
@@ -10,6 +9,6 @@ export declare class ProfileQuestionsService {
     getInitialOptions(): Promise<ProfileOptionsEntity[]>;
     getQuestionById(id: number): Promise<ProfileQuestionsEntity>;
     getOptionsById(id: number): Promise<ProfileOptionsEntity[]>;
-    getContextualizedQuestionById(id: number): Promise<ProfileQuestionsEntity>;
-    getContextualizedOptionsById(id: number): Promise<ProfileOptionsEntity[]>;
+    getContextualizedQuestionById(uuid: string, id: number): Promise<ProfileQuestionsEntity>;
+    getContextualizedOptionsById(uuid: string, id: number): Promise<ProfileOptionsEntity[]>;
 }

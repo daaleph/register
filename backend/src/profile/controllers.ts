@@ -1,4 +1,4 @@
-// controllers/profile.controller.ts
+// backend/src/profile/controllers.ts
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { ProfileService } from './service';
 import { ProfileEntity } from '../entities/profile';
@@ -7,7 +7,13 @@ import { ProfileEntity } from '../entities/profile';
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  @Get('id/:id')
+  @Post('create')
+  async createProfile(@Body() profile: ProfileEntity): Promise<{ id: string }> {
+    const id = await this.profileService.createProfile(profile);
+    return { id };
+  }
+
+  @Get(':id')
   async getProfile(@Param('id') id: string): Promise<ProfileEntity> {
     return this.profileService.retrieveProfile(id);
   }
@@ -16,4 +22,4 @@ export class ProfileController {
   async updateProfile(@Body() profile: ProfileEntity): Promise<void> {
     await this.profileService.updateProfileData(profile);
   }
-} // [source](search_result_11)
+}

@@ -16,6 +16,9 @@ let ProfileService = class ProfileService {
     constructor(profileRepository) {
         this.profileRepository = profileRepository;
     }
+    async createProfile(profile) {
+        return this.profileRepository.createProfile(profile);
+    }
     async retrieveProfile(id) {
         return this.profileRepository.findProfileById(id);
     }
