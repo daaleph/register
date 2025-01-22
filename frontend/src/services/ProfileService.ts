@@ -1,6 +1,6 @@
 // frontend/src/services/ProfileService.ts
 
-import { Question, UserProfile } from "@/models/interfaces";
+import { Question, QuestionOption, UserProfile } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class ProfileService {
@@ -17,19 +17,38 @@ export class ProfileService {
         });
     }
 
-    async getInitialProfileQuestion(id: string): Promise<Question> {
+    async getInitialProfileQuestionWithOptions(id: string): Promise<{question: Question, options: QuestionOption[]}> {
         return HttpUtility.get(`${this.baseUrl}questions/profile/${id}/initial`);
     }
 
-    async getNextProfileQuestion(uuid: string, questionId: number, answer: number[] | number): Promise<Question> {
-        return HttpUtility.get(`${this.baseUrl}questions/profile/${uuid}/questionId/${questionId}`, { answer });
+    async getProfileQuestionWithAnswers(
+        uuid: string,
+        questionId: number
+    ): Promise<{question: Question, options: QuestionOption[]}> {
+        return HttpUtility.get(`${this.baseUrl}questions/profile/${uuid}/questionId/${questionId}`);
     }
 
     async submitProfileAnswer(profileId: string, variable: string, answer: number[] | number): Promise<void> {
-        return HttpUtility.post(`${this.baseUrl}questions/profile/answer`, {
-            profileId,
-            variable,
-            answer
-        });
+      return HttpUtility.post(`${this.baseUrl}responses/profile/`, {
+        profileId,
+        variable,
+        answer
+      });
     }
+
+    async verifyProfileAccess(profileId: string): Promise<boolean> {
+      try {
+        const response = await fetch(`${this.baseUrl}profile/${profileId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        });
+        if (!response.ok) return false;
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
 }

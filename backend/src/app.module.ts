@@ -6,7 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/module';
-import { QuestionsModule } from './questions-options/questions.module';
+import { QuestionsModule } from './questions-options/module';
+import { ResponsesModule } from './responses/module';
 import { AbacusModule } from './abacus/module';
 import { SupabaseModule } from './supabase/module';
 import { SharedModule } from './shared/shared.module';
@@ -17,6 +18,7 @@ import { SharedModule } from './shared/shared.module';
     AuthModule,
     ProfileModule,
     QuestionsModule,
+    ResponsesModule,
     AbacusModule,
     SupabaseModule,
     SharedModule
@@ -24,4 +26,4 @@ import { SharedModule } from './shared/shared.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {} // [source](search_result_2)
+export class AppModule {}

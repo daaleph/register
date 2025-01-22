@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AbacusContextService } from './context.service';
-import { ProfileOptionsEntity, ProfileQuestionsEntity, ProfileResponsesEntity } from 'src/entities';
+import { ProfileOptionsEntity, ProfileQuestionsEntity, ProfilePreviousResponsesEntity } from 'src/entities';
 import { firstValueFrom } from 'rxjs';
 import { AbacusContextEntity } from 'src/entities/abacus-context';
 
@@ -16,7 +16,7 @@ export class AbacusPersonalizationService {
   async personalizesProfileQuestion(
     question: ProfileQuestionsEntity,
     previousQuestions: ProfileQuestionsEntity[],
-    previousResponses: ProfileResponsesEntity[]
+    previousResponses: ProfilePreviousResponsesEntity[]
   ): Promise<ProfileQuestionsEntity> {
     const context = this.contextService.buildContext(previousQuestions, previousResponses, 'profile');
     let personalizedQuestion = await this.personalizeQuestion(question, context, 'profile');
@@ -27,7 +27,7 @@ export class AbacusPersonalizationService {
   async personalizesProfileOptions(
     options: ProfileOptionsEntity[],
     previousQuestions: ProfileQuestionsEntity[],
-    previousResponses: ProfileResponsesEntity[]
+    previousResponses: ProfilePreviousResponsesEntity[]
   ): Promise<ProfileOptionsEntity[]> {
     const context = this.contextService.buildContext(previousQuestions, previousResponses, 'profile');
     let personalizedOptions = await this.personalizeOptions(options, context, 'profile');

@@ -1,14 +1,15 @@
 // frontend/src/pages/index.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '../context/UserContext';
 import { ProfileService } from '../services/ProfileService';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { UserProfile } from '@/models/interfaces';
+import { LoadingState } from '@/components/common/LoadingState';
 
 const InitialRegistration: React.FC = () => {
   const router = useRouter();
-  const { setUserProfile } = useUser();
+  const { userProfile, setUserProfile } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<UserProfile>({
@@ -49,25 +50,30 @@ const InitialRegistration: React.FC = () => {
     setError(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!validateForm()) return;
-
+    
     try {
       setIsLoading(true);
       const profileService = new ProfileService();
       const response = await profileService.createInitialProfile(formData);
-      console.log("Response from ProfileService:", response);
-      if (response.id) {
-        console.log("Redirecting to profile with ID:", response.id);
-        router.push(`/profile?id=${response.id}`);
-      }
+      const newProfile = {
+        ...formData,
+        id: response.id
+      };
+      setUserProfile(newProfile);
+      router.push(`/profile?id=${response.id}`, undefined, { shallow: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create profile');
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Show loading state while the profile is being created
+  if (isLoading) {
+    return <LoadingState />
+  }
 
   return (
     <div className="registration-container">

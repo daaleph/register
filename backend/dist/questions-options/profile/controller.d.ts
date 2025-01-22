@@ -1,13 +1,14 @@
 import { ProfileQuestionsService } from './service';
+import { ProfileOptionsEntity, ProfileQuestionsEntity } from 'src/entities';
 export declare class ProfileQuestionsController {
     private readonly profileQuestionsService;
     constructor(profileQuestionsService: ProfileQuestionsService);
     getInitialProfileQuestion(): Promise<{
-        profileQuestion: import("../../entities").ProfileQuestionsEntity;
-        profileOptions: import("../../entities").ProfileOptionsEntity[];
+        question: ProfileQuestionsEntity;
+        options: ProfileOptionsEntity[];
     }>;
-    getProfileQuestion(uuid: string, questionId: number): Promise<{
-        profileQuestion: import("../../entities").ProfileQuestionsEntity;
-        profileOptions: import("../../entities").ProfileOptionsEntity[];
+    getProfiledQuestion(uuid: string, questionId: number): Promise<{
+        question: ProfileQuestionsEntity;
+        options: ProfileOptionsEntity[];
     }>;
 }

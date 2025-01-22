@@ -4,20 +4,22 @@ import { Question, QuestionOption } from '../../models/interfaces';
 
 interface QuestionFormProps {
   question: Question;
+  options: QuestionOption[];
   onAnswerSelected: (answer: number[] | number) => void;
   isMultiSelect?: boolean;
-  isLoading?: boolean; // Add loading state [source](search_result_24)
+  isLoading?: boolean;
 }
 
 export const QuestionForm: React.FC<QuestionFormProps> = ({
   question,
+  options,
   onAnswerSelected,
   isMultiSelect = false,
   isLoading = false
 }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [otherText, setOtherText] = useState<string>('');
-  const [error, setError] = useState<string | null>(null); // Add error state [source](search_result_24)
+  const [error, setError] = useState<string | null>(null);
 
   // Reset form when question changes
   useEffect(() => {
@@ -27,6 +29,8 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   }, [question.id]);
 
   const handleOptionSelect = (optionId: number) => {
+    if (isLoading) return;
+    
     try {
       setError(null);
       if (isMultiSelect) {
@@ -34,7 +38,6 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
           ? selectedAnswers.filter(id => id !== optionId)
           : [...selectedAnswers, optionId];
         
-        // Validate selection [source](search_result_24)
         if (newAnswers.length === 0) {
           throw new Error('Please select at least one option');
         }
@@ -52,8 +55,8 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 
   const handleOtherInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOtherText(e.target.value);
-    const otherOptionId = question.options?.find(opt => 
-      opt.description_en.toLowerCase().includes('other'))?.opcionId;
+    const otherOptionId = options?.find(opt => 
+      opt.description_en.toLowerCase().includes('other'))?.option_id;
     if (otherOptionId && e.target.value) {
       handleOptionSelect(otherOptionId);
     }
@@ -65,38 +68,26 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 
   return (
     <div className="question-form">
-      <h2>{question.text_en}</h2>
+      <h2>{question.name_en}</h2>
       {question.description_en && <p>{question.description_en}</p>}
       
-      {error && <div className="error-message">{error}</div>}
-      
       <div className="options-container">
-        {question.options?.map((option: QuestionOption) => (
-          <div key={option.opcionId} className="option">
+        {options?.map((option) => (
+          <div key={option.option_id} className="option">
             <label>
               <input
                 type={isMultiSelect ? "checkbox" : "radio"}
                 name={`question-${question.id}`}
-                checked={selectedAnswers.includes(option.opcionId)}
-                onChange={() => handleOptionSelect(option.opcionId)}
+                checked={selectedAnswers.includes(option.option_id)}
+                onChange={() => handleOptionSelect(option.option_id)}
                 disabled={isLoading}
               />
-              {option.description_en}
+                { option.description_es }
             </label>
-            
-            {option.description_en.toLowerCase().includes('other') && (
-              <input
-                type="text"
-                value={otherText}
-                onChange={handleOtherInput}
-                placeholder="Please specify"
-                className="other-input"
-                disabled={!selectedAnswers.includes(option.opcionId)}
-              />
-            )}
           </div>
         ))}
       </div>
+      {error && <div className="error-message">{error}</div>}
     </div>
   );
 };

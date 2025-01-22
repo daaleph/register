@@ -3,8 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { ProfileQuestionsRepository } from '../../repositories/profile-questions';
 import { AbacusPersonalizationService } from '../../abacus/personalization.service';
-import { ProfileQuestionsEntity } from '../../entities/profile-questions';
-import { ProfileOptionsEntity } from 'src/entities/profile-options';
+import { ProfileQuestionsEntity, ProfileOptionsEntity } from '../../entities';
 
 @Injectable()
 export class ProfileQuestionsService {

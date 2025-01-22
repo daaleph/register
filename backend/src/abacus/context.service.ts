@@ -1,14 +1,14 @@
 // src/abacus/context.ts
 
 import { Injectable } from '@nestjs/common';
-import { ProfileQuestionsEntity, ProfileResponsesEntity } from 'src/entities';
+import { ProfileQuestionsEntity, ProfilePreviousResponsesEntity } from 'src/entities';
 import { AbacusContextEntity } from 'src/entities/abacus-context';
 
 @Injectable()
 export class AbacusContextService {
   buildContext(
     previousQuestions: ProfileQuestionsEntity[],
-    previousResponses: ProfileResponsesEntity[],
+    previousResponses: ProfilePreviousResponsesEntity[],
     questionType: string
   ): AbacusContextEntity {
     const context = previousQuestions.reduce((acc, question) => {

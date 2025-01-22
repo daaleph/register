@@ -22,4 +22,4 @@ export class SupabaseService {
     return this.client.from(table).select().match(params);
   }
 
-} // [source](search_result_13)
+}

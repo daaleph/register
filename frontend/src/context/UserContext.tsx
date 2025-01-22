@@ -8,7 +8,7 @@ interface UserContextType {
   responses: Map<string, number[] | number>;
   currentPhase: string;
   progress: number;
-  authToken: string | null;
+  // authToken: string | null;
   error: string | null;
   isLoading: boolean;
 
@@ -17,14 +17,14 @@ interface UserContextType {
   setResponses: (variable: string, answer: number[] | number) => void;
   setCurrentPhase: (phase: string) => void;
   setProgress: (value: number) => void;
-  setAuthToken: (token: string) => void;
+  // setAuthToken: (token: string) => void;
   setError: (error: string | null) => void;
   setIsLoading: (loading: boolean) => void;
 
   // Phase management
   canTransitionToNextPhase: () => boolean;
   moveToNextPhase: () => void;
-} // [source](search_result_24)
+}
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -34,9 +34,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [responses, setResponsesState] = useState<Map<string, number[] | number>>(new Map());
   const [currentPhase, setCurrentPhase] = useState<string>('profile');
   const [progress, setProgress] = useState<number>(0);
-  const [authToken, setAuthToken] = useState<string | null>(null);
+  // const [authToken, setAuthToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false); // [source](search_result_24)[source](search_result_34)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Response management
   const setResponses = (variable: string, answer: number[] | number) => {
@@ -51,14 +51,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const getRequiredResponsesForPhase = (phase: string): number => {
     switch (phase) {
       case 'profile':
-        return 14; // var01-var14 from profile table
+        return 14;
       case 'bfi':
-        return 44; // var01-var44 from bfi_responses table
+        return 44;
       case 'product':
-        return 1; // At least one product response
+        return 1;
       default:
         return 0;
-    } // [source](search_result_34)
+    }
   };
 
   const canTransitionToNextPhase = (): boolean => {
@@ -87,19 +87,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     responses,
     currentPhase,
     progress,
-    authToken,
+    // authToken,
     error,
     isLoading,
     setUserProfile,
     setResponses,
     setCurrentPhase,
     setProgress,
-    setAuthToken,
+    // setAuthToken,
     setError,
     setIsLoading,
     canTransitionToNextPhase,
     moveToNextPhase
-  };// [source](search_result_24)
+  };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
@@ -110,4 +110,4 @@ export const useUser = () => {
     throw new Error('useUser must be used within a UserProvider');
   }
   return context;
-}; // [source](search_result_24)
+};
