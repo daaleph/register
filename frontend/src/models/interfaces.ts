@@ -1,4 +1,4 @@
-// models/interfaces.ts
+// frontend/src/models/interfaces.ts
 
 export interface UserProfile {
     id: string;

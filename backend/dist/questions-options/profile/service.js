@@ -34,7 +34,10 @@ let ProfileQuestionsService = class ProfileQuestionsService {
         const question = await this.getQuestionById(id);
         const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
         const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(uuid, id);
-        return await this.abacusPersonalizationService.personalizesProfileQuestion(question, previousQuestions, previousResponses);
+        const personalizedQuestion = await this.abacusPersonalizationService.personalizesProfileQuestion(question, previousQuestions, previousResponses);
+        question.description_en = personalizedQuestion.description_en;
+        question.description_es = personalizedQuestion.description_es;
+        return question;
     }
     async getContextualizedOptionsById(uuid, id) {
         const options = await this.getOptionsById(id);

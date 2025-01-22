@@ -1,13 +1,13 @@
 // backend/src/responses/profile/service.ts
 
 import { Injectable } from '@nestjs/common';
-import { ProfileResponsesRepository } from '../../repositories/profile-responses'
+import { Repository } from '../../repositories/profile-responses'
 
 @Injectable()
-export class ProfileResponsesService {
+export class Service {
 
     constructor(
-        private readonly profileQuestionsRepository: ProfileResponsesRepository
+        private readonly repository: Repository
     ) {}
 
     async saveAnswerOfSpecificQuestion(
@@ -15,7 +15,16 @@ export class ProfileResponsesService {
         variable: string,
         answer_options: number[]
     ): Promise<any> {
-        this.profileQuestionsRepository.saveProfileResponse({profile, variable, answer_options});
+        this.repository.saveResponse({profile, variable, answer_options});
+    }
+
+    async saveOtherAnswerOfSpecificQuestion(
+        profile: string,
+        variable: string,
+        answer: string,
+        nature: number
+    ): Promise<any> {
+        this.repository.saveOtherResponse(profile, variable, answer, nature);
     }
 
 }

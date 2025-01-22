@@ -1,8 +1,9 @@
 // backend/src/responses/profile/module.ts
+
 import { Module } from '@nestjs/common';
 import { ProfileResponsesController } from './controller';
-import { ProfileResponsesService } from './service';
-import { ProfileResponsesRepository } from '../../repositories/profile-responses';
+import { Service } from './service';
+import { Repository } from '../../repositories/profile-responses';
 import { SupabaseModule } from 'src/supabase/module';
 
 @Module({
@@ -11,9 +12,9 @@ import { SupabaseModule } from 'src/supabase/module';
   ],
   controllers: [ProfileResponsesController],
   providers: [
-    ProfileResponsesService,
-    ProfileResponsesRepository
+    Service,
+    Repository
   ],
-  exports: [ProfileResponsesService]
+  exports: [Service]
 })
 export class ProfileResponsesModule {}

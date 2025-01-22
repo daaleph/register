@@ -32,7 +32,10 @@ export class ProfileQuestionsService {
     const question: ProfileQuestionsEntity = await this.getQuestionById(id);
     const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
     const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(uuid, id);
-    return await this.abacusPersonalizationService.personalizesProfileQuestion(question, previousQuestions, previousResponses);
+    const personalizedQuestion = await this.abacusPersonalizationService.personalizesProfileQuestion(question, previousQuestions, previousResponses);
+    question.description_en = personalizedQuestion.description_en;
+    question.description_es = personalizedQuestion.description_es;
+    return question;
   }
 
   async getContextualizedOptionsById(uuid: string, id: number): Promise<ProfileOptionsEntity[]> {

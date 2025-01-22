@@ -22,10 +22,10 @@ exports.ProfileResponsesModule = ProfileResponsesModule = __decorate([
         ],
         controllers: [controller_1.ProfileResponsesController],
         providers: [
-            service_1.ProfileResponsesService,
-            profile_responses_1.ProfileResponsesRepository
+            service_1.Service,
+            profile_responses_1.Repository
         ],
-        exports: [service_1.ProfileResponsesService]
+        exports: [service_1.Service]
     })
 ], ProfileResponsesModule);
 //# sourceMappingURL=module.js.map

@@ -56,7 +56,7 @@ const InitialRegistration: React.FC = () => {
     try {
       setIsLoading(true);
       const profileService = new ProfileService();
-      const response = await profileService.createInitialProfile(formData);
+      const response = await profileService.createProfile(formData);
       const newProfile = {
         ...formData,
         id: response.id
