@@ -1,4 +1,4 @@
-// src/questions/profile-questions/profile-questions.service.ts
+// backend/src/questions/profile-questions/profile-questions.service.ts
 
 import { Injectable } from '@nestjs/common';
 import { ProfileQuestionsRepository } from '../../repositories/profile-questions';
@@ -39,7 +39,7 @@ export class ProfileQuestionsService {
     const options: ProfileOptionsEntity[] = await this.getOptionsById(id);
     const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
     const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(uuid, id);
-    return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses);
+    return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses, id);
   }
 
 }

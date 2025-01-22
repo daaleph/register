@@ -37,11 +37,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
         const newAnswers = selectedAnswers.includes(optionId)
           ? selectedAnswers.filter(id => id !== optionId)
           : [...selectedAnswers, optionId];
-        
-        if (newAnswers.length === 0) {
-          throw new Error('Please select at least one option');
-        }
-        
+        if (newAnswers.length === 0) throw new Error('Please select at least one option');
         setSelectedAnswers(newAnswers);
         onAnswerSelected(newAnswers);
       } else {
@@ -55,11 +51,8 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 
   const handleOtherInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOtherText(e.target.value);
-    const otherOptionId = options?.find(opt => 
-      opt.description_en.toLowerCase().includes('other'))?.option_id;
-    if (otherOptionId && e.target.value) {
-      handleOptionSelect(otherOptionId);
-    }
+    const otherOptionId = options?.find(opt => opt.description_en.toLowerCase().includes('other'))?.option_id;
+    if (otherOptionId && e.target.value) handleOptionSelect(otherOptionId);
   };
 
   if (isLoading) {
@@ -68,9 +61,8 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 
   return (
     <div className="question-form">
-      <h2>{question.name_en}</h2>
-      {question.description_en && <p>{question.description_en}</p>}
-      
+      <h2>{question.name_es}</h2>
+      <p>{question.description_es}</p>
       <div className="options-container">
         {options?.map((option) => (
           <div key={option.option_id} className="option">

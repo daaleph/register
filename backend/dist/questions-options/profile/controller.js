@@ -22,12 +22,12 @@ let ProfileQuestionsController = class ProfileQuestionsController {
     async getInitialProfileQuestion() {
         const question = await this.profileQuestionsService.getInitialQuestion();
         const options = await this.profileQuestionsService.getInitialOptions();
-        return { question, options };
+        return JSON.stringify({ question, options });
     }
     async getProfiledQuestion(uuid, questionId) {
         const question = await this.profileQuestionsService.getContextualizedQuestionById(uuid, questionId);
         const options = await this.profileQuestionsService.getContextualizedOptionsById(uuid, questionId);
-        return { question, options };
+        return JSON.stringify({ question, options });
     }
 };
 exports.ProfileQuestionsController = ProfileQuestionsController;

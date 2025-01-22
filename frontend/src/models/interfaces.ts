@@ -25,3 +25,8 @@ export interface QuestionOption {
     description_es: string;
     description_en: string;
 }
+
+export interface QuestionWithOptions {
+    question: Question;
+    options: QuestionOption[];
+}

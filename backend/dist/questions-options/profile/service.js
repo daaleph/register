@@ -40,7 +40,7 @@ let ProfileQuestionsService = class ProfileQuestionsService {
         const options = await this.getOptionsById(id);
         const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
         const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(uuid, id);
-        return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses);
+        return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses, id);
     }
 };
 exports.ProfileQuestionsService = ProfileQuestionsService;

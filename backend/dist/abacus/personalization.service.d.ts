@@ -6,7 +6,7 @@ export declare class AbacusPersonalizationService {
     private readonly contextService;
     constructor(httpService: HttpService, contextService: AbacusContextService);
     personalizesProfileQuestion(question: ProfileQuestionsEntity, previousQuestions: ProfileQuestionsEntity[], previousResponses: ProfilePreviousResponsesEntity[]): Promise<ProfileQuestionsEntity>;
-    personalizesProfileOptions(options: ProfileOptionsEntity[], previousQuestions: ProfileQuestionsEntity[], previousResponses: ProfilePreviousResponsesEntity[]): Promise<ProfileOptionsEntity[]>;
+    personalizesProfileOptions(options: ProfileOptionsEntity[], previousQuestions: ProfileQuestionsEntity[], previousResponses: ProfilePreviousResponsesEntity[], id: number): Promise<ProfileOptionsEntity[]>;
     personalizesBFIQuestion(question: ProfileQuestionsEntity, previousQuestions: any[], previousResponses: any[]): Promise<any>;
     personalizesProductQuestion(question: ProfileQuestionsEntity, previousQuestions: any[], previousResponses: any[]): Promise<any>;
     private personalizeQuestion;

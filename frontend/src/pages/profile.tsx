@@ -8,6 +8,7 @@ import { Question, QuestionOption } from '../models/interfaces';
 import { QuestionForm } from '../components/common/QuestionForm';
 import { ProgressBar } from '../components/common/ProgressBar';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
+import { captureRejectionSymbol } from 'events';
 
 const ProfilePage: React.FC = () => {
   const router = useRouter();
@@ -21,6 +22,7 @@ const ProfilePage: React.FC = () => {
   const [currentProgress, setCurrentProgress] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState<number[] | number | null>(null);
 
   useEffect(() => {
     // Wait for router to be ready
@@ -31,7 +33,6 @@ const ProfilePage: React.FC = () => {
         setIsLoading(true);
         setError(null);
         const { question, options } = await profileService.getInitialProfileQuestionWithOptions(profileId);
-        
         setCurrentQuestion(question);
         setCurrentOptions(options);
         setProgress(0);
@@ -42,36 +43,43 @@ const ProfilePage: React.FC = () => {
         setIsLoading(false);
       }
     };
+    const profileId = userProfile?.id;
+    if (profileId) loadInitialQuestion(profileId);
+  }, [router.isReady, userProfile?.id]);
 
-    const profileId = userProfile?.id || router.query.id as string;
-    if (profileId) {
-      loadInitialQuestion(profileId);
-    }
-  }, [router.isReady, userProfile?.id, router.query.id]);
+  const handleAnswerSelection = (answer: number[] | number) => {
+    setSelectedAnswer(answer);
+  };
 
-  const handleAnswerSelection = async (answer: number[] | number) => {
-    if (!currentQuestion) return;
-    const profileId = userProfile?.id || router.query.id as string;
+  const handleSubmit = async () => {
+    if (!currentQuestion || selectedAnswer === null) return;
+    
+    const profileId = userProfile?.id;
     if (!profileId) return;
+
     try {
       setIsLoading(true);
       setError(null);
-      setResponses(currentQuestion.variable, answer);
+      setResponses(currentQuestion.variable, selectedAnswer);
+      
       await profileService.submitProfileAnswer(
         profileId,
         currentQuestion.variable,
-        answer
+        selectedAnswer
       );
+
       const { question, options } = await profileService.getProfileQuestionWithAnswers(
         profileId,
-        currentQuestion.id + 1
+        nextQuestion(currentQuestion.id, selectedAnswer)
       );
+
       if (question && options) {
         const newProgress = currentProgress + 10;
         setCurrentProgress(newProgress);
         setProgress(newProgress);
         setCurrentQuestion(question);
         setCurrentOptions(options);
+        setSelectedAnswer(null);
       } else {
         router.push('/bfi');
       }
@@ -107,8 +115,27 @@ const ProfilePage: React.FC = () => {
         isMultiSelect={currentQuestion.type === 'multiple'}
         isLoading={isLoading}
       />
+      <button 
+        className="submit-button"
+        onClick={handleSubmit}
+        disabled={isLoading || selectedAnswer === null}
+      >
+        Submit
+      </button>
     </div>
   );
 };
 
 export default ProfilePage;
+
+const nextQuestion = (id: number, selectedAnswer: number | number[]): number => {
+  switch(id) {
+    case 1: return Array.isArray(selectedAnswer) ? selectedAnswer[0] + 1 : selectedAnswer + 1;
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6: return 7;
+    default: return id + 1;
+  }
+}

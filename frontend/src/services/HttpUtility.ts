@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export class HttpUtility {
     private static readonly MAX_RETRIES = 3;
-    private static readonly TIMEOUT = 5000;
+    private static readonly TIMEOUT = 50000;
     private static readonly RETRY_DELAY = 1000;
 
     private static getAuthHeader(): Record<string, string> {

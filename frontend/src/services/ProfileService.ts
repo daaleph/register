@@ -1,6 +1,6 @@
 // frontend/src/services/ProfileService.ts
 
-import { Question, QuestionOption, UserProfile } from "@/models/interfaces";
+import { QuestionWithOptions, UserProfile } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class ProfileService {
@@ -17,15 +17,15 @@ export class ProfileService {
         });
     }
 
-    async getInitialProfileQuestionWithOptions(id: string): Promise<{question: Question, options: QuestionOption[]}> {
-        return HttpUtility.get(`${this.baseUrl}questions/profile/${id}/initial`);
+    async getInitialProfileQuestionWithOptions(id: string): Promise<QuestionWithOptions> {
+      return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/${id}/initial`);
     }
 
     async getProfileQuestionWithAnswers(
         uuid: string,
         questionId: number
-    ): Promise<{question: Question, options: QuestionOption[]}> {
-        return HttpUtility.get(`${this.baseUrl}questions/profile/${uuid}/questionId/${questionId}`);
+    ): Promise<QuestionWithOptions> {
+      return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/${uuid}/questionId/${questionId}`);
     }
 
     async submitProfileAnswer(profileId: string, variable: string, answer: number[] | number): Promise<void> {

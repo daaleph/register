@@ -1,4 +1,4 @@
-// src/repositories/profile-questions.ts
+// backend/src/repositories/profile-questions.ts
 
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from 'src/supabase/service';

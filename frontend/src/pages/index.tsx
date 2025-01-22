@@ -62,7 +62,7 @@ const InitialRegistration: React.FC = () => {
         id: response.id
       };
       setUserProfile(newProfile);
-      router.push(`/profile?id=${response.id}`, undefined, { shallow: true });
+      router.push(`/profile`, undefined, { shallow: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create profile');
     } finally {
