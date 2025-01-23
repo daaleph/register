@@ -7,14 +7,14 @@ export class ProfileService {
     private baseUrl: string;
 
     constructor() {
-        this.baseUrl = process.env.NEXT_PUBLIC_NEST_URL || '';
+      this.baseUrl = process.env.NEXT_PUBLIC_NEST_URL || '';
     }
 
     async createProfile(data: UserProfile): Promise<{ id: string }> {
-        return HttpUtility.post(`${this.baseUrl}profile/create`, data, {
-            headers: {'Content-Type': 'application/json'},
-            withCredentials: true
-        });
+      return HttpUtility.post(`${this.baseUrl}profile/create`, data, {
+        headers: {'Content-Type': 'application/json'},
+        withCredentials: true
+      });
     }
 
     async getInitialQuestionWithOptions(id: string): Promise<QuestionWithOptions> {

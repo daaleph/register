@@ -18,4 +18,5 @@ __exportStar(require("./question"), exports);
 __exportStar(require("./profile-questions"), exports);
 __exportStar(require("./profile-responses"), exports);
 __exportStar(require("./profile-options"), exports);
+__exportStar(require("./profile"), exports);
 //# sourceMappingURL=index.js.map

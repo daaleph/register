@@ -1,13 +1,13 @@
 // src/components/common/QuestionForm.tsx
 import styles from '../../styles/components.module.css';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Question, QuestionOption } from '../../models/interfaces';
+import { QuestionFormController, QuestionState } from '@/controllers';
 
 interface QuestionFormProps {
   question: Question;
   options: QuestionOption[];
   onAnswerSelected: (answer: number[] | number, otherText?: string) => void;
-  isMultiSelect?: boolean;
   isLoading?: boolean;
 }
 
@@ -17,70 +17,35 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   onAnswerSelected,
   isLoading = false
 }) => {
-  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
-  const [otherText, setOtherText] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
-  const isMultiple = question.type === 'multiple';
+  // Initialize controller with props
+  
+  const controller = React.useMemo(() => new QuestionFormController(
+    onAnswerSelected,
+    question.type === 'multiple'
+  ), [onAnswerSelected, question.type]);
+
+  const [formState, setFormState] = useState(() => controller.getState());
 
   // Reset form when question changes
   useEffect(() => {
-    setSelectedAnswers([]);
-    setOtherText('');
-    setError(null);
+    controller.reset();
+    setFormState(controller.getState());
   }, [question.id]);
-
-  const handleOptionSelect = (optionId: number) => {
-    if (isLoading) return;
-    
-    try {
-      setError(null);
-      if (isMultiple) {
-        const newAnswers = selectedAnswers.includes(optionId)
-          ? selectedAnswers.filter(id => id !== optionId)
-          : [...selectedAnswers, optionId];
-        if (newAnswers.length === 0) throw new Error('Please select at least one option');
-        setSelectedAnswers(newAnswers);
-        
-        // Check if "other" option is selected and pass otherText
-        const hasOtherOption = newAnswers.some(id => isOtherSelected(id));
-        onAnswerSelected(newAnswers, hasOtherOption ? otherText : undefined);
-      } else {
-        setSelectedAnswers([optionId]);
-        onAnswerSelected(optionId, isOtherSelected(optionId) ? otherText : undefined);
-      }
-
-      // Clear other text if the "Otro" option is deselected
-      const isOtherOption = isOtherSelected(optionId);
-      if (isOtherOption && !selectedAnswers.includes(optionId)) {
-        setOtherText('');
-      }
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
-
-  const handleOtherInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newOtherText = e.target.value;
-    setOtherText(newOtherText);
-    
-    // Propagate the change immediately
-    if (selectedAnswers.length > 0) {
-      if (isMultiple) {
-        onAnswerSelected(selectedAnswers, newOtherText);
-      } else {
-        onAnswerSelected(selectedAnswers[0], newOtherText);
-      }
-    }
-  };
-
-  const isOtherSelected = (optionId: number): boolean => {
-    const option = options.find(opt => opt.option_id === optionId);
-    return ['otra', 'otro'].some(text => option?.description_es.toLowerCase().includes(text));
-  };
 
   if (isLoading) {
     return <div className={styles.questionFormLoading}>Loading...</div>;
   }
+
+  const handleOptionSelect = (optionId: number) => {
+    if (isLoading) return;
+    controller.handleOptionSelect(optionId, options);
+    setFormState(controller.getState());
+  };
+
+  const handleOtherInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    controller.handleOtherInput(e.target.value, options);
+    setFormState(controller.getState());
+  };
 
   return (
     <div className={styles.questionForm}>
@@ -91,21 +56,21 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
           <div key={option.option_id} className={styles.option}>
             <label>
               <input
-                type={isMultiple ? "checkbox" : "radio"}
+                type={question.type === 'multiple' ? "checkbox" : "radio"}
                 name={`question-${question.id}`}
-                checked={selectedAnswers.includes(option.option_id)}
+                checked={formState.selectedAnswers.includes(option.option_id)}
                 onChange={() => handleOptionSelect(option.option_id)}
                 disabled={isLoading}
               />
               {option.description_es}
             </label>
-            {selectedAnswers.includes(option.option_id) && 
-             isOtherSelected(option.option_id) && (
+            {formState.selectedAnswers.includes(option.option_id) && 
+             controller.isOtherOption(option.option_id, options) && (
               <input
                 type="text"
                 className={styles.otherInput}
                 placeholder="Por favor especifica"
-                value={otherText}
+                value={formState.otherText}
                 onChange={handleOtherInput}
                 disabled={isLoading}
                 required
@@ -114,7 +79,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
           </div>
         ))}
       </div>
-      {error && <div className={styles.errorMessage}>{error}</div>}
+      {formState.error && <div className={styles.errorMessage}>{formState.error}</div>}
     </div>
   );
 };

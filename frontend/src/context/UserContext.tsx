@@ -79,7 +79,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setProgress(0);
       setError(null);
     }
-  }; //[source](search_result_24)
+  };
 
   // Context value
   const value: UserContextType = {

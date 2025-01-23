@@ -1,5 +1,5 @@
+import { ProfileEntity } from 'src/entities';
 import { ProfileService } from './service';
-import { ProfileEntity } from '../entities/profile';
 export declare class ProfileController {
     private readonly profileService;
     constructor(profileService: ProfileService);
