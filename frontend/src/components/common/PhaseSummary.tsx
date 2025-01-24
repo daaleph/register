@@ -11,11 +11,11 @@ export const PhaseSummary: React.FC<PhaseSummaryProps> = ({ onContinue }) => {
 
     const getPhaseTitle = () => {
         switch (currentPhase) {
-        case 'profile':
+        case 'PROFILE':
             return 'Profile Questions Complete';
-        case 'bfi':
+        case 'BFI':
             return 'BFI Assessment Complete';
-        case 'product':
+        case 'PRODUCT':
             return 'Product Preferences Complete';
         default:
             return 'Phase Complete';

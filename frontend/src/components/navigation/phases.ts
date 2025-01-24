@@ -1,5 +1,4 @@
 // frontend/src/components/navigation/phases.ts
-
 export enum ProgressIncrements {
     PROFILE = 10,  // 100/10 questions
     BFI = 2.273,      // 100/44 questions

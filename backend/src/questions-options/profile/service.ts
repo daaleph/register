@@ -1,7 +1,7 @@
 // backend/src/questions/profile-questions/profile-questions.service.ts
 
 import { Injectable } from '@nestjs/common';
-import { ProfileQuestionsRepository } from '../../repositories/profile-questions';
+import { ProfileQuestionsRepository } from '../../repositories/questions/profile';
 import { AbacusPersonalizationService } from '../../abacus/personalization.service';
 import { ProfileQuestionsEntity, ProfileOptionsEntity } from '../../entities';
 

@@ -1,6 +1,6 @@
 // src/questions/product-questions/product-questions.service.ts
 import { Injectable } from '@nestjs/common';
-import { ProductQuestionsRepository } from './product-questions.repository';
+import { ProductQuestionsRepository } from '../../repositories/questions/product';
 import { AbacusPersonalizationService } from '../../abacus/personalization.service';
 
 @Injectable()

@@ -3,7 +3,7 @@
 import { Module } from '@nestjs/common';
 import { ProfileResponsesController } from './controller';
 import { Service } from './service';
-import { Repository } from '../../repositories/profile-responses';
+import { Repository } from '../../repositories/responses/profile';
 import { SupabaseModule } from 'src/supabase/module';
 
 @Module({

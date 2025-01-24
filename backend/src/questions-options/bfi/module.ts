@@ -1,8 +1,8 @@
 // src/questions/bfi-questions/bfi-questions.module.ts
 import { Module } from '@nestjs/common';
-import { BfiQuestionsController } from './bif-questions.controller';
-import { BfiQuestionsService } from './bfi-questions.service';
-import { BfiQuestionsRepository } from './bfi-questions.repository';
+import { BfiQuestionsController } from './controller';
+import { BfiQuestionsService } from './service';
+import { BfiQuestionsRepository } from '../../repositories/questions/bfi';
 import { AbacusModule } from '../../abacus/module';
 import { SupabaseModule } from 'src/supabase/module';
 

@@ -1,6 +1,6 @@
 // src/questions/bfi-questions/bfi-questions.service.ts
 import { Injectable } from '@nestjs/common';
-import { BfiQuestionsRepository } from './bfi-questions.repository';
+import { BfiQuestionsRepository } from '../../repositories/questions/bfi';
 import { AbacusPersonalizationService } from '../../abacus/personalization.service';
 
 @Injectable()
