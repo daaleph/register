@@ -9,20 +9,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProfileResponsesService = void 0;
+exports.Service = void 0;
 const common_1 = require("@nestjs/common");
 const profile_responses_1 = require("../../repositories/profile-responses");
-let ProfileResponsesService = class ProfileResponsesService {
-    constructor(profileQuestionsRepository) {
-        this.profileQuestionsRepository = profileQuestionsRepository;
+let Service = class Service {
+    constructor(repository) {
+        this.repository = repository;
     }
     async saveAnswerOfSpecificQuestion(profile, variable, answer_options) {
-        this.profileQuestionsRepository.saveProfileResponse({ profile, variable, answer_options });
+        this.repository.saveResponse({ profile, variable, answer_options });
+    }
+    async saveOtherAnswerOfSpecificQuestion(profile, variable, answer, nature) {
+        this.repository.saveOtherResponse(profile, variable, answer, nature);
     }
 };
-exports.ProfileResponsesService = ProfileResponsesService;
-exports.ProfileResponsesService = ProfileResponsesService = __decorate([
+exports.Service = Service;
+exports.Service = Service = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [profile_responses_1.ProfileResponsesRepository])
-], ProfileResponsesService);
+    __metadata("design:paramtypes", [profile_responses_1.Repository])
+], Service);
 //# sourceMappingURL=service.js.map

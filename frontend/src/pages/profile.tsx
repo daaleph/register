@@ -1,141 +1,160 @@
 // frontend/src/pages/profile.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '../context/UserContext';
-// import { AuthService } from '../services/AuthService';
-import { ProfileService } from '../services/ProfileService';
-import { Question, QuestionOption } from '../models/interfaces';
 import { QuestionForm } from '../components/common/QuestionForm';
 import { ProgressBar } from '../components/common/ProgressBar';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
-import { captureRejectionSymbol } from 'events';
+import styles from '../styles/components.module.css';
+import { QuestionController, QuestionState } from '@/controllers';
+import { ProfileService } from '@/services';
 
 const ProfilePage: React.FC = () => {
   const router = useRouter();
-  const { userProfile } = useUser();
+  const { setResponses, setProgress, moveToNextPhase, progress, userProfile, currentPhase } = useUser();
   const profileService = new ProfileService();
-  // const { setAuthToken, setResponses, setProgress } = useUser();
-  const { setResponses, setProgress } = useUser();
-  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
-  const [currentOptions, setCurrentOptions] = useState<QuestionOption[] | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [currentProgress, setCurrentProgress] = useState<number>(0);
-  const [error, setError] = useState<string | null>(null);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [selectedAnswer, setSelectedAnswer] = useState<number[] | number | null>(null);
-
-  useEffect(() => {
-    // Wait for router to be ready
-    if (!router.isReady) return;
-
-    const loadInitialQuestion = async (profileId: string) => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const { question, options } = await profileService.getInitialProfileQuestionWithOptions(profileId);
-        setCurrentQuestion(question);
-        setCurrentOptions(options);
-        setProgress(0);
-        setIsInitialized(true);
-      } catch (error) {
-        setError(error instanceof Error ? error.message : 'Failed to load initial question');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    const profileId = userProfile?.id;
-    if (profileId) loadInitialQuestion(profileId);
-  }, [router.isReady, userProfile?.id]);
-
-  const handleAnswerSelection = (answer: number[] | number) => {
-    setSelectedAnswer(answer);
-  };
-
-  const handleSubmit = async () => {
-    if (!currentQuestion || selectedAnswer === null) return;
-    
-    const profileId = userProfile?.id;
-    if (!profileId) return;
-
-    try {
-      setIsLoading(true);
-      setError(null);
-      setResponses(currentQuestion.variable, selectedAnswer);
-      
-      await profileService.submitProfileAnswer(
-        profileId,
-        currentQuestion.variable,
-        selectedAnswer
-      );
-
-      const { question, options } = await profileService.getProfileQuestionWithAnswers(
-        profileId,
-        nextQuestion(currentQuestion.id, selectedAnswer)
-      );
-
-      if (question && options) {
-        const newProgress = currentProgress + 10;
-        setCurrentProgress(newProgress);
-        setProgress(newProgress);
-        setCurrentQuestion(question);
-        setCurrentOptions(options);
-        setSelectedAnswer(null);
-      } else {
+  
+  // Single state for the question controller and its state
+  const [controllerState, setControllerState] = useState<{
+    controller: QuestionController;
+    state: QuestionState;
+  }>(() => {
+    const controller = new QuestionController({
+      initialState: {
+        currentQuestion: null,
+        currentOptions: null,
+        isLoading: true,
+        currentProgress: 0,
+        error: null,
+        isInitialized: false,
+        selectedAnswer: null,
+        otherText: undefined
+      },
+      onProgressUpdate: () => {
+        setProgress();
+      },
+      onAnswerSubmitted: (variable: string, answer: number[] | number) => {
+        setResponses(variable, answer);
+      },
+      onCompletion: () => {
+        moveToNextPhase();
         router.push('/bfi');
       }
+    });
+
+    return {
+      controller,
+      state: controller.getState()
+    };
+  });
+
+  // Initialize questions when component mounts
+  useEffect(() => {
+    const initQuestions = async () => {
+      if (!router.isReady || typeof userProfile?.id !== "string") return;
+
+      try {
+        await controllerState.controller.initializeQuestions(
+          userProfile.id,
+          profileService.getInitialQuestionWithOptions.bind(profileService)
+        );
+        
+        setControllerState(current => ({
+          ...current,
+          state: current.controller.getState()
+        }));
+      } catch (error) {
+        console.error('Failed to initialize questions:', error);
+      }
+    };
+
+    initQuestions();
+  }, [router.isReady, userProfile?.id]);
+
+  // Handle answer selection
+  const handleAnswerSelected = useCallback((answer: number[] | number, otherText?: string) => {
+    otherText ? controllerState.controller.handleAnswerSelection(answer, otherText) : controllerState.controller.handleAnswerSelection(answer);
+    setControllerState(current => ({
+      ...current,
+      state: current.controller.getState()
+    }));
+  }, [controllerState.controller]);
+
+  // Handle form submission
+  const handleSubmit = useCallback(async () => {
+    if (!userProfile?.id) return;
+
+    try {
+      await controllerState.controller.submitAnswer(
+        userProfile.id,
+        profileService.submitAnswer.bind(profileService),
+        profileService.submitOtherAnswer.bind(profileService),
+        progress.get(currentPhase)!,
+        1
+      );
+      setControllerState(current => ({
+        ...current,
+        state: controllerState.controller.getState()
+      }));
+
+      await controllerState.controller.nextQuestionWithOptions(
+        userProfile.id,
+        controllerState.state,
+        profileService.getQuestionWithAnswers.bind(profileService)
+      );
+      setControllerState(current => ({
+        ...current,
+        state: controllerState.controller.getState()
+      }));
+      
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to process answer');
-    } finally {
-      setIsLoading(false);
+      console.error('Failed to initialize questions:', error);
     }
-  };
 
-  // Show loading state while router is not ready or data is loading
-  if (!router.isReady || isLoading) {
-    return <div className="loading">Loading your profile...</div>;
+  }, [userProfile?.id, controllerState.controller, profileService]);
+
+  // Loading state
+  if (!controllerState.state || !router.isReady) {
+    return <div className={styles.loading}>Loading your profile...</div>;
   }
 
-  // Show error if there is one
-  if (error) {
-    return <ErrorDisplay message={error} />;
+  // Error state
+  if (controllerState.state.error) {
+    return <ErrorDisplay message={controllerState.state.error} />;
   }
 
-  // Only render main content when we have both question and options
-  if (!currentQuestion || !currentOptions) {
-    return <div className="loading">Preparing questions...</div>;
+  // Not initialized state
+  if (!controllerState.state.currentQuestion || !controllerState.state.currentOptions) {
+    return <div className={styles.loading}>Preparing questions...</div>;
   }
+
+  const isSubmitDisabled = 
+    controllerState.state.isLoading ||
+    controllerState.state.selectedAnswer === null || 
+    (controllerState.state.otherText !== undefined && 
+     controllerState.state.otherText.trim() === '');
 
   return (
-    <div className="profile-container">
-      <ProgressBar currentProgress={currentProgress} phase='profile' />
+    <div className={styles.profileContainer}>
+      <ProgressBar 
+        currentProgress={progress.get(currentPhase)!}
+        phase={currentPhase}
+      />
       <QuestionForm
-        question={currentQuestion}
-        options={currentOptions}
-        onAnswerSelected={handleAnswerSelection}
-        isMultiSelect={currentQuestion.type === 'multiple'}
-        isLoading={isLoading}
+        question={controllerState.state.currentQuestion}
+        options={controllerState.state.currentOptions}
+        onAnswerSelected={handleAnswerSelected}
+        isLoading={controllerState.state.isLoading}
       />
       <button 
-        className="submit-button"
+        className={styles.submitButton}
         onClick={handleSubmit}
-        disabled={isLoading || selectedAnswer === null}
+        disabled={isSubmitDisabled}
       >
-        Submit
+        {controllerState.state.isLoading ? 'Submitting...' : 'Submit'}
       </button>
     </div>
   );
 };
 
 export default ProfilePage;
-
-const nextQuestion = (id: number, selectedAnswer: number | number[]): number => {
-  switch(id) {
-    case 1: return Array.isArray(selectedAnswer) ? selectedAnswer[0] + 1 : selectedAnswer + 1;
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6: return 7;
-    default: return id + 1;
-  }
-}

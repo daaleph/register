@@ -1,12 +1,13 @@
 // src/components/common/QuestionForm.tsx
-import React, { useState, useEffect } from 'react';
+import styles from '../../styles/components.module.css';
+import React, { useEffect, useState } from 'react';
 import { Question, QuestionOption } from '../../models/interfaces';
+import { QuestionFormController } from '@/controllers';
 
 interface QuestionFormProps {
   question: Question;
   options: QuestionOption[];
-  onAnswerSelected: (answer: number[] | number) => void;
-  isMultiSelect?: boolean;
+  onAnswerSelected: (answer: number[] | number, otherText?: string) => void;
   isLoading?: boolean;
 }
 
@@ -14,72 +15,71 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   question,
   options,
   onAnswerSelected,
-  isMultiSelect = false,
   isLoading = false
 }) => {
-  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
-  const [otherText, setOtherText] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
+  // Initialize controller with props
+  
+  const controller = React.useMemo(() => new QuestionFormController(
+    onAnswerSelected,
+    question.type === 'multiple'
+  ), [onAnswerSelected, question.type]);
+
+  const [formState, setFormState] = useState(() => controller.getState());
 
   // Reset form when question changes
   useEffect(() => {
-    setSelectedAnswers([]);
-    setOtherText('');
-    setError(null);
+    controller.reset();
+    setFormState(controller.getState());
   }, [question.id]);
+
+  if (isLoading) {
+    return <div className={styles.questionFormLoading}>Loading...</div>;
+  }
 
   const handleOptionSelect = (optionId: number) => {
     if (isLoading) return;
-    
-    try {
-      setError(null);
-      if (isMultiSelect) {
-        const newAnswers = selectedAnswers.includes(optionId)
-          ? selectedAnswers.filter(id => id !== optionId)
-          : [...selectedAnswers, optionId];
-        if (newAnswers.length === 0) throw new Error('Please select at least one option');
-        setSelectedAnswers(newAnswers);
-        onAnswerSelected(newAnswers);
-      } else {
-        setSelectedAnswers([optionId]);
-        onAnswerSelected(optionId);
-      }
-    } catch (err: any) {
-      setError(err.message);
-    }
+    controller.handleOptionSelect(optionId, options);
+    setFormState(controller.getState());
   };
 
   const handleOtherInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOtherText(e.target.value);
-    const otherOptionId = options?.find(opt => opt.description_en.toLowerCase().includes('other'))?.option_id;
-    if (otherOptionId && e.target.value) handleOptionSelect(otherOptionId);
+    controller.handleOtherInput(e.target.value, options);
+    setFormState(controller.getState());
   };
 
-  if (isLoading) {
-    return <div className="question-form-loading">Loading...</div>;
-  }
-
   return (
-    <div className="question-form">
+    <div className={styles.questionForm}>
       <h2>{question.name_es}</h2>
       <p>{question.description_es}</p>
-      <div className="options-container">
+      <div className={styles.optionsContainer}>
         {options?.map((option) => (
-          <div key={option.option_id} className="option">
+          <div key={option.option_id} className={styles.option}>
             <label>
               <input
-                type={isMultiSelect ? "checkbox" : "radio"}
+                type={question.type === 'multiple' ? "checkbox" : "radio"}
                 name={`question-${question.id}`}
-                checked={selectedAnswers.includes(option.option_id)}
+                checked={formState.selectedAnswers.includes(option.option_id)}
                 onChange={() => handleOptionSelect(option.option_id)}
                 disabled={isLoading}
               />
-                { option.description_es }
+              {option.description_es}
             </label>
+            {formState.selectedAnswers.includes(option.option_id) && 
+             controller.isOtherOption(option.option_id, options) && (
+              <input
+                type="text"
+                className={styles.otherInput}
+                placeholder="Por favor especifica"
+                value={formState.otherText}
+                onChange={handleOtherInput}
+                disabled={isLoading}
+                required
+              />
+            )}
           </div>
         ))}
       </div>
-      {error && <div className="error-message">{error}</div>}
+      {formState.error && <div className={styles.errorMessage}>{formState.error}</div>}
     </div>
   );
 };

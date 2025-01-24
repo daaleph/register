@@ -16,11 +16,14 @@ exports.ProfileResponsesController = void 0;
 const common_1 = require("@nestjs/common");
 const service_1 = require("./service");
 let ProfileResponsesController = class ProfileResponsesController {
-    constructor(profileResponsesService) {
-        this.profileResponsesService = profileResponsesService;
+    constructor(responsesService) {
+        this.responsesService = responsesService;
     }
-    async submitProfileAnswer(profileId, variable, answer) {
-        await this.profileResponsesService.saveAnswerOfSpecificQuestion(profileId, variable, Array.isArray(answer) ? answer : [answer]);
+    async submitAnswer(profileId, variable, answer) {
+        await this.responsesService.saveAnswerOfSpecificQuestion(profileId, variable, Array.isArray(answer) ? answer : [answer]);
+    }
+    async submitOtherAnswer(profileId, variable, answer, nature) {
+        await this.responsesService.saveOtherAnswerOfSpecificQuestion(profileId, variable, answer, nature);
     }
 };
 exports.ProfileResponsesController = ProfileResponsesController;
@@ -32,9 +35,19 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, Object]),
     __metadata("design:returntype", Promise)
-], ProfileResponsesController.prototype, "submitProfileAnswer", null);
+], ProfileResponsesController.prototype, "submitAnswer", null);
+__decorate([
+    (0, common_1.Post)('other'),
+    __param(0, (0, common_1.Body)('profileId')),
+    __param(1, (0, common_1.Body)('variable')),
+    __param(2, (0, common_1.Body)('answer')),
+    __param(3, (0, common_1.Body)('nature')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String, Number]),
+    __metadata("design:returntype", Promise)
+], ProfileResponsesController.prototype, "submitOtherAnswer", null);
 exports.ProfileResponsesController = ProfileResponsesController = __decorate([
     (0, common_1.Controller)('responses/profile'),
-    __metadata("design:paramtypes", [service_1.ProfileResponsesService])
+    __metadata("design:paramtypes", [service_1.Service])
 ], ProfileResponsesController);
 //# sourceMappingURL=controller.js.map

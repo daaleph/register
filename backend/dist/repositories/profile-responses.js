@@ -9,14 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProfileResponsesRepository = void 0;
+exports.Repository = void 0;
 const common_1 = require("@nestjs/common");
 const service_1 = require("../supabase/service");
-let ProfileResponsesRepository = class ProfileResponsesRepository {
+let Repository = class Repository {
     constructor(supabaseService = new service_1.SupabaseService()) {
         this.supabaseService = supabaseService;
     }
-    async saveProfileResponse(response) {
+    async saveResponse(response) {
         const connection = this.supabaseService.getConnection();
         const { data, error } = await connection
             .from('profile_responses')
@@ -32,10 +32,27 @@ let ProfileResponsesRepository = class ProfileResponsesRepository {
         }
         return data;
     }
+    async saveOtherResponse(profile, variable, answer, nature) {
+        const connection = this.supabaseService.getConnection();
+        const { data, error } = await connection
+            .from('others')
+            .insert([
+            {
+                profile,
+                variable,
+                answer,
+                nature
+            }
+        ]);
+        if (error) {
+            throw new Error(`Failed to insert profile response: ${error.message}`);
+        }
+        return data;
+    }
 };
-exports.ProfileResponsesRepository = ProfileResponsesRepository;
-exports.ProfileResponsesRepository = ProfileResponsesRepository = __decorate([
+exports.Repository = Repository;
+exports.Repository = Repository = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [service_1.SupabaseService])
-], ProfileResponsesRepository);
+], Repository);
 //# sourceMappingURL=profile-responses.js.map
