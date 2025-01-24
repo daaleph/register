@@ -3,7 +3,7 @@ import React from 'react';
 
 interface ProgressBarProps {
   currentProgress: number;
-  phase: string;
+  phase: 'profile' | 'bfi' | 'product';
 }
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({ currentProgress, phase }) => {
@@ -20,6 +20,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ currentProgress, phase
     }
   };
 
+  const displayProgress = Math.min(100, Math.round(currentProgress * 100) / 100);
+
   return (
     <div className="progress-container">
       <div className="progress-bar">
@@ -32,7 +34,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ currentProgress, phase
         />
       </div>
       <div className="progress-label">
-        {phase && phase.toUpperCase()}: {currentProgress}%
+        {phase.toUpperCase()}: {displayProgress.toFixed(1)}%
       </div>
     </div>
   );

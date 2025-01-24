@@ -2,7 +2,7 @@
 import styles from '../../styles/components.module.css';
 import React, { useEffect, useState } from 'react';
 import { Question, QuestionOption } from '../../models/interfaces';
-import { QuestionFormController, QuestionState } from '@/controllers';
+import { QuestionFormController } from '@/controllers';
 
 interface QuestionFormProps {
   question: Question;

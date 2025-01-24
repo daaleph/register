@@ -22,8 +22,8 @@ export class ProfileService {
     }
 
     async getQuestionWithAnswers(
-        uuid: string,
-        questionId: number
+      uuid: string,
+      questionId: number
     ): Promise<QuestionWithOptions> {
       return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/${uuid}/questionId/${questionId}`);
     }
