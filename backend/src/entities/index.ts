@@ -1,6 +1,9 @@
 // src/entities/index.ts
-export * from './question';
-export * from './profile-questions';
-export * from './profile-responses';
-export * from './profile-options';
+export * from './profile/question';
+export * from './profile/options';
+export * from './bfi/question';
+export * from './bfi/options';
+export * from './product/question';
+export * from './product/options';
+export * from './responses';
 export * from './profile';

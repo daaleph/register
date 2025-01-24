@@ -7,13 +7,13 @@ import { ProfileQuestionsService } from './service';
 export class ProfileQuestionsController {
     
     constructor(
-        private readonly profileQuestionsService: ProfileQuestionsService
+        private readonly service: ProfileQuestionsService
     ) {}
 
     @Get('initial')
     async getInitialProfileQuestion(): Promise<string> {
-        const question = await this.profileQuestionsService.getInitialQuestion();
-        const options = await this.profileQuestionsService.getInitialOptions();
+        const question = await this.service.getInitialQuestion();
+        const options = await this.service.getInitialOptions();
         return JSON.stringify({ question, options });
     }
 
@@ -22,8 +22,8 @@ export class ProfileQuestionsController {
         @Param('uuid') uuid: string,
         @Param('questionId') questionId: number
     ): Promise<string> {
-        const question = await this.profileQuestionsService.getContextualizedQuestionById(uuid, questionId);
-        const options = await this.profileQuestionsService.getContextualizedOptionsById(uuid, questionId);
+        const question = await this.service.getContextualizedQuestionById(uuid, questionId);
+        const options = await this.service.getContextualizedOptionsById(uuid, questionId);
         return JSON.stringify({ question, options });
     }
 

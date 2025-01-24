@@ -1,7 +1,7 @@
 // backend/src/responses/profile/service.ts
 
 import { Injectable } from '@nestjs/common';
-import { Repository } from '../../repositories/profile-responses'
+import { Repository } from '../../repositories/responses/profile'
 
 @Injectable()
 export class Service {

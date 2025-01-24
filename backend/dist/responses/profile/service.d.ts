@@ -1,4 +1,4 @@
-import { Repository } from '../../repositories/profile-responses';
+import { Repository } from '../../repositories/responses/profile';
 export declare class Service {
     private readonly repository;
     constructor(repository: Repository);

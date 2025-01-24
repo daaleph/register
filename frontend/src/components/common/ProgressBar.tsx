@@ -3,17 +3,17 @@ import React from 'react';
 
 interface ProgressBarProps {
   currentProgress: number;
-  phase: 'profile' | 'bfi' | 'product';
+  phase: 'PROFILE' | 'BFI' | 'PRODUCT';
 }
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({ currentProgress, phase }) => {
   const getPhaseColor = (phase: string): string => {
     switch (phase) {
-      case 'profile':
+      case 'PROFILE':
         return '#4CAF50';
-      case 'bfi':
+      case 'BFI':
         return '#2196F3';
-      case 'product':
+      case 'PRODUCT':
         return '#FF9800';
       default:
         return '#757575';

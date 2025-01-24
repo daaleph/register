@@ -7,4 +7,4 @@ export class ProfileEntity {
   movil: string;
   telegram: string;
   [key: `var${number}`]: number[] | number;
-} // [source](search_result_13)
+}

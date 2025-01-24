@@ -2,7 +2,7 @@
 import { Module } from '@nestjs/common';
 import { ProfileQuestionsController } from './controller';
 import { ProfileQuestionsService } from './service';
-import { ProfileQuestionsRepository } from '../../repositories/profile-questions';
+import { ProfileQuestionsRepository } from '../../repositories/questions/profile';
 import { AbacusModule } from '../../abacus/module';
 import { SupabaseModule } from 'src/supabase/module';
 
