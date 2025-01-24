@@ -10,7 +10,7 @@ exports.ProfileQuestionsModule = void 0;
 const common_1 = require("@nestjs/common");
 const controller_1 = require("./controller");
 const service_1 = require("./service");
-const profile_questions_1 = require("../../repositories/profile-questions");
+const profile_1 = require("../../repositories/questions/profile");
 const module_1 = require("../../abacus/module");
 const module_2 = require("../../supabase/module");
 let ProfileQuestionsModule = class ProfileQuestionsModule {
@@ -25,7 +25,7 @@ exports.ProfileQuestionsModule = ProfileQuestionsModule = __decorate([
         controllers: [controller_1.ProfileQuestionsController],
         providers: [
             service_1.ProfileQuestionsService,
-            profile_questions_1.ProfileQuestionsRepository
+            profile_1.ProfileQuestionsRepository
         ],
         exports: [service_1.ProfileQuestionsService]
     })

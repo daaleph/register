@@ -16,17 +16,17 @@ exports.ProfileQuestionsController = void 0;
 const common_1 = require("@nestjs/common");
 const service_1 = require("./service");
 let ProfileQuestionsController = class ProfileQuestionsController {
-    constructor(profileQuestionsService) {
-        this.profileQuestionsService = profileQuestionsService;
+    constructor(service) {
+        this.service = service;
     }
     async getInitialProfileQuestion() {
-        const question = await this.profileQuestionsService.getInitialQuestion();
-        const options = await this.profileQuestionsService.getInitialOptions();
+        const question = await this.service.getInitialQuestion();
+        const options = await this.service.getInitialOptions();
         return JSON.stringify({ question, options });
     }
     async getProfiledQuestion(uuid, questionId) {
-        const question = await this.profileQuestionsService.getContextualizedQuestionById(uuid, questionId);
-        const options = await this.profileQuestionsService.getContextualizedOptionsById(uuid, questionId);
+        const question = await this.service.getContextualizedQuestionById(uuid, questionId);
+        const options = await this.service.getContextualizedOptionsById(uuid, questionId);
         return JSON.stringify({ question, options });
     }
 };

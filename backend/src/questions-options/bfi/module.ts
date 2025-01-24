@@ -1,4 +1,4 @@
-// src/questions/bfi-questions/bfi-questions.module.ts
+// src/questions-options/bfi/module.ts
 import { Module } from '@nestjs/common';
 import { BfiQuestionsController } from './controller';
 import { BfiQuestionsService } from './service';

@@ -2,7 +2,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from 'src/supabase/service';
-import { ProfileResponsesEntity } from 'src/entities/profile-responses';
+import { ProfileResponsesEntity } from 'src/entities/profile/responses';
 
 @Injectable()
 export class Repository {

@@ -1,4 +1,4 @@
-import { ProductQuestionsRepository } from './product-questions.repository';
+import { ProductQuestionsRepository } from '../../repositories/questions/product';
 import { AbacusPersonalizationService } from '../../abacus/personalization.service';
 export declare class ProductQuestionsService {
     private readonly repository;

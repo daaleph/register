@@ -11,29 +11,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProfileQuestionsService = void 0;
 const common_1 = require("@nestjs/common");
-const profile_questions_1 = require("../../repositories/profile-questions");
+const profile_1 = require("../../repositories/questions/profile");
 const personalization_service_1 = require("../../abacus/personalization.service");
 let ProfileQuestionsService = class ProfileQuestionsService {
-    constructor(profileQuestionsRepository, abacusPersonalizationService) {
-        this.profileQuestionsRepository = profileQuestionsRepository;
+    constructor(repository, abacusPersonalizationService) {
+        this.repository = repository;
         this.abacusPersonalizationService = abacusPersonalizationService;
     }
     async getInitialQuestion() {
-        return this.profileQuestionsRepository.findQuestion(1);
+        return this.repository.findQuestion(1);
     }
     async getInitialOptions() {
-        return this.profileQuestionsRepository.findOptions(1);
+        return this.repository.findOptions(1);
     }
     async getQuestionById(id) {
-        return this.profileQuestionsRepository.findQuestion(id);
+        return this.repository.findQuestion(id);
     }
     async getOptionsById(id) {
-        return this.profileQuestionsRepository.findOptions(id);
+        return this.repository.findOptions(id);
     }
     async getContextualizedQuestionById(uuid, id) {
         const question = await this.getQuestionById(id);
-        const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
-        const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(uuid, id);
+        const previousQuestions = await this.repository.getPreviousQuestions(id);
+        const previousResponses = await this.repository.getPreviousResponses(uuid, id);
         const personalizedQuestion = await this.abacusPersonalizationService.personalizesProfileQuestion(question, previousQuestions, previousResponses);
         question.description_en = personalizedQuestion.description_en;
         question.description_es = personalizedQuestion.description_es;
@@ -41,15 +41,15 @@ let ProfileQuestionsService = class ProfileQuestionsService {
     }
     async getContextualizedOptionsById(uuid, id) {
         const options = await this.getOptionsById(id);
-        const previousQuestions = await this.profileQuestionsRepository.getPreviousQuestions(id);
-        const previousResponses = await this.profileQuestionsRepository.getPreviousResponses(uuid, id);
+        const previousQuestions = await this.repository.getPreviousQuestions(id);
+        const previousResponses = await this.repository.getPreviousResponses(uuid, id);
         return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses, id);
     }
 };
 exports.ProfileQuestionsService = ProfileQuestionsService;
 exports.ProfileQuestionsService = ProfileQuestionsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [profile_questions_1.ProfileQuestionsRepository,
+    __metadata("design:paramtypes", [profile_1.ProfileQuestionsRepository,
         personalization_service_1.AbacusPersonalizationService])
 ], ProfileQuestionsService);
 //# sourceMappingURL=service.js.map

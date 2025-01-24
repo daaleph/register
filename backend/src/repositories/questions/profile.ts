@@ -1,10 +1,10 @@
-// backend/src/repositories/profile-questions.ts
+// backend/src/repositories/questions/profile.ts
 
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from 'src/supabase/service';
-import { ProfileOptionsEntity } from 'src/entities/profile-options';
-import { ProfileResponsesEntity } from 'src/entities/profile-responses';
-import { ProfileQuestionsEntity } from 'src/entities/profile-questions';
+import { ProfileOptionsEntity } from 'src/entities/profile/options';
+import { ResponsesEntity } from 'src/entities/responses';
+import { ProfileQuestionsEntity } from 'src/entities/profile/question';
 
 @Injectable()
 export class ProfileQuestionsRepository {
@@ -37,7 +37,15 @@ export class ProfileQuestionsRepository {
       .select()
       .in('variable', variables);
     return data;
-}
+  }
+
+  async getAllQuestions(): Promise<any[]> {
+    const { data } = await this.supabaseService
+      .getConnection()
+      .from('profile_questions')
+      .select();
+    return data;
+  }
 
   async getPreviousResponses(uuid: string, currentId: number): Promise<any[]> {
     const variables = Array.from({ length: currentId }, (_, i) => `var${String(i + 1).padStart(2, '0')}`);
@@ -50,6 +58,15 @@ export class ProfileQuestionsRepository {
     return data;
   }
 
+  async getAllResponses(uuid: string): Promise<any[]> {
+    const { data } = await this.supabaseService
+      .getConnection()
+      .from('profile_responses_with_descriptions')
+      .select()
+      .eq('profile', uuid);
+    return data;
+  }
+
   async findAndCustomizeQuestion(id: number, personalizedQuestion: any): Promise<ProfileQuestionsEntity> {
     const baseQuestion = await this.findQuestion(id);
     return {
@@ -58,7 +75,7 @@ export class ProfileQuestionsRepository {
     };
   }
 
-  async saveProfileResponse(response: ProfileResponsesEntity): Promise<ProfileResponsesEntity> {
+  async saveProfileResponse(response: ResponsesEntity): Promise<ResponsesEntity> {
     const { data } = await this.supabaseService.query('profile_responses', response);
     return data;
   }

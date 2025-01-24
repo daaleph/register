@@ -2,7 +2,7 @@
 import { Module } from '@nestjs/common';
 import { ProfileQuestionsModule } from './profile/module';
 import { BfiQuestionsModule } from './bfi/module';
-import { ProductQuestionsModule } from './product/product-questions.module';
+import { ProductQuestionsModule } from './product/module';
 import { AbacusModule } from '../abacus/module';
 
 @Module({
