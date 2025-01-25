@@ -12,6 +12,7 @@ import styles from '../styles/components.module.css';
 
 const ProfilePage: React.FC = () => {
   const router = useRouter();
+  const [isFinished, setIsFinished] = useState<boolean>(false);
   const { setResponses, setProgress, moveToNextPhase, progress, userProfile, currentPhase } = useUser();
   const profileService = new ProfileService();
   
@@ -22,6 +23,7 @@ const ProfilePage: React.FC = () => {
   }>(() => {
     const controller = new QuestionController({
       initialState: {
+        currentPhase,
         currentQuestion: null,
         currentOptions: null,
         isLoading: true,
@@ -83,7 +85,7 @@ const ProfilePage: React.FC = () => {
 
   // Handle form submission
   const handleSubmit = useCallback(async () => {
-    if (!userProfile?.id) return;
+    if (!userProfile?.id || isFinished) return;
 
     try {
       await controllerState.controller.submitAnswer(
@@ -97,6 +99,11 @@ const ProfilePage: React.FC = () => {
         ...current,
         state: controllerState.controller.getState()
       }));
+
+      if (progress.get(currentPhase)! >= 100) {
+        setIsFinished(true);
+        return;
+      }
 
       await controllerState.controller.nextQuestionWithOptions(
         userProfile.id,

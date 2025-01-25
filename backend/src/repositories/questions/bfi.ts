@@ -72,7 +72,10 @@ export class BfiQuestionsRepository {
   }
 
   async findOptions(): Promise<BfiOptionEntity[]> {
-    const { data } = await this.supabaseService.query('bfi_options');
+    const { data } = await this.supabaseService
+      .getConnection()
+      .from('bfi_options')
+      .select();
     return data;
   }
 

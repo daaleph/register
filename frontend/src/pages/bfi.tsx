@@ -22,6 +22,7 @@ const BfiPage: React.FC = () => {
   }>(() => {
     const controller = new QuestionController({
       initialState: {
+        currentPhase,
         currentQuestion: null,
         currentOptions: null,
         isLoading: true,
@@ -90,8 +91,7 @@ const BfiPage: React.FC = () => {
       await controllerState.controller.submitAnswer(
         userProfile.id,
         bfiService.submitAnswer.bind(bfiService),
-        progress.get(currentPhase)!,
-        2
+        progress.get(currentPhase)!
       );
       setControllerState(current => ({
         ...current,

@@ -3,13 +3,14 @@ import React, { createContext, useState, useContext } from 'react';
 import { UserProfile } from '../models/interfaces';
 import { ProgressIncrements } from '@/components/navigation/phases';
 
+type Phases = 'PROFILE' | 'BFI' | 'PRODUCT';
 
 interface UserContextType {
   // Core user data
   userProfile: UserProfile | null;
   responses: Map<string, number[] | number>;
-  currentPhase: 'PROFILE' | 'BFI' | 'PRODUCT';
-  progress: Map<'PROFILE' | 'BFI' | 'PRODUCT', number>;
+  currentPhase: Phases;
+  progress: Map<Phases, number>;
   // authToken: string | null;
   error: string | null;
   isLoading: boolean;
@@ -17,7 +18,7 @@ interface UserContextType {
   // State setters
   setUserProfile: (PROFILE: UserProfile) => void;
   setResponses: (variable: string, answer: number[] | number) => void;
-  setCurrentPhase: (phase: 'PROFILE' | 'BFI' | 'PRODUCT') => void;
+  setCurrentPhase: (phase: Phases) => void;
   setProgress: () => void;
   // setAuthToken: (token: string) => void;
   setError: (error: string | null) => void;
@@ -34,8 +35,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Core states
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [responses, setResponsesState] = useState<Map<string, number[] | number>>(new Map());
-  const [currentPhase, setCurrentPhase] = useState<'PROFILE' | 'BFI' | 'PRODUCT'>('PROFILE');
-  const [progress, setProgressState] = useState<Map<'PROFILE' | 'BFI' | 'PRODUCT', number>>(
+  const [currentPhase, setCurrentPhase] = useState<Phases>('PROFILE');
+  const [progress, setProgressState] = useState<Map<Phases, number>>(
     new Map([
       ['PROFILE', ProgressIncrements.PROFILE],
       ['BFI', ProgressIncrements.BFI],
@@ -76,7 +77,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
     
-    const phases: Array<'PROFILE' | 'BFI' | 'PRODUCT'> = ['PROFILE', 'BFI', 'PRODUCT'];
+    const phases: Array<Phases> = ['PROFILE', 'BFI', 'PRODUCT'];
     const currentIndex = phases.indexOf(currentPhase);
     if (currentIndex < phases.length - 1) {
       setCurrentPhase(phases[currentIndex + 1]);

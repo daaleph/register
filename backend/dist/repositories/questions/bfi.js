@@ -69,7 +69,10 @@ let BfiQuestionsRepository = class BfiQuestionsRepository {
         return Array.isArray(data) ? data[0] : data;
     }
     async findOptions() {
-        const { data } = await this.supabaseService.query('bfi_options');
+        const { data } = await this.supabaseService
+            .getConnection()
+            .from('bfi_options')
+            .select();
         return data;
     }
     async saveResponse(response) {
