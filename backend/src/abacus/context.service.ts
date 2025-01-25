@@ -10,9 +10,9 @@ type QuestionType = 'profile' | 'bfi' | 'product' | 'unknown';
 
 interface ContextBuilder {
   buildQuestionContext(
-    question: QuestionEntity, 
-    varIndex: number,
-    response: PreviousResponsesEntity | undefined,
+    questions: QuestionEntity[],
+    responses: PreviousResponsesEntity[],
+    varIndexStart: number,
   ): Partial<AbacusContext>;
 }
 
@@ -28,33 +28,81 @@ export class AbacusContextService {
     ]);
   }
 
-  private buildQuestionContext(
-    questions: QuestionEntity[],
-    responses: PreviousResponsesEntity[],
-    questionType: QuestionType
-  ): AbacusContext {
-    const contextBuilder = this.contextBuilders.get(questionType) || new DefaultContextBuilder();
-    
-    return questions.reduce((acc, question, index) => {
-      const response = responses.find(resp => resp.variable === question.variable);
-      const context = contextBuilder.buildQuestionContext(question, index + 1, response);
-      return { ...acc, ...context };
-    }, {} as AbacusContext);
-  }
-
   buildContext(
-    previousQuestions: QuestionEntity[],
-    previousResponses: PreviousResponsesEntity[],
+    questions: {
+      profile?: ProfileQuestionEntity[],
+      bfi?: BfiQuestionEntity[],
+      product?: ProductQuestionEntity[]
+    },
+    responses: {
+      profile?: PreviousResponsesEntity[],
+      bfi?: PreviousResponsesEntity[],
+      product?: PreviousResponsesEntity[]
+    },
     questionType: string
   ): AbacusContextEntity {
     const validatedType = this.validateQuestionType(questionType);
-    const context = this.buildQuestionContext(previousQuestions, previousResponses, validatedType);
+    const context = this.buildQuestionContext(questions, responses);
 
     return {
       type: validatedType,
       context,
-      order: previousQuestions.length + 1
+      order: this.calculateTotalQuestions(questions)
     };
+  }
+
+  private buildQuestionContext(
+    questions: {
+      profile?: ProfileQuestionEntity[],
+      bfi?: BfiQuestionEntity[],
+      product?: ProductQuestionEntity[]
+    },
+    responses: {
+      profile?: PreviousResponsesEntity[],
+      bfi?: PreviousResponsesEntity[],
+      product?: PreviousResponsesEntity[]
+    }
+  ): AbacusContext {
+    let context = {} as AbacusContext;
+    let varIndexStart = 1;
+
+    if (questions.profile && responses.profile) {
+      const profileBuilder = this.contextBuilders.get('profile') as ProfileContextBuilder;
+      context = {
+        ...context,
+        ...profileBuilder.buildQuestionContext(questions.profile, responses.profile, varIndexStart)
+      };
+      varIndexStart += questions.profile.length;
+    }
+
+    if (questions.bfi && responses.bfi) {
+      const bfiBuilder = this.contextBuilders.get('bfi') as BfiContextBuilder;
+      context = {
+        ...context,
+        ...bfiBuilder.buildQuestionContext(questions.bfi, responses.bfi, varIndexStart)
+      };
+      varIndexStart += questions.bfi.length;
+    }
+
+    if (questions.product && responses.product) {
+      const productBuilder = this.contextBuilders.get('product') as ProductContextBuilder;
+      context = {
+        ...context,
+        ...productBuilder.buildQuestionContext(questions.product, responses.product, varIndexStart)
+      };
+    }
+
+    return context;
+  }
+
+  private calculateTotalQuestions(questions: {
+    profile?: QuestionEntity[],
+    bfi?: QuestionEntity[],
+    product?: QuestionEntity[]
+  }): number {
+    return (questions.profile?.length || 0) +
+           (questions.bfi?.length || 0) +
+           (questions.product?.length || 0);
   }
 
   private validateQuestionType(type: string): QuestionType {
@@ -64,82 +112,98 @@ export class AbacusContextService {
 
 class ProfileContextBuilder implements ContextBuilder {
   buildQuestionContext(
-    question: ProfileQuestionEntity, 
-    varIndex: number,
-    response?: PreviousResponsesEntity
+    questions: ProfileQuestionEntity[],
+    responses: PreviousResponsesEntity[],
+    varIndexStart: number
   ): Partial<AbacusContext> {
-    if (!response) return {};
-    
-    return {
-      [`var${varIndex}`]: {
-        type: question.type as 'multiple' | 'unique',
-        name_en: question.name_en,
-        name_es: question.name_es,
-        description_en: question.description_en,
-        description_es: question.description_es,
-        answer_es: response.answer_options_es,
-        answer_en: response.answer_options_en
-      }
-    };
+    return questions.reduce((acc, question, index) => {
+      const response = responses.find(resp => resp.variable === question.variable);
+      if (!response) return acc;
+
+      return {
+        ...acc,
+        [`var${varIndexStart + index}`]: {
+          type: question.type as 'multiple' | 'unique',
+          name_en: question.name_en,
+          name_es: question.name_es,
+          description_en: question.description_en,
+          description_es: question.description_es,
+          answer_es: response.answer_options_es,
+          answer_en: response.answer_options_en
+        }
+      };
+    }, {} as Partial<AbacusContext>);
   }
 }
 
 class BfiContextBuilder implements ContextBuilder {
   buildQuestionContext(
-    question: BfiQuestionEntity, 
-    varIndex: number,
-    response?: PreviousResponsesEntity
+    questions: BfiQuestionEntity[],
+    responses: PreviousResponsesEntity[],
+    varIndexStart: number
   ): Partial<AbacusContext> {
-    if (!response) return {};
-    
-    return {
-      [`var${varIndex}`]: {
-        description_en: question.description_en,
-        description_es: question.description_es,
-        answer_es: response.answer_options_es,
-        answer_en: response.answer_options_en
-      }
-    };
+    return questions.reduce((acc, question, index) => {
+      const response = responses.find(resp => resp.variable === question.variable);
+      if (!response) return acc;
+
+      return {
+        ...acc,
+        [`var${varIndexStart + index}`]: {
+          description_en: question.description_en,
+          description_es: question.description_es,
+          answer_es: response.answer_options_es,
+          answer_en: response.answer_options_en
+        }
+      };
+    }, {} as Partial<AbacusContext>);
   }
 }
 
 class ProductContextBuilder implements ContextBuilder {
   buildQuestionContext(
-    question: ProductQuestionEntity,
-    varIndex: number,
-    response?: PreviousResponsesEntity,
+    questions: ProductQuestionEntity[],
+    responses: PreviousResponsesEntity[],
+    varIndexStart: number
   ): Partial<AbacusContext> {
-    if (!response) return {};
-    
-    return {
-      [`var${varIndex}`]: {
-        type: question.type as 'multiple' | 'unique',
-        name_en: question.name_en,
-        name_es: question.name_es,
-        description_en: question.description_en,
-        description_es: question.description_es,
-        answer_es: response.answer_options_es,
-        answer_en: response.answer_options_en
-      }
-    };
+    return questions.reduce((acc, question, index) => {
+      const response = responses.find(resp => resp.variable === question.variable);
+      if (!response) return acc;
+
+      return {
+        ...acc,
+        [`var${varIndexStart + index}`]: {
+          type: question.type as 'multiple' | 'unique',
+          name_en: question.name_en,
+          name_es: question.name_es,
+          description_en: question.description_en,
+          description_es: question.description_es,
+          answer_es: response.answer_options_es,
+          answer_en: response.answer_options_en
+        }
+      };
+    }, {} as Partial<AbacusContext>);
   }
 }
 
 class DefaultContextBuilder implements ContextBuilder {
   buildQuestionContext(
-    question: QuestionEntity,
-    varIndex: number,
-    response?: PreviousResponsesEntity,
+    questions: QuestionEntity[],
+    responses: PreviousResponsesEntity[],
+    varIndexStart: number
   ): Partial<AbacusContext> {
-    if (!response) return {};
-    
-    return {
-      [`var${varIndex}`]: {
-        description_en: question.description_en,
-        description_es: question.description_es,
-        answer_es: response.answer_options_es,
-        answer_en: response.answer_options_en
-      }
-    };
+    return questions.reduce((acc, question, index) => {
+      const response = responses.find(resp => resp.variable === question.variable);
+      if (!response) return acc;
+
+      return {
+        ...acc,
+        [`var${varIndexStart + index}`]: {
+          description_en: question.description_en,
+          description_es: question.description_es,
+          answer_es: response.answer_options_es,
+          answer_en: response.answer_options_en
+        }
+      };
+    }, {} as Partial<AbacusContext>);
   }
 }

@@ -11,14 +11,14 @@ export class ProfileQuestionsController {
     ) {}
 
     @Get('initial')
-    async getInitialProfileQuestion(): Promise<string> {
+    async getInitialQuestionWithOptions(): Promise<string> {
         const question = await this.service.getInitialQuestion();
         const options = await this.service.getInitialOptions();
         return JSON.stringify({ question, options });
     }
 
     @Get('questionId/:questionId')
-    async getProfiledQuestion(
+    async getQuestionWithOptions(
         @Param('uuid') uuid: string,
         @Param('questionId') questionId: number
     ): Promise<string> {

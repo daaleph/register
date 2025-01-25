@@ -9,14 +9,16 @@ export class BfiQuestionsController {
   ) {}
 
   @Get('initial')
-  async getInitialProfileQuestion(): Promise<string> {
-      const question = await this.service.getInitialQuestion();
-      const options = await this.service.getInitialOptions();
+  async getInitialQuestionWithOptions(
+    @Param('uuid') uuid: string
+  ): Promise<string> {
+      const question = await this.service.getContextualizedInitialQuestion(uuid);
+      const options = await this.service.getContextualizedInitialOptions(uuid);
       return JSON.stringify({ question, options });
   }
 
   @Get('questionId/:questionId')
-  async getProfiledQuestion(
+  async getProfiledQuestionWithOptions(
       @Param('uuid') uuid: string,
       @Param('questionId') questionId: number
   ): Promise<string> {

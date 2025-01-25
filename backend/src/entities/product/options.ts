@@ -1,5 +1,5 @@
 // src/entities/product/options.ts
-export class ProductOptionsEntity {
+export class ProductOptionEntity {
     variable: string;
     option_id: number;
     description_es: string;

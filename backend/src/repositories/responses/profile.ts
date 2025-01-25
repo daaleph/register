@@ -1,8 +1,8 @@
 // backend/src/repositories/profile-responses.ts
 
 import { Injectable } from '@nestjs/common';
+import { ResponsesEntity } from 'src/entities';
 import { SupabaseService } from 'src/supabase/service';
-import { ProfileResponsesEntity } from 'src/entities/profile/responses';
 
 @Injectable()
 export class Repository {
@@ -11,7 +11,7 @@ export class Repository {
     private readonly supabaseService: SupabaseService = new SupabaseService()
   ) {}
 
-  async saveResponse(response: ProfileResponsesEntity): Promise<any> {
+  async saveResponse(response: ResponsesEntity): Promise<any> {
     const connection = this.supabaseService.getConnection();
     const { data, error } = await connection
       .from('profile_responses')

@@ -2,9 +2,9 @@
 
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from 'src/supabase/service';
-import { ProfileOptionsEntity } from 'src/entities/profile/options';
+import { ProfileOptionEntity } from 'src/entities/profile/options';
 import { ResponsesEntity } from 'src/entities/responses';
-import { ProfileQuestionsEntity } from 'src/entities/profile/question';
+import { ProfileQuestionEntity } from 'src/entities/profile/question';
 
 @Injectable()
 export class ProfileQuestionsRepository {
@@ -13,7 +13,7 @@ export class ProfileQuestionsRepository {
     private readonly supabaseService: SupabaseService = new SupabaseService()
   ) {}
 
-  async findQuestion(id: number): Promise<ProfileQuestionsEntity> {
+  async findQuestion(id: number): Promise<ProfileQuestionEntity> {
     const variable = `var${String(id).padStart(2, '0')}`;
     const { data } = await this.supabaseService.query('profile_questions', {
       variable,
@@ -21,7 +21,7 @@ export class ProfileQuestionsRepository {
     return Array.isArray(data) ? data[0] : data;
   }
 
-  async findOptions(id: number): Promise<ProfileOptionsEntity[]> {
+  async findOptions(id: number): Promise<ProfileOptionEntity[]> {
     const variable = `var${String(id).padStart(2, '0')}`;
     const { data } = await this.supabaseService.query('profile_options', {
       variable,
@@ -65,14 +65,6 @@ export class ProfileQuestionsRepository {
       .select()
       .eq('profile', uuid);
     return data;
-  }
-
-  async findAndCustomizeQuestion(id: number, personalizedQuestion: any): Promise<ProfileQuestionsEntity> {
-    const baseQuestion = await this.findQuestion(id);
-    return {
-      ...baseQuestion,
-      ...personalizedQuestion
-    };
   }
 
   async saveProfileResponse(response: ResponsesEntity): Promise<ResponsesEntity> {
