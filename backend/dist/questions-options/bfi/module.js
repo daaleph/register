@@ -13,6 +13,7 @@ const service_1 = require("./service");
 const bfi_1 = require("../../repositories/questions/bfi");
 const module_1 = require("../../abacus/module");
 const module_2 = require("../../supabase/module");
+const questions_1 = require("../../repositories/questions");
 let BfiQuestionsModule = class BfiQuestionsModule {
 };
 exports.BfiQuestionsModule = BfiQuestionsModule;
@@ -20,7 +21,7 @@ exports.BfiQuestionsModule = BfiQuestionsModule = __decorate([
     (0, common_1.Module)({
         imports: [module_1.AbacusModule, module_2.SupabaseModule],
         controllers: [controller_1.BfiQuestionsController],
-        providers: [service_1.BfiQuestionsService, bfi_1.BfiQuestionsRepository],
+        providers: [service_1.BfiQuestionsService, bfi_1.BfiQuestionsRepository, questions_1.ProfileQuestionsRepository],
         exports: [service_1.BfiQuestionsService]
     })
 ], BfiQuestionsModule);

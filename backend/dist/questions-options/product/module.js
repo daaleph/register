@@ -20,7 +20,12 @@ exports.ProductQuestionsModule = ProductQuestionsModule = __decorate([
     (0, common_1.Module)({
         imports: [module_1.AbacusModule, module_2.SupabaseModule],
         controllers: [controller_1.ProductQuestionsController],
-        providers: [service_1.ProductQuestionsService, questions_1.ProductQuestionsRepository],
+        providers: [
+            service_1.ProductQuestionsService,
+            questions_1.ProductQuestionsRepository,
+            questions_1.ProfileQuestionsRepository,
+            questions_1.BfiQuestionsRepository
+        ],
         exports: [service_1.ProductQuestionsService]
     })
 ], ProductQuestionsModule);
