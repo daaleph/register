@@ -1,6 +1,6 @@
-// src/services/ProductService.ts
+// frontend/src/services/ProductService.ts
 
-import { Question } from "@/models/interfaces";
+import { QuestionWithOptions } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class ProductService {
@@ -10,15 +10,43 @@ export class ProductService {
         this.baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
     }
 
-    async getProductQuestion(questionId: number): Promise<Question> {
-        return HttpUtility.get(`${this.baseUrl}/questions/product/${questionId}`);
+    async getInitialQuestionWithOptions(
+      id: string
+    ): Promise<QuestionWithOptions> {
+      return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/${id}/initial`);
     }
 
-    async submitProductAnswer(profileId: string, variable: string, answer: number[] | number): Promise<void> {
-        return HttpUtility.post(`${this.baseUrl}/questions/product/answer`, {
-            profileId,
-            variable,
-            answer
-        });
+    async getQuestionWithAnswers(
+      uuid: string,
+      questionId: number
+    ): Promise<QuestionWithOptions> {
+      return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/${uuid}/questionId/${questionId}`);
     }
-} // [source](search_result_14)
+
+    async submitAnswer(
+      profileId: string,
+      variable: string,
+      answer: number[]
+    ): Promise<void> {
+      return HttpUtility.post(`${this.baseUrl}responses/profile/`, {
+        profileId,
+        variable,
+        answer
+      });
+    }
+
+    async submitOtherAnswer(
+      profileId: string,
+      variable: string,
+      answer: string,
+      nature: number
+    ): Promise<void> {
+      return HttpUtility.post(`${this.baseUrl}responses/profile/other`, {
+        profileId,
+        variable,
+        answer,
+        nature
+      });
+    }
+
+}

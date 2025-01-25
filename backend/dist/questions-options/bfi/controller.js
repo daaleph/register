@@ -19,12 +19,12 @@ let BfiQuestionsController = class BfiQuestionsController {
     constructor(service) {
         this.service = service;
     }
-    async getInitialProfileQuestion() {
-        const question = await this.service.getInitialQuestion();
-        const options = await this.service.getInitialOptions();
+    async getInitialQuestionWithOptions(uuid) {
+        const question = await this.service.getContextualizedInitialQuestion(uuid);
+        const options = await this.service.getContextualizedInitialOptions(uuid);
         return JSON.stringify({ question, options });
     }
-    async getProfiledQuestion(uuid, questionId) {
+    async getProfiledQuestionWithOptions(uuid, questionId) {
         const question = await this.service.getContextualizedQuestionById(uuid, questionId);
         const options = await this.service.getContextualizedOptionsById(uuid, questionId);
         return JSON.stringify({ question, options });
@@ -33,10 +33,11 @@ let BfiQuestionsController = class BfiQuestionsController {
 exports.BfiQuestionsController = BfiQuestionsController;
 __decorate([
     (0, common_1.Get)('initial'),
+    __param(0, (0, common_1.Param)('uuid')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], BfiQuestionsController.prototype, "getInitialProfileQuestion", null);
+], BfiQuestionsController.prototype, "getInitialQuestionWithOptions", null);
 __decorate([
     (0, common_1.Get)('questionId/:questionId'),
     __param(0, (0, common_1.Param)('uuid')),
@@ -44,7 +45,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Number]),
     __metadata("design:returntype", Promise)
-], BfiQuestionsController.prototype, "getProfiledQuestion", null);
+], BfiQuestionsController.prototype, "getProfiledQuestionWithOptions", null);
 exports.BfiQuestionsController = BfiQuestionsController = __decorate([
     (0, common_1.Controller)('questions/bfi/:uuid'),
     __metadata("design:paramtypes", [service_1.BfiQuestionsService])

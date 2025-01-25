@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProfileOptionsEntity = void 0;
-class ProfileOptionsEntity {
+exports.ProfileOptionEntity = void 0;
+class ProfileOptionEntity {
 }
-exports.ProfileOptionsEntity = ProfileOptionsEntity;
+exports.ProfileOptionEntity = ProfileOptionEntity;
 //# sourceMappingURL=options.js.map

@@ -1,14 +1,15 @@
-import { BfiQuestionsRepository } from '../../repositories/questions/bfi';
 import { AbacusPersonalizationService } from '../../abacus/personalization.service';
-import { BfiQuestionEntity, BfiOptionsEntity } from '../../entities';
+import { BfiQuestionEntity, BfiOptionEntity } from '../../entities';
+import { BfiQuestionsRepository, ProfileQuestionsRepository } from 'src/repositories/questions';
 export declare class BfiQuestionsService {
     private readonly repository;
-    private readonly abacusPersonalizationService;
-    constructor(repository: BfiQuestionsRepository, abacusPersonalizationService: AbacusPersonalizationService);
-    getInitialQuestion(): Promise<BfiQuestionEntity>;
-    getInitialOptions(): Promise<BfiOptionsEntity[]>;
-    getQuestionById(id: number): Promise<BfiQuestionEntity>;
-    getOptionsById(id: number): Promise<BfiOptionsEntity[]>;
+    private readonly profileRepository;
+    private readonly personalizationService;
+    constructor(repository: BfiQuestionsRepository, profileRepository: ProfileQuestionsRepository, personalizationService: AbacusPersonalizationService);
+    getContextualizedInitialQuestion(uuid: string): Promise<BfiQuestionEntity>;
+    getContextualizedInitialOptions(uuid: string): Promise<BfiOptionEntity[]>;
     getContextualizedQuestionById(uuid: string, id: number): Promise<BfiQuestionEntity>;
-    getContextualizedOptionsById(uuid: string, id: number): Promise<BfiOptionsEntity[]>;
+    getContextualizedOptionsById(uuid: string, id: number): Promise<BfiOptionEntity[]>;
+    getQuestionById(id: number): Promise<BfiQuestionEntity>;
+    getOptionsById(): Promise<BfiOptionEntity[]>;
 }

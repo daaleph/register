@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BfiOptionsEntity = void 0;
-class BfiOptionsEntity {
+exports.BfiOptionEntity = void 0;
+class BfiOptionEntity {
 }
-exports.BfiOptionsEntity = BfiOptionsEntity;
+exports.BfiOptionEntity = BfiOptionEntity;
 //# sourceMappingURL=options.js.map

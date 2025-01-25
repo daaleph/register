@@ -5,9 +5,10 @@ import { useUser } from '../context/UserContext';
 import { QuestionForm } from '../components/common/QuestionForm';
 import { ProgressBar } from '../components/common/ProgressBar';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
-import styles from '../styles/components.module.css';
 import { QuestionController, QuestionState } from '@/controllers';
 import { ProfileService } from '@/services';
+
+import styles from '../styles/components.module.css';
 
 const ProfilePage: React.FC = () => {
   const router = useRouter();
@@ -88,9 +89,9 @@ const ProfilePage: React.FC = () => {
       await controllerState.controller.submitAnswer(
         userProfile.id,
         profileService.submitAnswer.bind(profileService),
-        profileService.submitOtherAnswer.bind(profileService),
         progress.get(currentPhase)!,
-        1
+        1,
+        profileService.submitOtherAnswer.bind(profileService)
       );
       setControllerState(current => ({
         ...current,

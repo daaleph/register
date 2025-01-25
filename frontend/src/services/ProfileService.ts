@@ -17,7 +17,9 @@ export class ProfileService {
       });
     }
 
-    async getInitialQuestionWithOptions(id: string): Promise<QuestionWithOptions> {
+    async getInitialQuestionWithOptions(
+      id: string
+    ): Promise<QuestionWithOptions> {
       return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/${id}/initial`);
     }
 
@@ -28,7 +30,11 @@ export class ProfileService {
       return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/${uuid}/questionId/${questionId}`);
     }
 
-    async submitAnswer(profileId: string, variable: string, answer: number[] | number): Promise<void> {
+    async submitAnswer(
+      profileId: string,
+      variable: string,
+      answer: number[]
+    ): Promise<void> {
       return HttpUtility.post(`${this.baseUrl}responses/profile/`, {
         profileId,
         variable,
@@ -36,7 +42,12 @@ export class ProfileService {
       });
     }
 
-    async submitOtherAnswer(profileId: string, variable: string, answer: string, nature: number): Promise<void> {
+    async submitOtherAnswer(
+      profileId: string,
+      variable: string,
+      answer: string,
+      nature: number
+    ): Promise<void> {
       return HttpUtility.post(`${this.baseUrl}responses/profile/other`, {
         profileId,
         variable,

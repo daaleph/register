@@ -11,6 +11,7 @@ export interface PersonalizedOption {
 }
 export interface AbacusContext {
     [key: `var${number}`]: {
+        nature: 'profile' | 'bfi' | 'product';
         type?: 'multiple' | 'unique';
         name_es?: string;
         name_en?: string;

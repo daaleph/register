@@ -64,13 +64,6 @@ let ProfileQuestionsRepository = class ProfileQuestionsRepository {
             .eq('profile', uuid);
         return data;
     }
-    async findAndCustomizeQuestion(id, personalizedQuestion) {
-        const baseQuestion = await this.findQuestion(id);
-        return {
-            ...baseQuestion,
-            ...personalizedQuestion
-        };
-    }
     async saveProfileResponse(response) {
         const { data } = await this.supabaseService.query('profile_responses', response);
         return data;

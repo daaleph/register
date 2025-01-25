@@ -24,12 +24,6 @@ let ProfileQuestionsService = class ProfileQuestionsService {
     async getInitialOptions() {
         return this.repository.findOptions(1);
     }
-    async getQuestionById(id) {
-        return this.repository.findQuestion(id);
-    }
-    async getOptionsById(id) {
-        return this.repository.findOptions(id);
-    }
     async getContextualizedQuestionById(uuid, id) {
         const question = await this.getQuestionById(id);
         const previousQuestions = await this.repository.getPreviousQuestions(id);
@@ -43,7 +37,13 @@ let ProfileQuestionsService = class ProfileQuestionsService {
         const options = await this.getOptionsById(id);
         const previousQuestions = await this.repository.getPreviousQuestions(id);
         const previousResponses = await this.repository.getPreviousResponses(uuid, id);
-        return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses, id);
+        return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses);
+    }
+    async getQuestionById(id) {
+        return this.repository.findQuestion(id);
+    }
+    async getOptionsById(id) {
+        return this.repository.findOptions(id);
     }
 };
 exports.ProfileQuestionsService = ProfileQuestionsService;

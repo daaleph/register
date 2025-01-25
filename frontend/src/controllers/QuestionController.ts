@@ -98,9 +98,9 @@ export class QuestionController {
     async submitAnswer(
         profileId: string,
         submitAnswer: Function,
-        submitOtherAnswer: Function,
         progress: number,
-        nature: number
+        nature: number,
+        submitOtherAnswer?: Function,
     ) {
         const { currentQuestion, selectedAnswer, otherText } = this.state;
         if (!currentQuestion || selectedAnswer === null) return;
@@ -110,7 +110,7 @@ export class QuestionController {
             this.config.onAnswerSubmitted(currentQuestion.variable, selectedAnswer);
             this.config.onProgressUpdate();
             const answers = Array.isArray(selectedAnswer) ? selectedAnswer : [selectedAnswer];
-            if (otherText && currentQuestion) {
+            if ( submitOtherAnswer && otherText && currentQuestion) {
                 await submitOtherAnswer(profileId, currentQuestion.variable, otherText, nature);
             }
             await submitAnswer(profileId, currentQuestion.variable, answers);   

@@ -9,13 +9,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResponsesModule = void 0;
 const common_1 = require("@nestjs/common");
 const module_1 = require("./profile/module");
+const module_2 = require("./bfi/module");
+const module_3 = require("./product/module");
 let ResponsesModule = class ResponsesModule {
 };
 exports.ResponsesModule = ResponsesModule;
 exports.ResponsesModule = ResponsesModule = __decorate([
     (0, common_1.Module)({
-        imports: [module_1.ProfileResponsesModule],
-        exports: [module_1.ProfileResponsesModule]
+        imports: [
+            module_1.ProfileResponsesModule,
+            module_2.BfiResponsesModule,
+            module_3.ProductResponsesModule
+        ],
+        exports: [
+            module_1.ProfileResponsesModule,
+            module_2.BfiResponsesModule,
+            module_3.ProductResponsesModule
+        ]
     })
 ], ResponsesModule);
 //# sourceMappingURL=module.js.map
