@@ -1,7 +1,7 @@
 // frontend/src/pages/bfi.tsx
 import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useUser } from '../context/UserContext';
+import { Phases, useUser } from '../context/UserContext';
 import { QuestionForm } from '../components/common/QuestionForm';
 import { ProgressBar } from '../components/common/ProgressBar';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
@@ -10,9 +10,9 @@ import { BfiService } from '@/services';
 import styles from '../styles/components.module.css';
 
 const BfiPage: React.FC = () => {
+  const QUESTIONTYPE: Phases = 'BFI';
   const router = useRouter();
-  const [isFinished, setIsFinished] = useState<boolean>(false);
-  const { setResponses, setProgress, moveToNextPhase, progress, userProfile, currentPhase } = useUser();
+  const { setResponses, setProgress, progress, userProfile, currentPhase } = useUser();
   const bfiService = new BfiService();
 
   // Single state for the question controller and its state
@@ -37,10 +37,6 @@ const BfiPage: React.FC = () => {
       },
       onAnswerSubmitted: (variable: string, answer: number[] | number) => {
         setResponses(variable, answer);
-      },
-      onCompletion: () => {
-        moveToNextPhase();
-        router.push('/product');
       }
     });
 
@@ -54,13 +50,11 @@ const BfiPage: React.FC = () => {
   useEffect(() => {
     const initQuestions = async () => {
       if (!router.isReady || typeof userProfile?.id !== "string") return;
-
       try {
         await controllerState.controller.initializeQuestions(
           userProfile.id,
           bfiService.getInitialQuestionWithOptions.bind(bfiService)
         );
-        
         setControllerState(current => ({
           ...current,
           state: current.controller.getState()
@@ -69,7 +63,6 @@ const BfiPage: React.FC = () => {
         console.error('Failed to initialize questions:', error);
       }
     };
-
     initQuestions();
   }, [router.isReady, userProfile?.id]);
 
@@ -84,23 +77,21 @@ const BfiPage: React.FC = () => {
 
   // Handle form submission
   const handleSubmit = useCallback(async () => {
-    if (!userProfile?.id || isFinished) return;
+    if (!userProfile?.id) return;
 
     try {
       await controllerState.controller.submitAnswer(
         userProfile.id,
         bfiService.submitAnswer.bind(bfiService),
-        progress.get(currentPhase)!
+        progress,
+        currentPhase
       );
       setControllerState(current => ({
         ...current,
         state: controllerState.controller.getState()
       }));
 
-      if (progress.get(currentPhase)! >= 100) {
-        setIsFinished(true);
-        return;
-      }
+      if (progress.get(currentPhase)! > 100 && QUESTIONTYPE !== currentPhase) return;
 
       await controllerState.controller.nextQuestionWithOptions(
         userProfile.id,
@@ -155,7 +146,7 @@ const BfiPage: React.FC = () => {
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
       >
-        {controllerState.state.isLoading ? 'Submitting...' : 'Submit'}
+        {controllerState.state.isLoading ? 'Entendiéndote...' : 'Contestar'}
       </button>
     </div>
   );

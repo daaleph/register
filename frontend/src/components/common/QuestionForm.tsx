@@ -35,7 +35,10 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   }, [question.id]);
 
   if (isLoading) {
-    return <div className={styles.questionFormLoading}>Loading...</div>;
+    return <div className={styles.questionFormLoading}>
+      Trabajamos agilizando<br/>
+      E informando mejor aquí
+    </div>;
   }
 
   const handleOptionSelect = (optionId: number) => {

@@ -46,7 +46,7 @@ export class ProductQuestionsRepository {
     const { data } = await this.supabaseService.query('product_questions', {
       variable,
     });
-    return data;
+    return data[0] as ProductQuestionEntity;
   }
 
   async findOptions(id: number): Promise<ProductOptionEntity[]> {

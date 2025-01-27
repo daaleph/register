@@ -18,7 +18,7 @@ export class ProfileQuestionsRepository {
     const { data } = await this.supabaseService.query('profile_questions', {
       variable,
     });
-    return Array.isArray(data) ? data[0] : data;
+    return data[0] as ProfileQuestionEntity;
   }
 
   async findOptions(id: number): Promise<ProfileOptionEntity[]> {

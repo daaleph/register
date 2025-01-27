@@ -26,7 +26,6 @@ interface UserContextType {
   setIsLoading: (loading: boolean) => void;
 
   // Phase management
-  canTransitionToNextPhase: () => boolean;
   moveToNextPhase: () => void;
 }
 
@@ -50,7 +49,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (progress.get(currentPhase)! >= 100) moveToNextPhase();
+    if (progress.get(currentPhase)! > 100) moveToNextPhase();
   }, [progress])
 
   // Response management
@@ -67,22 +66,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const newProgress = new Map(prevProgress);
       const increment = ProgressIncrements[currentPhase as keyof typeof ProgressIncrements];
       const currentValue = newProgress.get(currentPhase)!;
-      newProgress.set(currentPhase, Math.min(100, currentValue + increment));
+      newProgress.set(currentPhase, Math.min(currentValue + increment, 101));
       return newProgress;
     });
   };
 
-  const canTransitionToNextPhase = (): boolean => {
-    const advanceOfPhase = progress.get(currentPhase);
-    return advanceOfPhase ? advanceOfPhase >= 100: false;
-  };
-
   const moveToNextPhase = () => {
-    if (!canTransitionToNextPhase()) {
-      setError('Please complete all required questions');
-      return;
-    }
-    
     const phases: Array<Phases> = ['PROFILE', 'BFI', 'PRODUCT'];
     const currentIndex = phases.indexOf(currentPhase);
     if (currentIndex < phases.length - 1) {
@@ -91,6 +80,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setCurrentPhase(newPhase);
       setProgress();
       setError(null);
+    } else {
+      router.push('/home');
     }
   };
 
@@ -110,7 +101,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // setAuthToken,
     setError,
     setIsLoading,
-    canTransitionToNextPhase,
     moveToNextPhase
   };
 

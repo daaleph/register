@@ -62,14 +62,18 @@ export class QuestionController {
                 throw new Error('Current question is null');
             }
             this.setState({ isLoading: true, error: null });
+            console.log("STATE:", state);
             const nextQuestionId = state.currentPhase === 'PROFILE' ? this.getNextQuestionId(
                 state.currentQuestion.id,
                 state.selectedAnswer || 0
             ) : state.currentQuestion.id + 1;
+            console.log("PROFILE ID:", profileId);
+            console.log("OPTIONS:", nextQuestionId);
             const { question, options } = await getNextQuestion(
                 profileId,
                 nextQuestionId
             );
+            console.log("??????????????", question, options);
             if (!question || !options) {
                 throw new Error('Failed to load next question or options');
             }
@@ -116,6 +120,7 @@ export class QuestionController {
             this.config.onAnswerSubmitted(currentQuestion.variable, selectedAnswer);
             this.config.onProgressUpdate();
             this.setState({ currentProgress: progress.get(currentPhase)})
+            this.setState({ isLoading: false, error: null })
         } catch (error) {
             this.setState({
                 error: error instanceof Error ? error.message : 'Failed to process answer',
@@ -123,11 +128,6 @@ export class QuestionController {
             });
         }
     }
-
-    canTransitionToNextPhase = (progress: Map<Phases, number>, currentPhase: Phases): boolean => {
-        const advanceOfPhase = progress.get(currentPhase);
-        return advanceOfPhase ? advanceOfPhase >= 100: false;
-    };
   
     public getNextQuestionId(id: number | string, selectedAnswer: number | number[]): number {
         const numberId = Number(id);

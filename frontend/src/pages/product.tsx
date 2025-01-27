@@ -1,19 +1,18 @@
 // frontend/src/pages/product.tsx
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { useUser } from '../context/UserContext';
+import { Phases, useUser } from '../context/UserContext';
 import { QuestionForm } from '../components/common/QuestionForm';
 import { ProgressBar } from '../components/common/ProgressBar';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { QuestionController, QuestionState } from '@/controllers';
 import { ProductService } from '@/services';
-
 import styles from '../styles/components.module.css';
 
 const ProfilePage: React.FC = () => {
+    const QUESTIONTYPE: Phases = 'PRODUCT';
     const router = useRouter();
-    const [isFinished, setIsFinished] = useState<boolean>(false);
-    const { setResponses, setProgress, moveToNextPhase, progress, userProfile, currentPhase } = useUser();
+    const { setResponses, setProgress, progress, userProfile, currentPhase } = useUser();
     const productService = new ProductService();
     
     // Single state for the question controller and its state
@@ -22,55 +21,47 @@ const ProfilePage: React.FC = () => {
         state: QuestionState;
     }>(() => {
         const controller = new QuestionController({
-        initialState: {
-            currentPhase,
-            currentQuestion: null,
-            currentOptions: null,
-            isLoading: true,
-            currentProgress: 0,
-            error: null,
-            isInitialized: false,
-            selectedAnswer: null,
-            otherText: undefined
-        },
-        onProgressUpdate: () => {
-            setProgress();
-        },
-        onAnswerSubmitted: (variable: string, answer: number[] | number) => {
-            setResponses(variable, answer);
-        },
-        onCompletion: () => {
-            moveToNextPhase();
-            router.push('/');
-        }
+            initialState: {
+                currentPhase,
+                currentQuestion: null,
+                currentOptions: null,
+                isLoading: true,
+                currentProgress: 0,
+                error: null,
+                isInitialized: false,
+                selectedAnswer: null,
+                otherText: undefined
+            },
+            onProgressUpdate: () => {
+                setProgress();
+            },
+            onAnswerSubmitted: (variable: string, answer: number[] | number) => {
+                setResponses(variable, answer);
+            }
         });
-
         return {
-        controller,
-        state: controller.getState()
+            controller,
+            state: controller.getState()
         };
     });
 
     // Initialize questions when component mounts
     useEffect(() => {
         const initQuestions = async () => {
-        if (!router.isReady || typeof userProfile?.id !== "string") return;
-
-        try {
-            await controllerState.controller.initializeQuestions(
-            userProfile.id,
-            productService.getInitialQuestionWithOptions.bind(productService)
-            );
-            
-            setControllerState(current => ({
-            ...current,
-            state: current.controller.getState()
-            }));
-        } catch (error) {
-            console.error('Failed to initialize questions:', error);
-        }
+            if (!router.isReady || typeof userProfile?.id !== "string") return;
+            try {
+                await controllerState.controller.initializeQuestions(
+                    userProfile.id,
+                    productService.getInitialQuestionWithOptions.bind(productService)
+                );
+                setControllerState(current => ({
+                    ...current,
+                    state: current.controller.getState()
+                }));
+            } catch (error) {
+                console.error('Failed to initialize questions:', error);
+            }
         };
-
         initQuestions();
     }, [router.isReady, userProfile?.id]);
 
@@ -85,38 +76,36 @@ const ProfilePage: React.FC = () => {
 
     // Handle form submission
     const handleSubmit = useCallback(async () => {
-        if (!userProfile?.id || isFinished) return;
+        if (!userProfile?.id) return;
 
         try {
-        await controllerState.controller.submitAnswer(
-            userProfile.id,
-            productService.submitAnswer.bind(productService),
-            progress,
-            currentPhase,
-            productService.submitOtherAnswer.bind(productService)
-        );
-        setControllerState(current => ({
-            ...current,
-            state: controllerState.controller.getState()
-        }));
 
-        if (progress.get(currentPhase)! >= 100) {
-            setIsFinished(true);
-            return;
-        }
+            await controllerState.controller.submitAnswer(
+                userProfile.id,
+                productService.submitAnswer.bind(productService),
+                progress,
+                currentPhase,
+                productService.submitOtherAnswer.bind(productService)
+            );
+            setControllerState(current => ({
+                ...current,
+                state: controllerState.controller.getState()
+            }));
 
-        await controllerState.controller.nextQuestionWithOptions(
-            userProfile.id,
-            controllerState.state,
-            productService.getQuestionWithAnswers.bind(productService)
-        );
-        setControllerState(current => ({
-            ...current,
-            state: controllerState.controller.getState()
-        }));
+            if (progress.get(currentPhase)! > 100 && QUESTIONTYPE !== currentPhase) return;
+
+            await controllerState.controller.nextQuestionWithOptions(
+                userProfile.id,
+                controllerState.state,
+                productService.getQuestionWithAnswers.bind(productService)
+            );
+            setControllerState(current => ({
+                ...current,
+                state: controllerState.controller.getState()
+            }));
         
         } catch (error) {
-        console.error('Failed to initialize questions:', error);
+            console.error('Failed to initialize questions:', error);
         }
 
     }, [userProfile?.id, controllerState.controller, productService]);
@@ -144,24 +133,24 @@ const ProfilePage: React.FC = () => {
 
     return (
         <div className={styles.profileContainer}>
-        <ProgressBar 
-            currentProgress={progress.get(currentPhase)!}
-            phase={currentPhase}
-        />
-        <QuestionForm
-            question={controllerState.state.currentQuestion}
-            options={controllerState.state.currentOptions}
-            onAnswerSelected={handleAnswerSelected}
-            currentPhase={currentPhase}
-            isLoading={controllerState.state.isLoading}
-        />
-        <button 
-            className={styles.submitButton}
-            onClick={handleSubmit}
-            disabled={isSubmitDisabled}
-        >
-            {controllerState.state.isLoading ? 'Submitting...' : 'Submit'}
-        </button>
+            <ProgressBar 
+                currentProgress={progress.get(currentPhase)!}
+                phase={currentPhase}
+            />
+            <QuestionForm
+                question={controllerState.state.currentQuestion}
+                options={controllerState.state.currentOptions}
+                onAnswerSelected={handleAnswerSelected}
+                currentPhase={currentPhase}
+                isLoading={controllerState.state.isLoading}
+            />
+            <button 
+                className={styles.submitButton}
+                onClick={handleSubmit}
+                disabled={isSubmitDisabled}
+            >
+                {controllerState.state.isLoading ? 'Entendiéndote...' : 'Contestar'}
+            </button>
         </div>
     );
 };

@@ -48,7 +48,7 @@ let ProductQuestionsRepository = class ProductQuestionsRepository {
         const { data } = await this.supabaseService.query('product_questions', {
             variable,
         });
-        return data;
+        return data[0];
     }
     async findOptions(id) {
         const variable = `var${String(id).padStart(2, '0')}`;
