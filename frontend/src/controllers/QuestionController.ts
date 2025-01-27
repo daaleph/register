@@ -62,18 +62,14 @@ export class QuestionController {
                 throw new Error('Current question is null');
             }
             this.setState({ isLoading: true, error: null });
-            console.log("STATE:", state);
             const nextQuestionId = state.currentPhase === 'PROFILE' ? this.getNextQuestionId(
                 state.currentQuestion.id,
                 state.selectedAnswer || 0
             ) : state.currentQuestion.id + 1;
-            console.log("PROFILE ID:", profileId);
-            console.log("OPTIONS:", nextQuestionId);
             const { question, options } = await getNextQuestion(
                 profileId,
                 nextQuestionId
             );
-            console.log("??????????????", question, options);
             if (!question || !options) {
                 throw new Error('Failed to load next question or options');
             }

@@ -20,7 +20,6 @@ export class ProductService {
       uuid: string,
       questionId: number
     ): Promise<QuestionWithOptions> {
-      const response = await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/${uuid}/questionId/${questionId}`);
       return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/${uuid}/questionId/${questionId}`);
     }
 

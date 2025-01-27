@@ -57,7 +57,6 @@ export class ProductQuestionsService {
       { profile: previousQuestions.profileQuestions, bfi: previousQuestions.bfiQuestions, product: previousQuestions.data },
       { profile: previousResponses.profileResponses, bfi: previousResponses.bfiResponses, product: previousQuestions.data }
     );
-    console.log("PERSONALIZED QUESTION:", personalizedQuestion);
     question.description_en = personalizedQuestion.description_en;
     question.description_es = personalizedQuestion.description_es;
     return question;

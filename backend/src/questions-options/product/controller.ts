@@ -16,7 +16,7 @@ export class ProductQuestionsController {
     ): Promise<string> {
         const question = await this.service.getContextualizedInitialQuestion(uuid);
         const options = await this.service.getContextualizedInitialOptions(uuid);
-        
+
         return JSON.stringify({ question, options });
     }
 
@@ -27,8 +27,6 @@ export class ProductQuestionsController {
     ): Promise<string> {
         const question = await this.service.getContextualizedQuestionById(uuid, questionId);
         const options = await this.service.getContextualizedOptionsById(uuid, questionId);
-        console.log("QUESTION:", question);
-        console.log("OPTIONS:", options);
         return JSON.stringify({ question, options });
     }
 }
