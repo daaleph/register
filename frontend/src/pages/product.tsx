@@ -91,7 +91,8 @@ const ProfilePage: React.FC = () => {
         await controllerState.controller.submitAnswer(
             userProfile.id,
             productService.submitAnswer.bind(productService),
-            progress.get(currentPhase)!,
+            progress,
+            currentPhase,
             productService.submitOtherAnswer.bind(productService)
         );
         setControllerState(current => ({

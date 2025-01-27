@@ -49,15 +49,13 @@ export class ProductQuestionsService {
   }
 
   async getContextualizedQuestionById(uuid: string, id: number): Promise<ProductQuestionEntity> {
-    const profileQuestions = await this.profileRepository.getAllQuestions();
-    const profileResponses = await this.profileRepository.getAllResponses(uuid);
     const previousQuestions = await this.repository.getPreviousQuestions(id);
     const previousResponses = await this.repository.getPreviousResponses(uuid, id);
-    const question: ProductQuestionEntity = await this.getQuestionById(id);
-    const personalizedQuestion = await this.personalizationService.personalizesBfiQuestion(
+    const question = await this.getQuestionById(id);
+    const personalizedQuestion = await this.personalizationService.personalizesProductQuestion(
       question,
-      { profile: profileQuestions, bfi: previousQuestions },
-      { profile: profileResponses, bfi: previousResponses }
+      { profile: previousQuestions.profileQuestions, bfi: previousQuestions.bfiQuestions, product: previousQuestions.data },
+      { profile: previousResponses.profileResponses, bfi: previousResponses.bfiResponses, product: previousQuestions.data }
     );
     question.description_en = personalizedQuestion.description_en;
     question.description_es = personalizedQuestion.description_es;
@@ -65,15 +63,13 @@ export class ProductQuestionsService {
   }
 
   async getContextualizedOptionsById(uuid: string, id: number): Promise<ProductOptionEntity[]> {
-    const profileQuestions = await this.profileRepository.getAllQuestions();
-    const profileResponses = await this.profileRepository.getAllResponses(uuid);
     const previousQuestions = await this.repository.getPreviousQuestions(id);
     const previousResponses = await this.repository.getPreviousResponses(uuid, id);
-    const options: ProductOptionEntity[] = await this.getOptionsById(1);
-    const personalizedOptions =  this.personalizationService.personalizesBfiOptions(
+    const options = await this.getOptionsById(id);
+    const personalizedOptions = await this.personalizationService.personalizesProductOptions(
       options,
-      { profile: profileQuestions, bfi: previousQuestions },
-      { profile: profileResponses, bfi: previousResponses }
+      { profile: previousQuestions.profileQuestions, bfi: previousQuestions.bfiQuestions, product: previousQuestions.data },
+      { profile: previousResponses.profileResponses, bfi: previousResponses.bfiResponses, product: previousQuestions.data }
     );
     options.map((currentOption, index) => {
       currentOption.description_en = personalizedOptions[index].description_en;

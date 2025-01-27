@@ -18,11 +18,11 @@ export class ProductQuestionsRepository {
 
   async getPreviousQuestions(currentId: number): Promise<any> {
     const variables = Array.from({ length: currentId }, (_, i) => `var${String(i + 1).padStart(2, '0')}`);
-    const profileQuestions = this.profileRepository.getAllQuestions();
-    const bfiQuestions = this.bfiRepository.getAllQuestions();
+    const profileQuestions = await this.profileRepository.getAllQuestions();
+    const bfiQuestions = await this.bfiRepository.getAllQuestions();
     const { data } = await this.supabaseService
       .getConnection()
-      .from('bfi_questions')
+      .from('product_questions')
       .select()
       .in('variable', variables);
     return { data, profileQuestions, bfiQuestions };
@@ -30,11 +30,11 @@ export class ProductQuestionsRepository {
 
   async getPreviousResponses(uuid: string, currentId: number): Promise<any> {
     const variables = Array.from({ length: currentId }, (_, i) => `var${String(i + 1).padStart(2, '0')}`);
-    const profileResponses = this.profileRepository.getAllResponses(uuid);
-    const bfiResponses = this.bfiRepository.getAllResponses(uuid);
+    const profileResponses = await this.profileRepository.getAllResponses(uuid);
+    const bfiResponses = await this.bfiRepository.getAllResponses(uuid);
     const { data } = await this.supabaseService
       .getConnection()
-      .from('bfi_responses_with_descriptions')
+      .from('product_responses_with_descriptions')
       .select()
       .in('variable', variables)
       .eq('profile', uuid);
@@ -46,7 +46,7 @@ export class ProductQuestionsRepository {
     const { data } = await this.supabaseService.query('product_questions', {
       variable,
     });
-    return Array.isArray(data) ? data[0] : data;
+    return data;
   }
 
   async findOptions(id: number): Promise<ProductOptionEntity[]> {

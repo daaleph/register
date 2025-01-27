@@ -66,7 +66,8 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
               />
               {option.description_es}
             </label>
-            { currentPhase !== 'bfi' && formState.selectedAnswers.includes(option.option_id) && 
+            { currentPhase !== 'bfi' &&
+              formState.selectedAnswers.includes(option.option_id) && 
               controller.isOtherOption(option.option_id, options) && (
               <input
                 type="text"

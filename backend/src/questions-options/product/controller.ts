@@ -3,7 +3,7 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { ProductQuestionsService } from './service';
 // import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
-@Controller('questions/product')
+@Controller('questions/product/:uuid')
 // @UseGuards(JwtAuthGuard)
 export class ProductQuestionsController {
     constructor(

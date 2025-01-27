@@ -7,13 +7,11 @@ import { ProgressBar } from '../components/common/ProgressBar';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { QuestionController, QuestionState } from '@/controllers';
 import { ProfileService } from '@/services';
-
 import styles from '../styles/components.module.css';
 
 const ProfilePage: React.FC = () => {
   const router = useRouter();
-  const [isFinished, setIsFinished] = useState<boolean>(false);
-  const { setResponses, setProgress, moveToNextPhase, progress, userProfile, currentPhase } = useUser();
+  const { setResponses, setProgress, progress, userProfile, currentPhase } = useUser();
   const profileService = new ProfileService();
   
   // Single state for the question controller and its state
@@ -38,10 +36,6 @@ const ProfilePage: React.FC = () => {
       },
       onAnswerSubmitted: (variable: string, answer: number[] | number) => {
         setResponses(variable, answer);
-      },
-      onCompletion: () => {
-        moveToNextPhase();
-        router.push('/bfi');
       }
     });
 
@@ -85,24 +79,20 @@ const ProfilePage: React.FC = () => {
 
   // Handle form submission
   const handleSubmit = useCallback(async () => {
-    if (!userProfile?.id || isFinished) return;
+    if (!userProfile?.id) return;
 
     try {
       await controllerState.controller.submitAnswer(
         userProfile.id,
         profileService.submitAnswer.bind(profileService),
-        progress.get(currentPhase)!,
+        progress,
+        currentPhase,
         profileService.submitOtherAnswer.bind(profileService)
       );
       setControllerState(current => ({
         ...current,
         state: controllerState.controller.getState()
       }));
-
-      if (progress.get(currentPhase)! >= 100) {
-        setIsFinished(true);
-        return;
-      }
 
       await controllerState.controller.nextQuestionWithOptions(
         userProfile.id,

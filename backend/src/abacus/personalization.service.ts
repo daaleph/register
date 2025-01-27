@@ -98,6 +98,23 @@ export class AbacusPersonalizationService {
     return this.personalizeQuestion(question, context);
   }
 
+  async personalizesProductOptions(
+    options: ProductOptionEntity[],
+    questions: {
+      profile: ProfileQuestionEntity[],
+      bfi: BfiQuestionEntity[],
+      product?: ProductQuestionEntity[]
+    },
+    responses: {
+      profile: PreviousResponsesEntity[],
+      bfi: PreviousResponsesEntity[],
+      product: PreviousResponsesEntity[]
+    }
+  ): Promise<BfiOptionEntity[]> {
+    const context = this.contextService.buildContext(questions, responses, 'product');
+    return this.personalizeOptions(options, context);
+  }
+
   private async personalizeQuestion<T extends QuestionEntity>(
     question: T,
     context: AbacusContextEntity

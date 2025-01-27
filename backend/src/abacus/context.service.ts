@@ -42,6 +42,7 @@ export class AbacusContextService {
     questionType: string
   ): AbacusContextEntity {
     const validatedType = this.validateQuestionType(questionType);
+    console.log("SSSSSSSSSSSSSSSS:", questions, responses);
     const context = this.buildQuestionContext(questions, responses);
     return {
       type: validatedType,

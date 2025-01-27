@@ -5,14 +5,14 @@ import { useUser } from '../context/UserContext';
 import { QuestionForm } from '../components/common/QuestionForm';
 import { ProgressBar } from '../components/common/ProgressBar';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
-import { QuestionController, QuestionState } from '../controllers/QuestionController';
+import { QuestionController, QuestionState } from '@/controllers';
 import { BfiService } from '@/services';
-
 import styles from '../styles/components.module.css';
 
 const BfiPage: React.FC = () => {
   const router = useRouter();
-    const { setResponses, setProgress, moveToNextPhase, progress, userProfile, currentPhase } = useUser();
+  const [isFinished, setIsFinished] = useState<boolean>(false);
+  const { setResponses, setProgress, moveToNextPhase, progress, userProfile, currentPhase } = useUser();
   const bfiService = new BfiService();
 
   // Single state for the question controller and its state
@@ -73,7 +73,6 @@ const BfiPage: React.FC = () => {
     initQuestions();
   }, [router.isReady, userProfile?.id]);
 
-
   // Handle answer selection
   const handleAnswerSelected = useCallback((answer: number[] | number, otherText?: string) => {
     otherText ? controllerState.controller.handleAnswerSelection(answer, otherText) : controllerState.controller.handleAnswerSelection(answer);
@@ -85,7 +84,7 @@ const BfiPage: React.FC = () => {
 
   // Handle form submission
   const handleSubmit = useCallback(async () => {
-    if (!userProfile?.id) return;
+    if (!userProfile?.id || isFinished) return;
 
     try {
       await controllerState.controller.submitAnswer(
@@ -97,6 +96,11 @@ const BfiPage: React.FC = () => {
         ...current,
         state: controllerState.controller.getState()
       }));
+
+      if (progress.get(currentPhase)! >= 100) {
+        setIsFinished(true);
+        return;
+      }
 
       await controllerState.controller.nextQuestionWithOptions(
         userProfile.id,
@@ -151,7 +155,7 @@ const BfiPage: React.FC = () => {
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
       >
-        Submit
+        {controllerState.state.isLoading ? 'Submitting...' : 'Submit'}
       </button>
     </div>
   );

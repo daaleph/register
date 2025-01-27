@@ -1,5 +1,6 @@
 // frontend/src/controllers/QuestionController.ts
 
+import { Phases } from "@/context/UserContext";
 import { Question, QuestionOption } from "@/models/interfaces";
 
 export interface QuestionState {
@@ -18,7 +19,6 @@ interface QuestionControllerConfig {
     initialState: QuestionState;
     onProgressUpdate: () => void;
     onAnswerSubmitted: (variable: string, answer: number[] | number) => void;
-    onCompletion: () => void;
 }
   
 export class QuestionController {
@@ -62,7 +62,7 @@ export class QuestionController {
                 throw new Error('Current question is null');
             }
             this.setState({ isLoading: true, error: null });
-            const nextQuestionId = state.currentPhase === 'profile' ? this.getNextQuestionId(
+            const nextQuestionId = state.currentPhase === 'PROFILE' ? this.getNextQuestionId(
                 state.currentQuestion.id,
                 state.selectedAnswer || 0
             ) : state.currentQuestion.id + 1;
@@ -99,30 +99,35 @@ export class QuestionController {
     async submitAnswer(
         profileId: string,
         submitAnswer: Function,
-        progress: number,
-        submitOtherAnswer?: Function,
+        progress: Map<Phases, number>,
+        currentPhase: Phases,
+        submitOtherAnswer?: Function
     ) {
         const { currentQuestion, selectedAnswer, otherText } = this.state;
         if (!currentQuestion || selectedAnswer === null) return;
     
         try {
             this.setState({ isLoading: true, error: null });
-            this.config.onAnswerSubmitted(currentQuestion.variable, selectedAnswer);
-            this.config.onProgressUpdate();
             const answers = Array.isArray(selectedAnswer) ? selectedAnswer : [selectedAnswer];
             if ( submitOtherAnswer && otherText && currentQuestion) {
                 await submitOtherAnswer(profileId, currentQuestion.variable, otherText);
             }
-            await submitAnswer(profileId, currentQuestion.variable, answers);   
+            await submitAnswer(profileId, currentQuestion.variable, answers);
+            this.config.onAnswerSubmitted(currentQuestion.variable, selectedAnswer);
+            this.config.onProgressUpdate();
+            this.setState({ currentProgress: progress.get(currentPhase)})
         } catch (error) {
             this.setState({
                 error: error instanceof Error ? error.message : 'Failed to process answer',
                 isLoading: false
             });
-        } finally {
-            if (progress >= 100) this.config.onCompletion();
         }
     }
+
+    canTransitionToNextPhase = (progress: Map<Phases, number>, currentPhase: Phases): boolean => {
+        const advanceOfPhase = progress.get(currentPhase);
+        return advanceOfPhase ? advanceOfPhase >= 100: false;
+    };
   
     public getNextQuestionId(id: number | string, selectedAnswer: number | number[]): number {
         const numberId = Number(id);

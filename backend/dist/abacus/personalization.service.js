@@ -40,6 +40,10 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
         const context = this.contextService.buildContext(questions, responses, 'product');
         return this.personalizeQuestion(question, context);
     }
+    async personalizesProductOptions(options, questions, responses) {
+        const context = this.contextService.buildContext(questions, responses, 'product');
+        return this.personalizeOptions(options, context);
+    }
     async personalizeQuestion(question, context) {
         const payload = this.createQuestionPayload(question, context);
         const response = await this.makeAbacusRequest(process.env.CUSTOMIZE_QUESTION_TOKEN, process.env.CUSTOMIZE_QUESTION_PROJECT, payload);

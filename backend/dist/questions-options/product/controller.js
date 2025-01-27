@@ -47,7 +47,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductQuestionsController.prototype, "getProfiledQuestionWithOptions", null);
 exports.ProductQuestionsController = ProductQuestionsController = __decorate([
-    (0, common_1.Controller)('questions/product'),
+    (0, common_1.Controller)('questions/product/:uuid'),
     __metadata("design:paramtypes", [service_1.ProductQuestionsService])
 ], ProductQuestionsController);
 //# sourceMappingURL=controller.js.map

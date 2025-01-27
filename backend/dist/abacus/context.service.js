@@ -21,6 +21,7 @@ let AbacusContextService = class AbacusContextService {
     }
     buildContext(questions, responses, questionType) {
         const validatedType = this.validateQuestionType(questionType);
+        console.log("SSSSSSSSSSSSSSSS:", questions, responses);
         const context = this.buildQuestionContext(questions, responses);
         return {
             type: validatedType,

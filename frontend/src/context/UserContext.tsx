@@ -1,9 +1,10 @@
 // frontend/src/context/UserContext.tsx
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { UserProfile } from '../models/interfaces';
 import { ProgressIncrements } from '@/components/navigation/phases';
+import { useRouter } from 'next/router';
 
-type Phases = 'PROFILE' | 'BFI' | 'PRODUCT';
+export type Phases = 'PROFILE' | 'BFI' | 'PRODUCT';
 
 interface UserContextType {
   // Core user data
@@ -33,6 +34,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Core states
+  const router = useRouter();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [responses, setResponsesState] = useState<Map<string, number[] | number>>(new Map());
   const [currentPhase, setCurrentPhase] = useState<Phases>('PROFILE');
@@ -46,6 +48,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // const [authToken, setAuthToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (progress.get(currentPhase)! >= 100) moveToNextPhase();
+  }, [progress])
 
   // Response management
   const setResponses = (variable: string, answer: number[] | number) => {
@@ -80,7 +86,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const phases: Array<Phases> = ['PROFILE', 'BFI', 'PRODUCT'];
     const currentIndex = phases.indexOf(currentPhase);
     if (currentIndex < phases.length - 1) {
-      setCurrentPhase(phases[currentIndex + 1]);
+      const newPhase = phases[currentIndex + 1]
+      router.push(`/${newPhase.toLowerCase()}`);
+      setCurrentPhase(newPhase);
       setProgress();
       setError(null);
     }

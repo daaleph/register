@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { ProfileOptionEntity, ProfileQuestionEntity, PreviousResponsesEntity, BfiQuestionEntity, BfiOptionEntity, ProductQuestionEntity } from 'src/entities';
+import { ProfileOptionEntity, ProfileQuestionEntity, PreviousResponsesEntity, BfiQuestionEntity, BfiOptionEntity, ProductQuestionEntity, ProductOptionEntity } from 'src/entities';
 import { AbacusContextService } from './context.service';
 export declare class AbacusPersonalizationService {
     private readonly httpService;
@@ -30,6 +30,15 @@ export declare class AbacusPersonalizationService {
         bfi: PreviousResponsesEntity[];
         product?: PreviousResponsesEntity[];
     }): Promise<ProductQuestionEntity>;
+    personalizesProductOptions(options: ProductOptionEntity[], questions: {
+        profile: ProfileQuestionEntity[];
+        bfi: BfiQuestionEntity[];
+        product?: ProductQuestionEntity[];
+    }, responses: {
+        profile: PreviousResponsesEntity[];
+        bfi: PreviousResponsesEntity[];
+        product: PreviousResponsesEntity[];
+    }): Promise<BfiOptionEntity[]>;
     private personalizeQuestion;
     private personalizeOptions;
     private createQuestionPayload;
