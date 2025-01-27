@@ -6,9 +6,7 @@ import { Service } from './service';
 @Controller('responses/product')
 export class ProductResponsesController {
     
-    constructor(
-        private readonly responsesService: Service
-    ) {}
+    constructor(private readonly responsesService: Service) {}
 
     @Post()
     async submitAnswer(

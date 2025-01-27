@@ -50,7 +50,6 @@ let ProductQuestionsService = class ProductQuestionsService {
         const previousResponses = await this.repository.getPreviousResponses(uuid, id);
         const question = await this.getQuestionById(id);
         const personalizedQuestion = await this.personalizationService.personalizesProductQuestion(question, { profile: previousQuestions.profileQuestions, bfi: previousQuestions.bfiQuestions, product: previousQuestions.data }, { profile: previousResponses.profileResponses, bfi: previousResponses.bfiResponses, product: previousQuestions.data });
-        console.log("PERSONALIZED QUESTION:", personalizedQuestion);
         question.description_en = personalizedQuestion.description_en;
         question.description_es = personalizedQuestion.description_es;
         return question;

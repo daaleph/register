@@ -27,8 +27,6 @@ let ProductQuestionsController = class ProductQuestionsController {
     async getProfiledQuestionWithOptions(uuid, questionId) {
         const question = await this.service.getContextualizedQuestionById(uuid, questionId);
         const options = await this.service.getContextualizedOptionsById(uuid, questionId);
-        console.log("QUESTION:", question);
-        console.log("OPTIONS:", options);
         return JSON.stringify({ question, options });
     }
 };

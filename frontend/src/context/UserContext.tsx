@@ -12,7 +12,7 @@ interface UserContextType {
   responses: Map<string, number[] | number>;
   currentPhase: Phases;
   progress: Map<Phases, number>;
-  // authToken: string | null;
+  authToken: string | null;
   error: string | null;
   isLoading: boolean;
 
@@ -21,7 +21,7 @@ interface UserContextType {
   setResponses: (variable: string, answer: number[] | number) => void;
   setCurrentPhase: (phase: Phases) => void;
   setProgress: () => void;
-  // setAuthToken: (token: string) => void;
+  setAuthToken: (token: string | null) => void;
   setError: (error: string | null) => void;
   setIsLoading: (loading: boolean) => void;
 
@@ -44,13 +44,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ['PRODUCT', ProgressIncrements.PRODUCT]
     ])
   );
-  // const [authToken, setAuthToken] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (progress.get(currentPhase)! > 100) moveToNextPhase();
-  }, [progress])
+  }, [progress]);
 
   // Response management
   const setResponses = (variable: string, answer: number[] | number) => {
@@ -81,7 +81,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setProgress();
       setError(null);
     } else {
-      router.push('/home');
+      router.push('/finalize');
     }
   };
 
@@ -91,14 +91,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     responses,
     currentPhase,
     progress,
-    // authToken,
+    authToken,
     error,
     isLoading,
     setUserProfile,
     setResponses,
     setCurrentPhase,
     setProgress,
-    // setAuthToken,
+    setAuthToken,
     setError,
     setIsLoading,
     moveToNextPhase

@@ -182,3 +182,45 @@
   transform: none;
   box-shadow: none;
 }
+
+.loginContainer {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.errorMessage {
+  color: red;
+  margin-top: 10px;
+}
+
+.submitButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.submitButton:hover {
+  background-color: #0056b3;
+}

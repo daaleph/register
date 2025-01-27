@@ -1,20 +1,23 @@
 // src/components/auth/AuthGuard.tsx
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useUser } from '../../context/UserContext';
+import { useAuth } from '@/hooks/useAuth';
 
-const publicPaths = ['/'];
-
-export const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const { isAuthenticated } = useAuth();
     const router = useRouter();
-    // const { authToken } = useUser();
 
-    // useEffect(() => {
-    //     const isPublicPath = publicPaths.includes(router.pathname);
-    //     if (!authToken && !isPublicPath) {
-    //         router.push('/');
-    //     }
-    // }, [authToken, router]);
+    useEffect(() => {
+        if (!isAuthenticated) {
+            router.push('/login');
+        }
+    }, [isAuthenticated, router]);
+
+    if (!isAuthenticated) {
+        return <div>Loading...</div>;
+    }
 
     return <>{children}</>;
 };
+
+export default AuthGuard;

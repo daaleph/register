@@ -19,31 +19,68 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    async login(profileId) {
-        if (!profileId) {
+    async login(email, password) {
+        if (!email) {
             throw new common_1.UnauthorizedException('Profile ID is required');
         }
-        return this.authService.login(profileId);
+        return this.authService.login(email, password);
     }
-    async finalizeRegistration(profileId) {
-        return this.authService.login(profileId);
+    async validateToken(authHeader) {
+        if (!authHeader)
+            throw new common_1.UnauthorizedException('Authorization header is required');
+        const token = authHeader.split(' ')[1];
+        return this.authService.validateToken(token);
+    }
+    async finalizeRegistration(email, password) {
+        if (!email)
+            throw new common_1.UnauthorizedException('Profile ID is required');
+        if (!password)
+            throw new common_1.BadRequestException('Password is required');
+        console.log("AAAAAAAAAAAAAA");
+        console.dir(email, { depth: null });
+        console.dir(password, { depth: null });
+        return this.authService.finalizeRegistration(email, password);
+    }
+    async setPassword(email, password) {
+        if (!email)
+            throw new common_1.UnauthorizedException('Profile ID is required');
+        if (!password)
+            throw new common_1.BadRequestException('Password is required');
+        return this.authService.setPassword(email, password);
     }
 };
 exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Post)('login'),
-    __param(0, (0, common_1.Body)('profileId')),
+    __param(0, (0, common_1.Body)('email')),
+    __param(1, (0, common_1.Body)('password')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
-    (0, common_1.Post)('finalize'),
-    __param(0, (0, common_1.Body)('profileId')),
+    (0, common_1.Get)('validate'),
+    __param(0, (0, common_1.Headers)('Authorization')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
+], AuthController.prototype, "validateToken", null);
+__decorate([
+    (0, common_1.Post)('finalize'),
+    __param(0, (0, common_1.Body)('email')),
+    __param(1, (0, common_1.Body)('password')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "finalizeRegistration", null);
+__decorate([
+    (0, common_1.Post)('set-password'),
+    __param(0, (0, common_1.Body)('email')),
+    __param(1, (0, common_1.Body)('password')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "setPassword", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
