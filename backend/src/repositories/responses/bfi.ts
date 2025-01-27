@@ -1,4 +1,4 @@
-// backend/src/repositories/profile-responses.ts
+// backend/src/repositories/responses/bfi.ts
 
 import { Injectable } from '@nestjs/common';
 import { ResponsesEntity } from 'src/entities';
@@ -24,12 +24,10 @@ export class Repository {
             ]) : 
         await connection
             .from('bfi_responses')
-            .upsert([
-                {
-                    profile: response.profile,
-                    [response.variable]: response.answer_options[0]
-                }
-            ]);
+            .update({ 
+                [response.variable]: response.answer_options[0] 
+            })
+            .eq('profile', response.profile);
         if (error) {
             throw new Error(`Failed to insert profile response: ${error.message}`);
         }

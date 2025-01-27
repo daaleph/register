@@ -45,14 +45,12 @@ export class ProfileService {
     async submitOtherAnswer(
       profileId: string,
       variable: string,
-      answer: string,
-      nature: number
+      answer: string
     ): Promise<void> {
       return HttpUtility.post(`${this.baseUrl}responses/profile/other`, {
         profileId,
         variable,
-        answer,
-        nature
+        answer
       });
     }
 

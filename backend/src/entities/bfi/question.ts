@@ -5,4 +5,3 @@ export class BfiQuestionEntity {
     description_es: string;
     description_en: string;
 }
-  

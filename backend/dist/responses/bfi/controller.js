@@ -34,7 +34,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BfiResponsesController.prototype, "submitAnswer", null);
 exports.BfiResponsesController = BfiResponsesController = __decorate([
-    (0, common_1.Controller)('responses/profile'),
+    (0, common_1.Controller)('responses/bfi'),
     __metadata("design:paramtypes", [service_1.Service])
 ], BfiResponsesController);
 //# sourceMappingURL=controller.js.map

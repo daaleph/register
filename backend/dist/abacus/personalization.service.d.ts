@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
-import { AbacusContextService } from './context.service';
 import { ProfileOptionEntity, ProfileQuestionEntity, PreviousResponsesEntity, BfiQuestionEntity, BfiOptionEntity, ProductQuestionEntity } from 'src/entities';
+import { AbacusContextService } from './context.service';
 export declare class AbacusPersonalizationService {
     private readonly httpService;
     private readonly contextService;

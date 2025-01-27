@@ -143,6 +143,7 @@ const BfiPage: React.FC = () => {
         question={controllerState.state.currentQuestion}
         options={controllerState.state.currentOptions}
         onAnswerSelected={handleAnswerSelected}
+        currentPhase={currentPhase}
         isLoading={controllerState.state.isLoading}
       />
       <button 

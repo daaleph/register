@@ -1,10 +1,10 @@
 // src/questions-options/product/controller.ts
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ProductQuestionsService } from './service';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @Controller('questions/product')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class ProductQuestionsController {
     constructor(
         private readonly service: ProductQuestionsService

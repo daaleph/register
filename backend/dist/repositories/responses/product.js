@@ -18,21 +18,32 @@ let Repository = class Repository {
     }
     async saveResponse(response) {
         const connection = this.supabaseService.getConnection();
-        const { data, error } = response.variable === 'var01' ?
-            await connection
-                .from('bfi_responses')
-                .insert([
-                {
-                    profile: response.profile,
-                    [response.variable]: response.answer_options[0]
-                }
-            ]) :
-            await connection
-                .from('bfi_responses')
-                .update({
-                [response.variable]: response.answer_options[0]
-            })
-                .eq('profile', response.profile);
+        const { data, error } = await connection
+            .from('product_responses')
+            .insert([
+            {
+                profile: response.profile,
+                variable: response.variable,
+                answer_options: response.answer_options
+            }
+        ]);
+        if (error) {
+            throw new Error(`Failed to insert profile response: ${error.message}`);
+        }
+        return data;
+    }
+    async saveOtherResponse(profile, variable, answer) {
+        const connection = this.supabaseService.getConnection();
+        const { data, error } = await connection
+            .from('others')
+            .insert([
+            {
+                profile,
+                variable,
+                answer,
+                nature: 3
+            }
+        ]);
         if (error) {
             throw new Error(`Failed to insert profile response: ${error.message}`);
         }
@@ -44,4 +55,4 @@ exports.Repository = Repository = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [service_1.SupabaseService])
 ], Repository);
-//# sourceMappingURL=bfi.js.map
+//# sourceMappingURL=product.js.map

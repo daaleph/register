@@ -1,4 +1,4 @@
-// backend/src/repositories/responses/profile.ts
+// backend/src/repositories/responses/product.ts
 
 import { Injectable } from '@nestjs/common';
 import { ResponsesEntity } from 'src/entities';
@@ -14,7 +14,7 @@ export class Repository {
   async saveResponse(response: ResponsesEntity): Promise<any> {
     const connection = this.supabaseService.getConnection();
     const { data, error } = await connection
-      .from('profile_responses')
+      .from('product_responses')
       .insert([
         {
           profile: response.profile,
@@ -43,7 +43,7 @@ export class Repository {
           profile,
           variable,
           answer,
-          nature: 1
+          nature: 3
         }
       ]);
 

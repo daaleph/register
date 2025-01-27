@@ -11,7 +11,6 @@ export declare class BfiQuestionsRepository {
     getAllQuestions(): Promise<any[]>;
     getPreviousResponses(uuid: string, currentId: number): Promise<any>;
     getAllResponses(uuid: string): Promise<any[]>;
-    findAndCustomizeQuestion(id: number, personalizedQuestion: any): Promise<BfiQuestionEntity>;
     findQuestion(id: number): Promise<BfiQuestionEntity>;
     findOptions(): Promise<BfiOptionEntity[]>;
     saveResponse(response: ResponsesEntity): Promise<ResponsesEntity>;

@@ -3,7 +3,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { Service } from './service';
 
-@Controller('responses/profile')
+@Controller('responses/bfi')
 export class BfiResponsesController {
     
     constructor(

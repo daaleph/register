@@ -1,4 +1,4 @@
-// src/questions-options/bfi/service.ts
+// backend/src/questions-options/bfi/service.ts
 import { Injectable } from '@nestjs/common';
 import { AbacusPersonalizationService } from '../../abacus/personalization.service';
 import { BfiQuestionEntity, BfiOptionEntity } from '../../entities';
@@ -15,65 +15,61 @@ export class BfiQuestionsService {
   async getContextualizedInitialQuestion(uuid: string): Promise<BfiQuestionEntity> {
     const profileQuestions = await this.profileRepository.getAllQuestions();
     const profileResponses = await this.profileRepository.getAllResponses(uuid);
-    const currentQuestion = await this.repository.findQuestion(1);
+    const question: BfiQuestionEntity = await this.repository.findQuestion(1);
     const personalizedQuestion = await this.personalizationService.personalizesBfiQuestion(
-      currentQuestion,
+      question,
       { profile: profileQuestions },
       { profile: profileResponses }
     );
-    currentQuestion.description_en = personalizedQuestion.description_en;
-    currentQuestion.description_es = personalizedQuestion.description_es;
-    return currentQuestion;
+    question.description_en = personalizedQuestion.description_en;
+    question.description_es = personalizedQuestion.description_es;
+    return question;
   }
 
   async getContextualizedInitialOptions(uuid: string): Promise<BfiOptionEntity[]> {
     const profileQuestions = await this.profileRepository.getAllQuestions();
     const profileResponses = await this.profileRepository.getAllResponses(uuid);
-    const currentOptions = await this.repository.findOptions();
+    const options: BfiOptionEntity[] = await this.repository.findOptions();
     const personalizedOptions = await this.personalizationService.personalizesBfiOptions(
-      currentOptions,
+      options,
       { profile: profileQuestions },
       { profile: profileResponses }
     );
-    currentOptions.map((currentOption, index) => {
+    options.map((currentOption, index) => {
       currentOption.description_en = personalizedOptions[index].description_en;
       currentOption.description_es = personalizedOptions[index].description_es;
     })
-    return currentOptions;
+    return options;
   }
 
   async getContextualizedQuestionById(uuid: string, id: number): Promise<BfiQuestionEntity> {
-    const profileQuestions = await this.profileRepository.getAllQuestions();
-    const profileResponses = await this.profileRepository.getAllResponses(uuid);
-    const currentQuestion = await this.getQuestionById(id);
+    const question = await this.getQuestionById(id);
     const previousQuestions = await this.repository.getPreviousQuestions(id);
     const previousResponses = await this.repository.getPreviousResponses(uuid, id);
     const personalizedQuestion = await this.personalizationService.personalizesBfiQuestion(
-      currentQuestion,
-      { profile: profileQuestions, bfi: previousQuestions },
-      { profile: profileResponses, bfi: previousResponses }
+      question,
+      { profile: previousQuestions.profileQuestions, bfi: previousQuestions.bfiQuestions },
+      { profile: previousResponses.profileResponses, bfi: previousResponses.bfiResponses }
     );
-    currentQuestion.description_en = personalizedQuestion.description_en;
-    currentQuestion.description_es = personalizedQuestion.description_es;
-    return currentQuestion;
+    question.description_en = personalizedQuestion.description_en;
+    question.description_es = personalizedQuestion.description_es;
+    return question;
   }
 
   async getContextualizedOptionsById(uuid: string, id: number): Promise<BfiOptionEntity[]> {
-    const profileQuestions = await this.profileRepository.getAllQuestions();
-    const profileResponses = await this.profileRepository.getAllResponses(uuid);
-    const currentOptions = await this.getOptionsById();
+    const options = await this.getOptionsById();
     const previousQuestions = await this.repository.getPreviousQuestions(id);
     const previousResponses = await this.repository.getPreviousResponses(uuid, id);
-    const personalizedOptions =  this.personalizationService.personalizesBfiOptions(
-      currentOptions,
-      { profile: profileQuestions, bfi: previousQuestions },
-      { profile: profileResponses, bfi: previousResponses }
+    const personalizedOptions = await this.personalizationService.personalizesBfiOptions(
+      options,
+      { profile: previousQuestions.profileQuestions, bfi: previousQuestions.bfiQuestions },
+      { profile: previousResponses.profileResponses, bfi: previousResponses.bfiResponses }
     );
-    currentOptions.map((currentOption, index) => {
+    options.map((currentOption, index) => {
       currentOption.description_en = personalizedOptions[index].description_en;
       currentOption.description_es = personalizedOptions[index].description_es;
     })
-    return currentOptions;
+    return options;
   }
 
   async getQuestionById(id: number): Promise<BfiQuestionEntity> {

@@ -23,10 +23,9 @@ export class ProfileResponsesController {
     async submitOtherAnswer(
         @Body('profileId') profileId: string,
         @Body('variable') variable: string,
-        @Body('answer') answer: string,
-        @Body('nature') nature: number
+        @Body('answer') answer: string
     ): Promise<void> {
-        await this.responsesService.saveOtherAnswerOfSpecificQuestion(profileId, variable, answer, nature);
+        await this.responsesService.saveOtherAnswerOfSpecificQuestion(profileId, variable, answer);
     }
 
 }

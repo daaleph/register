@@ -1,7 +1,6 @@
 // backend/src/abacus/personalization.service.ts
-import { Injectable, Options } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { AbacusContextService } from './context.service';
 import {
   ProfileOptionEntity,
   ProfileQuestionEntity,
@@ -13,9 +12,11 @@ import {
 } from 'src/entities';
 import { firstValueFrom } from 'rxjs';
 import { AbacusContextEntity } from 'src/entities/abacus-context';
+import { console } from 'inspector';
+import { AbacusContextService } from './context.service';
 
 type QuestionEntity = ProfileQuestionEntity | BfiQuestionEntity | ProductQuestionEntity;
-type QuestionType = 'profile' | 'bfi' | 'product' | 'unknown';
+type OptionEntity = ProfileOptionEntity | BfiOptionEntity | ProductOptionEntity;
 
 @Injectable()
 export class AbacusPersonalizationService {
@@ -103,21 +104,21 @@ export class AbacusPersonalizationService {
   ): Promise<T> {
     const payload = this.createQuestionPayload(question, context);
     const response = await this.makeAbacusRequest(
-      process.env.CUSTOMIZE_QUESTION_TOKEN!,
-      process.env.CUSTOMIZE_QUESTION_PROJECT!,
+      process.env.CUSTOMIZE_QUESTION_TOKEN,
+      process.env.CUSTOMIZE_QUESTION_PROJECT,
       payload
     );
     return JSON.parse(response.result.messages[1].text);
   }
 
-  private async personalizeOptions<T extends ProfileOptionEntity | BfiOptionEntity | ProductOptionEntity>(
+  private async personalizeOptions<T extends OptionEntity>(
     options: T[],
     context: AbacusContextEntity
   ): Promise<T[]> {
     const payload = this.createOptionsPayload(options, context);
     const response = await this.makeAbacusRequest(
-      process.env.CUSTOMIZE_OPTIONS_TOKEN!,
-      process.env.CUSTOMIZE_OPTIONS_PROJECT!,
+      process.env.CUSTOMIZE_OPTIONS_TOKEN,
+      process.env.CUSTOMIZE_OPTIONS_PROJECT,
       payload
     );
     return JSON.parse(response.result.messages[1].text).options;

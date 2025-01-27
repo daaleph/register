@@ -1,4 +1,4 @@
-// backend/src/responses/profile/module.ts
+// backend/src/responses/bfi/module.ts
 
 import { Module } from '@nestjs/common';
 import { BfiResponsesController } from './controller';
@@ -7,9 +7,7 @@ import { Repository } from '../../repositories/responses/bfi';
 import { SupabaseModule } from 'src/supabase/module';
 
 @Module({
-  imports: [
-    SupabaseModule
-  ],
+  imports: [SupabaseModule],
   controllers: [BfiResponsesController],
   providers: [
     Service,

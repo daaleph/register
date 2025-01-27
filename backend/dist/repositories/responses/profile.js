@@ -32,7 +32,7 @@ let Repository = class Repository {
         }
         return data;
     }
-    async saveOtherResponse(profile, variable, answer, nature) {
+    async saveOtherResponse(profile, variable, answer) {
         const connection = this.supabaseService.getConnection();
         const { data, error } = await connection
             .from('others')
@@ -41,7 +41,7 @@ let Repository = class Repository {
                 profile,
                 variable,
                 answer,
-                nature
+                nature: 1
             }
         ]);
         if (error) {

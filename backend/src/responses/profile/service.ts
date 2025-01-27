@@ -21,10 +21,9 @@ export class Service {
     async saveOtherAnswerOfSpecificQuestion(
         profile: string,
         variable: string,
-        answer: string,
-        nature: number
+        answer: string
     ): Promise<any> {
-        this.repository.saveOtherResponse(profile, variable, answer, nature);
+        this.repository.saveOtherResponse(profile, variable, answer);
     }
 
 }

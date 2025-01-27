@@ -19,14 +19,14 @@ let BfiQuestionsRepository = class BfiQuestionsRepository {
         this.profileRepository = profileRepository;
     }
     async getPreviousQuestions(currentId) {
-        const profileQuestions = this.profileRepository.getAllQuestions();
+        const profileQuestions = await this.profileRepository.getAllQuestions();
         const variables = Array.from({ length: currentId }, (_, i) => `var${String(i + 1).padStart(2, '0')}`);
         const { data } = await this.supabaseService
             .getConnection()
             .from('bfi_questions')
             .select()
             .in('variable', variables);
-        return { data, profileQuestions };
+        return { bfiQuestions: data, profileQuestions };
     }
     async getAllQuestions() {
         const { data } = await this.supabaseService
@@ -37,14 +37,15 @@ let BfiQuestionsRepository = class BfiQuestionsRepository {
     }
     async getPreviousResponses(uuid, currentId) {
         const variables = Array.from({ length: currentId }, (_, i) => `var${String(i + 1).padStart(2, '0')}`);
-        const profileResponses = this.profileRepository.getAllResponses(uuid);
+        const profileResponses = await this.profileRepository.getAllResponses(uuid);
         const { data } = await this.supabaseService
             .getConnection()
             .from('bfi_responses_with_descriptions')
             .select()
             .in('variable', variables)
-            .eq('profile', uuid);
-        return { data, profileResponses };
+            .eq('profile', uuid)
+            .not('description_en', 'is', null);
+        return { bfiResponses: data, profileResponses };
     }
     async getAllResponses(uuid) {
         const { data } = await this.supabaseService
@@ -54,19 +55,12 @@ let BfiQuestionsRepository = class BfiQuestionsRepository {
             .eq('profile', uuid);
         return data;
     }
-    async findAndCustomizeQuestion(id, personalizedQuestion) {
-        const baseQuestion = await this.findQuestion(id);
-        return {
-            ...baseQuestion,
-            ...personalizedQuestion
-        };
-    }
     async findQuestion(id) {
         const variable = `var${String(id).padStart(2, '0')}`;
         const { data } = await this.supabaseService.query('bfi_questions', {
             variable,
         });
-        return Array.isArray(data) ? data[0] : data;
+        return data[0];
     }
     async findOptions() {
         const { data } = await this.supabaseService

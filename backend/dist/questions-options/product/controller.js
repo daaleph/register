@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductQuestionsController = void 0;
 const common_1 = require("@nestjs/common");
 const service_1 = require("./service");
-const jwt_auth_guard_1 = require("../../auth/jwt-auth.guard");
 let ProductQuestionsController = class ProductQuestionsController {
     constructor(service) {
         this.service = service;
@@ -49,7 +48,6 @@ __decorate([
 ], ProductQuestionsController.prototype, "getProfiledQuestionWithOptions", null);
 exports.ProductQuestionsController = ProductQuestionsController = __decorate([
     (0, common_1.Controller)('questions/product'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __metadata("design:paramtypes", [service_1.ProductQuestionsService])
 ], ProductQuestionsController);
 //# sourceMappingURL=controller.js.map

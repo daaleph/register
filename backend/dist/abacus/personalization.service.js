@@ -12,8 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AbacusPersonalizationService = void 0;
 const common_1 = require("@nestjs/common");
 const axios_1 = require("@nestjs/axios");
-const context_service_1 = require("./context.service");
 const rxjs_1 = require("rxjs");
+const inspector_1 = require("inspector");
+const context_service_1 = require("./context.service");
 let AbacusPersonalizationService = class AbacusPersonalizationService {
     constructor(httpService, contextService) {
         this.httpService = httpService;
@@ -71,7 +72,7 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
         }
     }
     handleError(error, payload) {
-        console.error("Error occurred while making Abacus request:", {
+        inspector_1.console.error("Error occurred while making Abacus request:", {
             message: error.message,
             status: error.response?.status,
             statusText: error.response?.statusText,

@@ -1,4 +1,4 @@
-// src/abacus/context.service.ts
+// backend/src/abacus/context.service.ts
 
 import { Injectable } from '@nestjs/common';
 import { ProfileQuestionEntity, PreviousResponsesEntity, BfiQuestionEntity, ProductQuestionEntity } from 'src/entities';
@@ -43,7 +43,6 @@ export class AbacusContextService {
   ): AbacusContextEntity {
     const validatedType = this.validateQuestionType(questionType);
     const context = this.buildQuestionContext(questions, responses);
-
     return {
       type: validatedType,
       context,
@@ -63,6 +62,7 @@ export class AbacusContextService {
       product?: PreviousResponsesEntity[]
     }
   ): AbacusContext {
+
     let context = {} as AbacusContext;
     let varIndexStart = 1;
 
@@ -119,7 +119,6 @@ class ProfileContextBuilder implements ContextBuilder {
     return questions.reduce((acc, question, index) => {
       const response = responses.find(resp => resp.variable === question.variable);
       if (!response) return acc;
-
       return {
         ...acc,
         [`var${varIndexStart + index}`]: {
@@ -145,7 +144,6 @@ class BfiContextBuilder implements ContextBuilder {
     return questions.reduce((acc, question, index) => {
       const response = responses.find(resp => resp.variable === question.variable);
       if (!response) return acc;
-
       return {
         ...acc,
         [`var${varIndexStart + index}`]: {
@@ -168,36 +166,12 @@ class ProductContextBuilder implements ContextBuilder {
     return questions.reduce((acc, question, index) => {
       const response = responses.find(resp => resp.variable === question.variable);
       if (!response) return acc;
-
       return {
         ...acc,
         [`var${varIndexStart + index}`]: {
           type: question.type as 'multiple' | 'unique',
           name_en: question.name_en,
           name_es: question.name_es,
-          description_en: question.description_en,
-          description_es: question.description_es,
-          answer_es: response.answer_options_es,
-          answer_en: response.answer_options_en
-        }
-      };
-    }, {} as Partial<AbacusContext>);
-  }
-}
-
-class DefaultContextBuilder implements ContextBuilder {
-  buildQuestionContext(
-    questions: QuestionEntity[],
-    responses: PreviousResponsesEntity[],
-    varIndexStart: number
-  ): Partial<AbacusContext> {
-    return questions.reduce((acc, question, index) => {
-      const response = responses.find(resp => resp.variable === question.variable);
-      if (!response) return acc;
-
-      return {
-        ...acc,
-        [`var${varIndexStart + index}`]: {
           description_en: question.description_en,
           description_es: question.description_es,
           answer_es: response.answer_options_es,

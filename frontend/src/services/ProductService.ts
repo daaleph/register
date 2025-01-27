@@ -7,7 +7,7 @@ export class ProductService {
     private baseUrl: string;
 
     constructor() {
-        this.baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      this.baseUrl = process.env.NEXT_PUBLIC_NEST_URL || '';
     }
 
     async getInitialQuestionWithOptions(
@@ -28,7 +28,7 @@ export class ProductService {
       variable: string,
       answer: number[]
     ): Promise<void> {
-      return HttpUtility.post(`${this.baseUrl}responses/profile/`, {
+      return HttpUtility.post(`${this.baseUrl}responses/product`, {
         profileId,
         variable,
         answer
@@ -38,14 +38,12 @@ export class ProductService {
     async submitOtherAnswer(
       profileId: string,
       variable: string,
-      answer: string,
-      nature: number
+      answer: string
     ): Promise<void> {
-      return HttpUtility.post(`${this.baseUrl}responses/profile/other`, {
+      return HttpUtility.post(`${this.baseUrl}responses/product/other`, {
         profileId,
         variable,
-        answer,
-        nature
+        answer
       });
     }
 

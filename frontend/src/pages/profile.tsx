@@ -92,7 +92,6 @@ const ProfilePage: React.FC = () => {
         userProfile.id,
         profileService.submitAnswer.bind(profileService),
         progress.get(currentPhase)!,
-        1,
         profileService.submitOtherAnswer.bind(profileService)
       );
       setControllerState(current => ({
@@ -152,6 +151,7 @@ const ProfilePage: React.FC = () => {
         question={controllerState.state.currentQuestion}
         options={controllerState.state.currentOptions}
         onAnswerSelected={handleAnswerSelected}
+        currentPhase={currentPhase}
         isLoading={controllerState.state.isLoading}
       />
       <button 

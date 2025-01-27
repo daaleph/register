@@ -28,7 +28,7 @@ export class BfiService {
         variable: string,
         answer: number[]
     ): Promise<void> {
-        return HttpUtility.post(`${this.baseUrl}responses/bfi/`, {
+        return HttpUtility.post(`${this.baseUrl}responses/bfi`, {
             profileId,
             variable,
             answer

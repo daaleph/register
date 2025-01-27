@@ -14,9 +14,9 @@ const common_1 = require("@nestjs/common");
 const profile_1 = require("../../repositories/questions/profile");
 const personalization_service_1 = require("../../abacus/personalization.service");
 let ProfileQuestionsService = class ProfileQuestionsService {
-    constructor(repository, abacusPersonalizationService) {
+    constructor(repository, personalizationService) {
         this.repository = repository;
-        this.abacusPersonalizationService = abacusPersonalizationService;
+        this.personalizationService = personalizationService;
     }
     async getInitialQuestion() {
         return this.repository.findQuestion(1);
@@ -28,7 +28,7 @@ let ProfileQuestionsService = class ProfileQuestionsService {
         const question = await this.getQuestionById(id);
         const previousQuestions = await this.repository.getPreviousQuestions(id);
         const previousResponses = await this.repository.getPreviousResponses(uuid, id);
-        const personalizedQuestion = await this.abacusPersonalizationService.personalizesProfileQuestion(question, previousQuestions, previousResponses);
+        const personalizedQuestion = await this.personalizationService.personalizesProfileQuestion(question, previousQuestions, previousResponses);
         question.description_en = personalizedQuestion.description_en;
         question.description_es = personalizedQuestion.description_es;
         return question;
@@ -37,7 +37,12 @@ let ProfileQuestionsService = class ProfileQuestionsService {
         const options = await this.getOptionsById(id);
         const previousQuestions = await this.repository.getPreviousQuestions(id);
         const previousResponses = await this.repository.getPreviousResponses(uuid, id);
-        return await this.abacusPersonalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses);
+        const personalizedOptions = await this.personalizationService.personalizesProfileOptions(options, previousQuestions, previousResponses);
+        options.map((currentOption, index) => {
+            currentOption.description_en = personalizedOptions[index].description_en;
+            currentOption.description_es = personalizedOptions[index].description_es;
+        });
+        return options;
     }
     async getQuestionById(id) {
         return this.repository.findQuestion(id);

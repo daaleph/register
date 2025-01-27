@@ -130,22 +130,4 @@ class ProductContextBuilder {
         }, {});
     }
 }
-class DefaultContextBuilder {
-    buildQuestionContext(questions, responses, varIndexStart) {
-        return questions.reduce((acc, question, index) => {
-            const response = responses.find(resp => resp.variable === question.variable);
-            if (!response)
-                return acc;
-            return {
-                ...acc,
-                [`var${varIndexStart + index}`]: {
-                    description_en: question.description_en,
-                    description_es: question.description_es,
-                    answer_es: response.answer_options_es,
-                    answer_en: response.answer_options_en
-                }
-            };
-        }, {});
-    }
-}
 //# sourceMappingURL=context.service.js.map

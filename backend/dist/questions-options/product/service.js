@@ -50,24 +50,24 @@ let ProductQuestionsService = class ProductQuestionsService {
         const profileResponses = await this.profileRepository.getAllResponses(uuid);
         const previousQuestions = await this.repository.getPreviousQuestions(id);
         const previousResponses = await this.repository.getPreviousResponses(uuid, id);
-        const currentQuestion = await this.getQuestionById(id);
-        const personalizedQuestion = await this.personalizationService.personalizesBfiQuestion(currentQuestion, { profile: profileQuestions, bfi: previousQuestions }, { profile: profileResponses, bfi: previousResponses });
-        currentQuestion.description_en = personalizedQuestion.description_en;
-        currentQuestion.description_es = personalizedQuestion.description_es;
-        return currentQuestion;
+        const question = await this.getQuestionById(id);
+        const personalizedQuestion = await this.personalizationService.personalizesBfiQuestion(question, { profile: profileQuestions, bfi: previousQuestions }, { profile: profileResponses, bfi: previousResponses });
+        question.description_en = personalizedQuestion.description_en;
+        question.description_es = personalizedQuestion.description_es;
+        return question;
     }
     async getContextualizedOptionsById(uuid, id) {
         const profileQuestions = await this.profileRepository.getAllQuestions();
         const profileResponses = await this.profileRepository.getAllResponses(uuid);
         const previousQuestions = await this.repository.getPreviousQuestions(id);
         const previousResponses = await this.repository.getPreviousResponses(uuid, id);
-        const currentOptions = await this.getOptionsById(1);
-        const personalizedOptions = this.personalizationService.personalizesBfiOptions(currentOptions, { profile: profileQuestions, bfi: previousQuestions }, { profile: profileResponses, bfi: previousResponses });
-        currentOptions.map((currentOption, index) => {
+        const options = await this.getOptionsById(1);
+        const personalizedOptions = this.personalizationService.personalizesBfiOptions(options, { profile: profileQuestions, bfi: previousQuestions }, { profile: profileResponses, bfi: previousResponses });
+        options.map((currentOption, index) => {
             currentOption.description_en = personalizedOptions[index].description_en;
             currentOption.description_es = personalizedOptions[index].description_es;
         });
-        return currentOptions;
+        return options;
     }
     async getQuestionById(id) {
         return this.repository.findQuestion(id);

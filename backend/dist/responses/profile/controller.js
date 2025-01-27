@@ -22,8 +22,8 @@ let ProfileResponsesController = class ProfileResponsesController {
     async submitAnswer(profileId, variable, answer) {
         await this.responsesService.saveAnswerOfSpecificQuestion(profileId, variable, Array.isArray(answer) ? answer : [answer]);
     }
-    async submitOtherAnswer(profileId, variable, answer, nature) {
-        await this.responsesService.saveOtherAnswerOfSpecificQuestion(profileId, variable, answer, nature);
+    async submitOtherAnswer(profileId, variable, answer) {
+        await this.responsesService.saveOtherAnswerOfSpecificQuestion(profileId, variable, answer);
     }
 };
 exports.ProfileResponsesController = ProfileResponsesController;
@@ -41,9 +41,8 @@ __decorate([
     __param(0, (0, common_1.Body)('profileId')),
     __param(1, (0, common_1.Body)('variable')),
     __param(2, (0, common_1.Body)('answer')),
-    __param(3, (0, common_1.Body)('nature')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, Number]),
+    __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], ProfileResponsesController.prototype, "submitOtherAnswer", null);
 exports.ProfileResponsesController = ProfileResponsesController = __decorate([

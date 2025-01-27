@@ -1,7 +1,7 @@
-// backend/src/responses/profile/service.ts
+// backend/src/responses/product/service.ts
 
 import { Injectable } from '@nestjs/common';
-import { Repository } from '../../repositories/responses/profile'
+import { Repository } from '../../repositories/responses/product'
 
 @Injectable()
 export class Service {
@@ -21,10 +21,9 @@ export class Service {
     async saveOtherAnswerOfSpecificQuestion(
         profile: string,
         variable: string,
-        answer: string,
-        nature: number
+        answer: string
     ): Promise<any> {
-        this.repository.saveOtherResponse(profile, variable, answer, nature);
+        this.repository.saveOtherResponse(profile, variable, answer);
     }
 
 }

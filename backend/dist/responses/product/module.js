@@ -10,20 +10,18 @@ exports.ProductResponsesModule = void 0;
 const common_1 = require("@nestjs/common");
 const controller_1 = require("./controller");
 const service_1 = require("./service");
-const profile_1 = require("../../repositories/responses/profile");
+const product_1 = require("../../repositories/responses/product");
 const module_1 = require("../../supabase/module");
 let ProductResponsesModule = class ProductResponsesModule {
 };
 exports.ProductResponsesModule = ProductResponsesModule;
 exports.ProductResponsesModule = ProductResponsesModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            module_1.SupabaseModule
-        ],
+        imports: [module_1.SupabaseModule],
         controllers: [controller_1.ProductResponsesController],
         providers: [
             service_1.Service,
-            profile_1.Repository
+            product_1.Repository
         ],
         exports: [service_1.Service]
     })

@@ -22,8 +22,8 @@ let ProductResponsesController = class ProductResponsesController {
     async submitAnswer(profileId, variable, answer) {
         await this.responsesService.saveAnswerOfSpecificQuestion(profileId, variable, Array.isArray(answer) ? answer : [answer]);
     }
-    async submitOtherAnswer(profileId, variable, answer, nature) {
-        await this.responsesService.saveOtherAnswerOfSpecificQuestion(profileId, variable, answer, nature);
+    async submitOtherAnswer(profileId, variable, answer) {
+        await this.responsesService.saveOtherAnswerOfSpecificQuestion(profileId, variable, answer);
     }
 };
 exports.ProductResponsesController = ProductResponsesController;
@@ -41,13 +41,12 @@ __decorate([
     __param(0, (0, common_1.Body)('profileId')),
     __param(1, (0, common_1.Body)('variable')),
     __param(2, (0, common_1.Body)('answer')),
-    __param(3, (0, common_1.Body)('nature')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, Number]),
+    __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], ProductResponsesController.prototype, "submitOtherAnswer", null);
 exports.ProductResponsesController = ProductResponsesController = __decorate([
-    (0, common_1.Controller)('responses/profile'),
+    (0, common_1.Controller)('responses/product'),
     __metadata("design:paramtypes", [service_1.Service])
 ], ProductResponsesController);
 //# sourceMappingURL=controller.js.map
