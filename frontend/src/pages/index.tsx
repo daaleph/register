@@ -1,5 +1,5 @@
 // frontend/src/pages/index.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '../context/UserContext';
 import { ProfileService } from '../services/ProfileService';
@@ -9,7 +9,7 @@ import { LoadingState } from '@/components/common/LoadingState';
 
 const InitialRegistration: React.FC = () => {
   const router = useRouter();
-  const { userProfile, setUserProfile } = useUser();
+  const { setUserProfile } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<UserProfile>({

@@ -14,39 +14,40 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductQuestionsController = void 0;
 const common_1 = require("@nestjs/common");
-const product_questions_service_1 = require("./product-questions.service");
-const jwt_auth_guard_1 = require("../../auth/jwt-auth.guard");
+const service_1 = require("./service");
 let ProductQuestionsController = class ProductQuestionsController {
     constructor(service) {
         this.service = service;
     }
-    async getQuestion(id) {
-        return this.service.getQuestion(id, []);
+    async getInitialQuestionWithOptions(uuid) {
+        const question = await this.service.getContextualizedInitialQuestion(uuid);
+        const options = await this.service.getContextualizedInitialOptions(uuid);
+        return JSON.stringify({ question, options });
     }
-    async saveAnswer(variable, profileId, answer) {
-        await this.service.storeAnswer(profileId, variable, answer);
+    async getProfiledQuestionWithOptions(uuid, questionId) {
+        const question = await this.service.getContextualizedQuestionById(uuid, questionId);
+        const options = await this.service.getContextualizedOptionsById(uuid, questionId);
+        return JSON.stringify({ question, options });
     }
 };
 exports.ProductQuestionsController = ProductQuestionsController;
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)('initial'),
+    __param(0, (0, common_1.Param)('uuid')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], ProductQuestionsController.prototype, "getQuestion", null);
+], ProductQuestionsController.prototype, "getInitialQuestionWithOptions", null);
 __decorate([
-    (0, common_1.Post)(':variable'),
-    __param(0, (0, common_1.Param)('variable')),
-    __param(1, (0, common_1.Body)('profileId')),
-    __param(2, (0, common_1.Body)('answer')),
+    (0, common_1.Get)('questionId/:questionId'),
+    __param(0, (0, common_1.Param)('uuid')),
+    __param(1, (0, common_1.Param)('questionId')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Array]),
+    __metadata("design:paramtypes", [String, Number]),
     __metadata("design:returntype", Promise)
-], ProductQuestionsController.prototype, "saveAnswer", null);
+], ProductQuestionsController.prototype, "getProfiledQuestionWithOptions", null);
 exports.ProductQuestionsController = ProductQuestionsController = __decorate([
-    (0, common_1.Controller)('questions/product'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __metadata("design:paramtypes", [product_questions_service_1.ProductQuestionsService])
+    (0, common_1.Controller)('questions/product/:uuid'),
+    __metadata("design:paramtypes", [service_1.ProductQuestionsService])
 ], ProductQuestionsController);
-//# sourceMappingURL=product-questions.controller.js.map
+//# sourceMappingURL=controller.js.map

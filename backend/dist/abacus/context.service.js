@@ -19,22 +19,47 @@ let AbacusContextService = class AbacusContextService {
             ['product', new ProductContextBuilder()]
         ]);
     }
-    buildQuestionContext(questions, responses, questionType) {
-        const contextBuilder = this.contextBuilders.get(questionType) || new DefaultContextBuilder();
-        return questions.reduce((acc, question, index) => {
-            const response = responses.find(resp => resp.variable === question.variable);
-            const context = contextBuilder.buildQuestionContext(question, index + 1, response);
-            return { ...acc, ...context };
-        }, {});
-    }
-    buildContext(previousQuestions, previousResponses, questionType) {
+    buildContext(questions, responses, questionType) {
         const validatedType = this.validateQuestionType(questionType);
-        const context = this.buildQuestionContext(previousQuestions, previousResponses, validatedType);
+        const context = this.buildQuestionContext(questions, responses);
         return {
             type: validatedType,
             context,
-            order: previousQuestions.length + 1
+            order: this.calculateTotalQuestions(questions)
         };
+    }
+    buildQuestionContext(questions, responses) {
+        let context = {};
+        let varIndexStart = 1;
+        if (questions.profile && responses.profile) {
+            const profileBuilder = this.contextBuilders.get('profile');
+            context = {
+                ...context,
+                ...profileBuilder.buildQuestionContext(questions.profile, responses.profile, varIndexStart)
+            };
+            varIndexStart += questions.profile.length;
+        }
+        if (questions.bfi && responses.bfi) {
+            const bfiBuilder = this.contextBuilders.get('bfi');
+            context = {
+                ...context,
+                ...bfiBuilder.buildQuestionContext(questions.bfi, responses.bfi, varIndexStart)
+            };
+            varIndexStart += questions.bfi.length;
+        }
+        if (questions.product && responses.product) {
+            const productBuilder = this.contextBuilders.get('product');
+            context = {
+                ...context,
+                ...productBuilder.buildQuestionContext(questions.product, responses.product, varIndexStart)
+            };
+        }
+        return context;
+    }
+    calculateTotalQuestions(questions) {
+        return (questions.profile?.length || 0) +
+            (questions.bfi?.length || 0) +
+            (questions.product?.length || 0);
     }
     validateQuestionType(type) {
         return ['profile', 'bfi', 'product'].includes(type) ? type : 'unknown';
@@ -46,65 +71,63 @@ exports.AbacusContextService = AbacusContextService = __decorate([
     __metadata("design:paramtypes", [])
 ], AbacusContextService);
 class ProfileContextBuilder {
-    buildQuestionContext(question, varIndex, response) {
-        if (!response)
-            return {};
-        return {
-            [`var${varIndex}`]: {
-                type: question.type,
-                name_en: question.name_en,
-                name_es: question.name_es,
-                description_en: question.description_en,
-                description_es: question.description_es,
-                answer_es: response.answer_options_es,
-                answer_en: response.answer_options_en
-            }
-        };
+    buildQuestionContext(questions, responses, varIndexStart) {
+        return questions.reduce((acc, question, index) => {
+            const response = responses.find(resp => resp.variable === question.variable);
+            if (!response)
+                return acc;
+            return {
+                ...acc,
+                [`var${varIndexStart + index}`]: {
+                    type: question.type,
+                    name_en: question.name_en,
+                    name_es: question.name_es,
+                    description_en: question.description_en,
+                    description_es: question.description_es,
+                    answer_es: response.answer_options_es,
+                    answer_en: response.answer_options_en
+                }
+            };
+        }, {});
     }
 }
 class BfiContextBuilder {
-    buildQuestionContext(question, varIndex, response) {
-        if (!response)
-            return {};
-        return {
-            [`var${varIndex}`]: {
-                description_en: question.description_en,
-                description_es: question.description_es,
-                answer_es: response.answer_options_es,
-                answer_en: response.answer_options_en
-            }
-        };
+    buildQuestionContext(questions, responses, varIndexStart) {
+        return questions.reduce((acc, question, index) => {
+            const response = responses.find(resp => resp.variable === question.variable);
+            if (!response)
+                return acc;
+            return {
+                ...acc,
+                [`var${varIndexStart + index}`]: {
+                    description_en: question.description_en,
+                    description_es: question.description_es,
+                    answer_es: response.answer_options_es,
+                    answer_en: response.answer_options_en
+                }
+            };
+        }, {});
     }
 }
 class ProductContextBuilder {
-    buildQuestionContext(question, varIndex, response) {
-        if (!response)
-            return {};
-        return {
-            [`var${varIndex}`]: {
-                type: question.type,
-                name_en: question.name_en,
-                name_es: question.name_es,
-                description_en: question.description_en,
-                description_es: question.description_es,
-                answer_es: response.answer_options_es,
-                answer_en: response.answer_options_en
-            }
-        };
-    }
-}
-class DefaultContextBuilder {
-    buildQuestionContext(question, varIndex, response) {
-        if (!response)
-            return {};
-        return {
-            [`var${varIndex}`]: {
-                description_en: question.description_en,
-                description_es: question.description_es,
-                answer_es: response.answer_options_es,
-                answer_en: response.answer_options_en
-            }
-        };
+    buildQuestionContext(questions, responses, varIndexStart) {
+        return questions.reduce((acc, question, index) => {
+            const response = responses.find(resp => resp.variable === question.variable);
+            if (!response)
+                return acc;
+            return {
+                ...acc,
+                [`var${varIndexStart + index}`]: {
+                    type: question.type,
+                    name_en: question.name_en,
+                    name_es: question.name_es,
+                    description_en: question.description_en,
+                    description_es: question.description_es,
+                    answer_es: response.answer_options_es,
+                    answer_en: response.answer_options_en
+                }
+            };
+        }, {});
     }
 }
 //# sourceMappingURL=context.service.js.map

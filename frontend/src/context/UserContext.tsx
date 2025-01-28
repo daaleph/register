@@ -1,30 +1,31 @@
 // frontend/src/context/UserContext.tsx
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { UserProfile } from '../models/interfaces';
 import { ProgressIncrements } from '@/components/navigation/phases';
+import { useRouter } from 'next/router';
 
+export type Phases = 'PROFILE' | 'BFI' | 'PRODUCT';
 
 interface UserContextType {
   // Core user data
   userProfile: UserProfile | null;
   responses: Map<string, number[] | number>;
-  currentPhase: 'PROFILE' | 'BFI' | 'PRODUCT';
-  progress: Map<'PROFILE' | 'BFI' | 'PRODUCT', number>;
-  // authToken: string | null;
+  currentPhase: Phases;
+  progress: Map<Phases, number>;
+  authToken: string | null;
   error: string | null;
   isLoading: boolean;
 
   // State setters
   setUserProfile: (PROFILE: UserProfile) => void;
   setResponses: (variable: string, answer: number[] | number) => void;
-  setCurrentPhase: (phase: 'PROFILE' | 'BFI' | 'PRODUCT') => void;
+  setCurrentPhase: (phase: Phases) => void;
   setProgress: () => void;
-  // setAuthToken: (token: string) => void;
+  setAuthToken: (token: string | null) => void;
   setError: (error: string | null) => void;
   setIsLoading: (loading: boolean) => void;
 
   // Phase management
-  canTransitionToNextPhase: () => boolean;
   moveToNextPhase: () => void;
 }
 
@@ -32,19 +33,24 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Core states
+  const router = useRouter();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [responses, setResponsesState] = useState<Map<string, number[] | number>>(new Map());
-  const [currentPhase, setCurrentPhase] = useState<'PROFILE' | 'BFI' | 'PRODUCT'>('PROFILE');
-  const [progress, setProgressState] = useState<Map<'PROFILE' | 'BFI' | 'PRODUCT', number>>(
+  const [currentPhase, setCurrentPhase] = useState<Phases>('PROFILE');
+  const [progress, setProgressState] = useState<Map<Phases, number>>(
     new Map([
       ['PROFILE', ProgressIncrements.PROFILE],
       ['BFI', ProgressIncrements.BFI],
       ['PRODUCT', ProgressIncrements.PRODUCT]
     ])
   );
-  // const [authToken, setAuthToken] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (progress.get(currentPhase)! > 100) moveToNextPhase();
+  }, [progress]);
 
   // Response management
   const setResponses = (variable: string, answer: number[] | number) => {
@@ -60,28 +66,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const newProgress = new Map(prevProgress);
       const increment = ProgressIncrements[currentPhase as keyof typeof ProgressIncrements];
       const currentValue = newProgress.get(currentPhase)!;
-      newProgress.set(currentPhase, Math.min(100, currentValue + increment));
+      newProgress.set(currentPhase, Math.min(currentValue + increment, 101));
       return newProgress;
     });
   };
 
-  const canTransitionToNextPhase = (): boolean => {
-    const advanceOfPhase = progress.get(currentPhase);
-    return advanceOfPhase ? advanceOfPhase >= 100: false;
-  };
-
   const moveToNextPhase = () => {
-    if (!canTransitionToNextPhase()) {
-      setError('Please complete all required questions');
-      return;
-    }
-    
-    const phases: Array<'PROFILE' | 'BFI' | 'PRODUCT'> = ['PROFILE', 'BFI', 'PRODUCT'];
+    const phases: Array<Phases> = ['PROFILE', 'BFI', 'PRODUCT'];
     const currentIndex = phases.indexOf(currentPhase);
     if (currentIndex < phases.length - 1) {
-      setCurrentPhase(phases[currentIndex + 1]);
+      const newPhase = phases[currentIndex + 1]
+      router.push(`/${newPhase.toLowerCase()}`);
+      setCurrentPhase(newPhase);
       setProgress();
       setError(null);
+    } else {
+      router.push('/finalize');
     }
   };
 
@@ -91,17 +91,16 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     responses,
     currentPhase,
     progress,
-    // authToken,
+    authToken,
     error,
     isLoading,
     setUserProfile,
     setResponses,
     setCurrentPhase,
     setProgress,
-    // setAuthToken,
+    setAuthToken,
     setError,
     setIsLoading,
-    canTransitionToNextPhase,
     moveToNextPhase
   };
 

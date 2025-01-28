@@ -14,6 +14,11 @@ const auth_service_1 = require("./auth.service");
 const auth_controller_1 = require("./auth.controller");
 const jwt_strategy_1 = require("./jwt.strategy");
 const module_1 = require("../supabase/module");
+const dotenv = require("dotenv");
+dotenv.config();
+if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is not set');
+}
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -32,4 +37,5 @@ exports.AuthModule = AuthModule = __decorate([
         exports: [auth_service_1.AuthService, jwt_1.JwtModule],
     })
 ], AuthModule);
+;
 //# sourceMappingURL=auth.module.js.map

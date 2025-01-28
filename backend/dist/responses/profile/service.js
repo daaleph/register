@@ -19,8 +19,8 @@ let Service = class Service {
     async saveAnswerOfSpecificQuestion(profile, variable, answer_options) {
         this.repository.saveResponse({ profile, variable, answer_options });
     }
-    async saveOtherAnswerOfSpecificQuestion(profile, variable, answer, nature) {
-        this.repository.saveOtherResponse(profile, variable, answer, nature);
+    async saveOtherAnswerOfSpecificQuestion(profile, variable, answer) {
+        this.repository.saveOtherResponse(profile, variable, answer);
     }
 };
 exports.Service = Service;

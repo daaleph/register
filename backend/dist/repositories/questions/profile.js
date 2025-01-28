@@ -21,7 +21,7 @@ let ProfileQuestionsRepository = class ProfileQuestionsRepository {
         const { data } = await this.supabaseService.query('profile_questions', {
             variable,
         });
-        return Array.isArray(data) ? data[0] : data;
+        return data[0];
     }
     async findOptions(id) {
         const variable = `var${String(id).padStart(2, '0')}`;
@@ -63,13 +63,6 @@ let ProfileQuestionsRepository = class ProfileQuestionsRepository {
             .select()
             .eq('profile', uuid);
         return data;
-    }
-    async findAndCustomizeQuestion(id, personalizedQuestion) {
-        const baseQuestion = await this.findQuestion(id);
-        return {
-            ...baseQuestion,
-            ...personalizedQuestion
-        };
     }
     async saveProfileResponse(response) {
         const { data } = await this.supabaseService.query('profile_responses', response);

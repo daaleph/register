@@ -13,23 +13,37 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const service_1 = require("../supabase/service");
+const crypto_1 = require("crypto");
 let AuthService = class AuthService {
     constructor(jwtService, supabaseService) {
         this.jwtService = jwtService;
         this.supabaseService = supabaseService;
     }
-    async login(profileId) {
+    async profileExists(email) {
         const profile = await this.supabaseService
             .getConnection()
             .from('profile')
             .select('*')
-            .eq('id', profileId)
+            .eq('email', email)
             .single();
-        if (!profile) {
+        if (!profile.data) {
             throw new common_1.UnauthorizedException('Profile not found');
         }
+        return profile.data;
+    }
+    async login(email, password) {
+        const profile = await this.profileExists(email);
+        const passwordHash = profile.password;
+        if (!passwordHash) {
+            throw new common_1.UnauthorizedException('Password not set for this profile');
+        }
+        const [salt, storedHash] = passwordHash.split(':');
+        const hashedPassword = (0, crypto_1.pbkdf2Sync)(password, salt, 1000, 64, 'sha512').toString('hex');
+        if (hashedPassword !== storedHash) {
+            throw new common_1.UnauthorizedException('Invalid credentials');
+        }
         const payload = {
-            sub: profileId,
+            sub: profile.id,
             email: profile.email,
         };
         return {
@@ -38,11 +52,44 @@ let AuthService = class AuthService {
     }
     async validateToken(token) {
         try {
-            return await this.jwtService.verify(token);
+            return this.jwtService.verify(token);
         }
         catch {
             throw new common_1.UnauthorizedException('Invalid token');
         }
+    }
+    async finalizeRegistration(email, password) {
+        await this.setPassword(email, password);
+        console.log("AAAAAAAAAAAAAAAAAA:", email);
+        return this.login(email, password);
+    }
+    async setPassword(email, password) {
+        await this.profileExists(email);
+        if (password.length < 8) {
+            throw new common_1.BadRequestException('Password must be at least 8 characters long');
+        }
+        const salt = (0, crypto_1.randomBytes)(16).toString('hex');
+        const hashedPassword = (0, crypto_1.pbkdf2Sync)(password, salt, 1000, 64, 'sha512').toString('hex');
+        const passwordHash = `${salt}:${hashedPassword}`;
+        const { error } = await this.supabaseService
+            .getConnection()
+            .from('profile')
+            .update({ password: passwordHash })
+            .eq('email', email);
+        if (error) {
+            throw new common_1.BadRequestException('Failed to set password');
+        }
+        return { message: 'Password set successfully' };
+    }
+    async verifyPassword(profileId, password) {
+        const profile = await this.profileExists(profileId);
+        const passwordHash = profile.password;
+        if (!passwordHash) {
+            throw new common_1.UnauthorizedException('Password not set for this profile');
+        }
+        const [salt, storedHash] = passwordHash.split(':');
+        const hashedPassword = (0, crypto_1.pbkdf2Sync)(password, salt, 1000, 64, 'sha512').toString('hex');
+        return hashedPassword === storedHash;
     }
 };
 exports.AuthService = AuthService;

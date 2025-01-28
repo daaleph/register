@@ -1,17 +1,18 @@
 // frontend/src/pages/profile.tsx
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { useUser } from '../context/UserContext';
+import { Phases, useUser } from '../context/UserContext';
 import { QuestionForm } from '../components/common/QuestionForm';
 import { ProgressBar } from '../components/common/ProgressBar';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
-import styles from '../styles/components.module.css';
 import { QuestionController, QuestionState } from '@/controllers';
 import { ProfileService } from '@/services';
+import styles from '../styles/components.module.css';
 
 const ProfilePage: React.FC = () => {
+  const QUESTIONTYPE: Phases = 'PROFILE';
   const router = useRouter();
-  const { setResponses, setProgress, moveToNextPhase, progress, userProfile, currentPhase } = useUser();
+  const { setResponses, setProgress, progress, userProfile, currentPhase } = useUser();
   const profileService = new ProfileService();
   
   // Single state for the question controller and its state
@@ -21,6 +22,7 @@ const ProfilePage: React.FC = () => {
   }>(() => {
     const controller = new QuestionController({
       initialState: {
+        currentPhase,
         currentQuestion: null,
         currentOptions: null,
         isLoading: true,
@@ -35,10 +37,6 @@ const ProfilePage: React.FC = () => {
       },
       onAnswerSubmitted: (variable: string, answer: number[] | number) => {
         setResponses(variable, answer);
-      },
-      onCompletion: () => {
-        moveToNextPhase();
-        router.push('/bfi');
       }
     });
 
@@ -52,13 +50,11 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     const initQuestions = async () => {
       if (!router.isReady || typeof userProfile?.id !== "string") return;
-
       try {
         await controllerState.controller.initializeQuestions(
           userProfile.id,
           profileService.getInitialQuestionWithOptions.bind(profileService)
         );
-        
         setControllerState(current => ({
           ...current,
           state: current.controller.getState()
@@ -67,7 +63,6 @@ const ProfilePage: React.FC = () => {
         console.error('Failed to initialize questions:', error);
       }
     };
-
     initQuestions();
   }, [router.isReady, userProfile?.id]);
 
@@ -85,17 +80,20 @@ const ProfilePage: React.FC = () => {
     if (!userProfile?.id) return;
 
     try {
+
       await controllerState.controller.submitAnswer(
         userProfile.id,
         profileService.submitAnswer.bind(profileService),
-        profileService.submitOtherAnswer.bind(profileService),
-        progress.get(currentPhase)!,
-        1
+        progress,
+        currentPhase,
+        profileService.submitOtherAnswer.bind(profileService)
       );
       setControllerState(current => ({
         ...current,
         state: controllerState.controller.getState()
       }));
+
+      if (progress.get(currentPhase)! > 100 && QUESTIONTYPE !== currentPhase) return;
 
       await controllerState.controller.nextQuestionWithOptions(
         userProfile.id,
@@ -115,7 +113,7 @@ const ProfilePage: React.FC = () => {
 
   // Loading state
   if (!controllerState.state || !router.isReady) {
-    return <div className={styles.loading}>Loading your profile...</div>;
+    return <div className={styles.loading}>Creando tu perfil...</div>;
   }
 
   // Error state
@@ -144,6 +142,7 @@ const ProfilePage: React.FC = () => {
         question={controllerState.state.currentQuestion}
         options={controllerState.state.currentOptions}
         onAnswerSelected={handleAnswerSelected}
+        currentPhase={currentPhase}
         isLoading={controllerState.state.isLoading}
       />
       <button 
@@ -151,7 +150,7 @@ const ProfilePage: React.FC = () => {
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
       >
-        {controllerState.state.isLoading ? 'Submitting...' : 'Submit'}
+        {controllerState.state.isLoading ? 'Entendiéndote...' : 'Contestar'}
       </button>
     </div>
   );

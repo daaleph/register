@@ -10,5 +10,6 @@ import { SupabaseModule } from '../supabase/module';
   controllers: [ProfileController],
   providers: [ProfileService, ProfileRepository],
   exports: [ProfileService],
-}) // [source](search_result_11)
+})
+
 export class ProfileModule {}

@@ -1,24 +1,32 @@
 // src/questions-options/product/controller.ts
-import { Controller, Get, Post, Param, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ProductQuestionsService } from './service';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
-@Controller('questions/product')
-@UseGuards(JwtAuthGuard)
+@Controller('questions/product/:uuid')
+// @UseGuards(JwtAuthGuard)
 export class ProductQuestionsController {
-    constructor(private readonly service: ProductQuestionsService) {}
+    constructor(
+        private readonly service: ProductQuestionsService
+    ) {}
 
-    @Get(':id')
-    async getQuestion(@Param('id') id: number) {
-        return this.service.getQuestion(id, []);
+    @Get('initial')
+    async getInitialQuestionWithOptions(
+      @Param('uuid') uuid: string
+    ): Promise<string> {
+        const question = await this.service.getContextualizedInitialQuestion(uuid);
+        const options = await this.service.getContextualizedInitialOptions(uuid);
+
+        return JSON.stringify({ question, options });
     }
 
-    @Post(':variable')
-    async saveAnswer(
-        @Param('variable') variable: string,
-        @Body('profileId') profileId: string,
-        @Body('answer') answer: number[]
-    ) {
-        await this.service.storeAnswer(profileId, variable, answer);
-    } 
+    @Get('questionId/:questionId')
+    async getProfiledQuestionWithOptions(
+        @Param('uuid') uuid: string,
+        @Param('questionId') questionId: number
+    ): Promise<string> {
+        const question = await this.service.getContextualizedQuestionById(uuid, questionId);
+        const options = await this.service.getContextualizedOptionsById(uuid, questionId);
+        return JSON.stringify({ question, options });
+    }
 }

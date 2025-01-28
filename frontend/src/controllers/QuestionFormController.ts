@@ -59,9 +59,7 @@ export class QuestionFormController {
 
     isOtherOption(optionId: number, options: QuestionOption[]): boolean {
         const option = options.find(opt => opt.option_id === optionId);
-        return ['otra', 'otro'].some(text => 
-            option?.description_es.toLowerCase().includes(text)
-        );
+        return option?.description_es.length === 4 && option?.description_es.toLowerCase().startsWith('otr');
     }
 
     reset(): void {

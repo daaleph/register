@@ -19,12 +19,12 @@ let ProfileQuestionsController = class ProfileQuestionsController {
     constructor(service) {
         this.service = service;
     }
-    async getInitialProfileQuestion() {
+    async getInitialQuestionWithOptions() {
         const question = await this.service.getInitialQuestion();
         const options = await this.service.getInitialOptions();
         return JSON.stringify({ question, options });
     }
-    async getProfiledQuestion(uuid, questionId) {
+    async getQuestionWithOptions(uuid, questionId) {
         const question = await this.service.getContextualizedQuestionById(uuid, questionId);
         const options = await this.service.getContextualizedOptionsById(uuid, questionId);
         return JSON.stringify({ question, options });
@@ -36,7 +36,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], ProfileQuestionsController.prototype, "getInitialProfileQuestion", null);
+], ProfileQuestionsController.prototype, "getInitialQuestionWithOptions", null);
 __decorate([
     (0, common_1.Get)('questionId/:questionId'),
     __param(0, (0, common_1.Param)('uuid')),
@@ -44,7 +44,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Number]),
     __metadata("design:returntype", Promise)
-], ProfileQuestionsController.prototype, "getProfiledQuestion", null);
+], ProfileQuestionsController.prototype, "getQuestionWithOptions", null);
 exports.ProfileQuestionsController = ProfileQuestionsController = __decorate([
     (0, common_1.Controller)('questions/profile/:uuid'),
     __metadata("design:paramtypes", [service_1.ProfileQuestionsService])

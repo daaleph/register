@@ -1,4 +1,4 @@
-export declare class ProductOptionsEntity {
+export declare class ProductOptionEntity {
     variable: string;
     option_id: number;
     description_es: string;

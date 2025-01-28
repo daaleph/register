@@ -1,21 +1,34 @@
 // src/services/BFIService.ts
 
-import { Question } from "@/models/interfaces";
+import { QuestionWithOptions } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class BfiService {
     private baseUrl: string;
 
     constructor() {
-        this.baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+        this.baseUrl = process.env.NEXT_PUBLIC_NEST_URL || '';
     }
 
-    async getBfiQuestion(questionId: number): Promise<Question> {
-        return HttpUtility.get(`${this.baseUrl}/questions/bfi/${questionId}`);
+    async getInitialQuestionWithOptions(
+        id: string
+    ): Promise<QuestionWithOptions> {
+        return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/bfi/${id}/initial`);
     }
 
-    async submitBfiAnswer(profileId: string, variable: string, answer: number[] | number): Promise<void> {
-        return HttpUtility.post(`${this.baseUrl}/questions/bfi/answer`, {
+    async getQuestionWithAnswers(
+        uuid: string,
+        questionId: number
+    ): Promise<QuestionWithOptions> {
+        return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/bfi/${uuid}/questionId/${questionId}`);
+    }
+
+    async submitAnswer(
+        profileId: string,
+        variable: string,
+        answer: number[]
+    ): Promise<void> {
+        return HttpUtility.post(`${this.baseUrl}responses/bfi`, {
             profileId,
             variable,
             answer

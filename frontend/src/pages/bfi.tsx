@@ -1,105 +1,152 @@
 // frontend/src/pages/bfi.tsx
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useUser } from '../context/UserContext';
-import { Question, QuestionOption } from '../models/interfaces';
+import { Phases, useUser } from '../context/UserContext';
 import { QuestionForm } from '../components/common/QuestionForm';
 import { ProgressBar } from '../components/common/ProgressBar';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
-import { QuestionController } from '../controllers/QuestionController';
-import styles from '../styles/components.module.css';
+import { QuestionController, QuestionState } from '@/controllers';
 import { BfiService } from '@/services';
+import styles from '../styles/components.module.css';
 
 const BfiPage: React.FC = () => {
+  const QUESTIONTYPE: Phases = 'BFI';
   const router = useRouter();
-  const { userProfile, setResponses, setProgress } = useUser();
+  const { setResponses, setProgress, progress, userProfile, currentPhase } = useUser();
   const bfiService = new BfiService();
 
-  // Initialize QuestionController with configuration
-  const questionController = new QuestionController({
-    initialState: {
-      currentQuestion: null,
-      currentOptions: null,
-      isLoading: true,
-      currentProgress: 0,
-      error: null,
-      isInitialized: false,
-      selectedAnswer: null,
-      otherText: undefined
-    },
-    onProgressUpdate: (progress: number) => {
-      setProgress(progress);
-    },
-    onAnswerSubmitted: (variable: string, answer: number[] | number) => {
-      setResponses(variable, answer);
-    },
-    onCompletion: () => {
-      router.push('/product');
-    }
+  // Single state for the question controller and its state
+  const [controllerState, setControllerState] = useState<{
+    controller: QuestionController;
+    state: QuestionState;
+  }>(() => {
+    const controller = new QuestionController({
+      initialState: {
+        currentPhase,
+        currentQuestion: null,
+        currentOptions: null,
+        isLoading: true,
+        currentProgress: 0,
+        error: null,
+        isInitialized: false,
+        selectedAnswer: null,
+        otherText: undefined
+      },
+      onProgressUpdate: () => {
+        setProgress();
+      },
+      onAnswerSubmitted: (variable: string, answer: number[] | number) => {
+        setResponses(variable, answer);
+      }
+    });
+
+    return {
+      controller,
+      state: controller.getState()
+    };
   });
 
-  // Initialize question flow
+  // Initialize questions when component mounts
   useEffect(() => {
-    if (!router.isReady || !userProfile?.id) return;
-
-    questionController.initializeQuestions(
-      userProfile.id,
-      bfiService.getInitialQuestionWithOptions.bind(bfiService)
-    );
+    const initQuestions = async () => {
+      if (!router.isReady || typeof userProfile?.id !== "string") return;
+      try {
+        await controllerState.controller.initializeQuestions(
+          userProfile.id,
+          bfiService.getInitialQuestionWithOptions.bind(bfiService)
+        );
+        setControllerState(current => ({
+          ...current,
+          state: current.controller.getState()
+        }));
+      } catch (error) {
+        console.error('Failed to initialize questions:', error);
+      }
+    };
+    initQuestions();
   }, [router.isReady, userProfile?.id]);
 
-  // Handle answer submission
-  const handleSubmit = async () => {
+  // Handle answer selection
+  const handleAnswerSelected = useCallback((answer: number[] | number, otherText?: string) => {
+    otherText ? controllerState.controller.handleAnswerSelection(answer, otherText) : controllerState.controller.handleAnswerSelection(answer);
+    setControllerState(current => ({
+      ...current,
+      state: current.controller.getState()
+    }));
+  }, [controllerState.controller]);
+
+  // Handle form submission
+  const handleSubmit = useCallback(async () => {
     if (!userProfile?.id) return;
 
-    await questionController.submitAnswer(
-      userProfile.id,
-      bfiService.submitAnswer.bind(bfiService),
-      bfiService.submitOtherAnswer.bind(bfiService),
-      bfiService.getQuestionWithAnswers.bind(bfiService),
-      2 // nature for BFI questions
-    );
-  };
+    try {
+      await controllerState.controller.submitAnswer(
+        userProfile.id,
+        bfiService.submitAnswer.bind(bfiService),
+        progress,
+        currentPhase
+      );
+      setControllerState(current => ({
+        ...current,
+        state: controllerState.controller.getState()
+      }));
 
-  const state = questionController.getState();
+      if (progress.get(currentPhase)! > 100 && QUESTIONTYPE !== currentPhase) return;
 
-  // Show loading state
-  if (!router.isReady || state.isLoading) {
-    return <div className={styles.loading}>Loading BFI questions...</div>;
+      await controllerState.controller.nextQuestionWithOptions(
+        userProfile.id,
+        controllerState.state,
+        bfiService.getQuestionWithAnswers.bind(bfiService)
+      );
+      setControllerState(current => ({
+        ...current,
+        state: controllerState.controller.getState()
+      }));
+      
+    } catch (error) {
+      console.error('Failed to initialize questions:', error);
+    }
+
+  }, [userProfile?.id, controllerState.controller, bfiService]);
+
+  // Loading state
+  if (!controllerState.state || !router.isReady) {
+    return <div className={styles.loading}>Loading your profile...</div>;
   }
 
-  // Show error if there is one
-  if (state.error) {
-    return <ErrorDisplay message={state.error} />;
+  // Error state
+  if (controllerState.state.error) {
+    return <ErrorDisplay message={controllerState.state.error} />;
   }
 
-  // Only render main content when we have both question and options
-  if (!state.currentQuestion || !state.currentOptions) {
+  // Not initialized state
+  if (!controllerState.state.currentQuestion || !controllerState.state.currentOptions) {
     return <div className={styles.loading}>Preparing questions...</div>;
   }
+
+  const isSubmitDisabled = 
+    controllerState.state.isLoading ||
+    controllerState.state.selectedAnswer === null;
 
   return (
     <div className={styles.profileContainer}>
       <ProgressBar 
-        currentProgress={state.currentProgress} 
-        phase='bfi' 
+        currentProgress={progress.get(currentPhase)!} 
+        phase={currentPhase}
       />
       <QuestionForm
-        question={state.currentQuestion}
-        options={state.currentOptions}
-        onAnswerSelected={questionController.handleAnswerSelection}
-        isLoading={state.isLoading}
+        question={controllerState.state.currentQuestion}
+        options={controllerState.state.currentOptions}
+        onAnswerSelected={handleAnswerSelected}
+        currentPhase={currentPhase}
+        isLoading={controllerState.state.isLoading}
       />
       <button 
         className={styles.submitButton}
         onClick={handleSubmit}
-        disabled={
-          state.isLoading || 
-          state.selectedAnswer === null || 
-          (state.otherText !== undefined && state.otherText.trim() === '')
-        }
+        disabled={isSubmitDisabled}
       >
-        Submit
+        {controllerState.state.isLoading ? 'Entendiéndote...' : 'Contestar'}
       </button>
     </div>
   );

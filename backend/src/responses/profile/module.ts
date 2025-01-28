@@ -7,9 +7,7 @@ import { Repository } from '../../repositories/responses/profile';
 import { SupabaseModule } from 'src/supabase/module';
 
 @Module({
-  imports: [
-    SupabaseModule
-  ],
+  imports: [SupabaseModule],
   controllers: [ProfileResponsesController],
   providers: [
     Service,

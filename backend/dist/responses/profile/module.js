@@ -17,9 +17,7 @@ let ProfileResponsesModule = class ProfileResponsesModule {
 exports.ProfileResponsesModule = ProfileResponsesModule;
 exports.ProfileResponsesModule = ProfileResponsesModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            module_1.SupabaseModule
-        ],
+        imports: [module_1.SupabaseModule],
         controllers: [controller_1.ProfileResponsesController],
         providers: [
             service_1.Service,
