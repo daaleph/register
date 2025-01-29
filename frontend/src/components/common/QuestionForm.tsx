@@ -5,6 +5,9 @@ import { Question, QuestionOption } from '../../models/interfaces';
 import { QuestionFormController } from '@/controllers';
 
 interface QuestionFormProps {
+  hook: {key:string, hook:string, method: string, description:string};
+  showDescription: boolean;
+  setShowDescription: (showDescription: boolean) => void;
   question: Question;
   options: QuestionOption[];
   onAnswerSelected: (answer: number[] | number, otherText?: string) => void;
@@ -13,6 +16,9 @@ interface QuestionFormProps {
 }
 
 export const QuestionForm: React.FC<QuestionFormProps> = ({
+  hook,
+  showDescription,
+  setShowDescription,
   question,
   options,
   onAnswerSelected,
@@ -35,10 +41,34 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   }, [question.id]);
 
   if (isLoading) {
-    return <div className={styles.questionFormLoading}>
-      Trabajamos agilizando<br/>
-      E informando mejor aquí
-    </div>;
+    return (
+      <div className={styles.questionFormLoading}>
+        <div className={styles.content}>
+          <div className={styles.title}>
+            La computación cuántica
+            <span className={styles.highlight}>esto acelerará</span>
+          </div>
+          
+          <div className={styles.hookText}>
+            {hook.hook}
+          </div>
+          
+          {!showDescription ? (
+            <button 
+              className={styles.revealButton}
+              onClick={() => setShowDescription(true)}
+            >
+              {hook.method}
+            </button>
+          ) : (
+            <div className={styles.description}>
+              {hook.description}
+            </div>
+          )}
+
+        </div>
+      </div>
+    );
   }
 
   const handleOptionSelect = (optionId: number) => {

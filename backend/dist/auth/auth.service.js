@@ -60,7 +60,6 @@ let AuthService = class AuthService {
     }
     async finalizeRegistration(email, password) {
         await this.setPassword(email, password);
-        console.log("AAAAAAAAAAAAAAAAAA:", email);
         return this.login(email, password);
     }
     async setPassword(email, password) {

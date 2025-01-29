@@ -8,14 +8,22 @@ import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { QuestionController, QuestionState } from '@/controllers';
 import { ProfileService } from '@/services';
 import styles from '../styles/components.module.css';
+import { hookManager } from '@/marketing/hooks';
 
 const ProfilePage: React.FC = () => {
   const QUESTIONTYPE: Phases = 'PROFILE';
   const router = useRouter();
+  const [showDescription, setShowDescription] = useState<boolean>(false);
   const { setResponses, setProgress, progress, userProfile, currentPhase } = useUser();
   const profileService = new ProfileService();
+
+  const [hook, setHook] = useState<{
+    key: string;
+    hook: string;
+    method: string;
+    description: string;
+  }>(hookManager.getRandomHook());
   
-  // Single state for the question controller and its state
   const [controllerState, setControllerState] = useState<{
     controller: QuestionController;
     state: QuestionState;
@@ -78,7 +86,8 @@ const ProfilePage: React.FC = () => {
   // Handle form submission
   const handleSubmit = useCallback(async () => {
     if (!userProfile?.id) return;
-
+    setHook(hookManager.getRandomHook());
+    setShowDescription(false);
     try {
 
       await controllerState.controller.submitAnswer(
@@ -139,6 +148,9 @@ const ProfilePage: React.FC = () => {
         phase={currentPhase}
       />
       <QuestionForm
+        hook={hook}
+        showDescription={showDescription}
+        setShowDescription={setShowDescription}
         question={controllerState.state.currentQuestion}
         options={controllerState.state.currentOptions}
         onAnswerSelected={handleAnswerSelected}

@@ -22,6 +22,7 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
     }
     async personalizesProfileQuestion(question, previousQuestions, previousResponses) {
         const context = this.contextService.buildContext({ profile: previousQuestions }, { profile: previousResponses }, 'profile');
+        inspector_1.console.log("CONTEXT:", context);
         return this.personalizeQuestion(question, context);
     }
     async personalizesProfileOptions(options, previousQuestions, previousResponses) {

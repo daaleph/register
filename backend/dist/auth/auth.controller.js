@@ -36,9 +36,6 @@ let AuthController = class AuthController {
             throw new common_1.UnauthorizedException('Profile ID is required');
         if (!password)
             throw new common_1.BadRequestException('Password is required');
-        console.log("AAAAAAAAAAAAAA");
-        console.dir(email, { depth: null });
-        console.dir(password, { depth: null });
         return this.authService.finalizeRegistration(email, password);
     }
     async setPassword(email, password) {

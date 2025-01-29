@@ -35,6 +35,7 @@ export class AbacusPersonalizationService {
       { profile: previousResponses },
       'profile'
     );
+    console.log("CONTEXT:", context);
     return this.personalizeQuestion(question, context);
   }
 
