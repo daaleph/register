@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { isAuthenticated } = useAuth();
+    console.log();
     const router = useRouter();
 
     useEffect(() => {
@@ -12,10 +13,6 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             router.push('/login');
         }
     }, [isAuthenticated, router]);
-
-    if (!isAuthenticated) {
-        return <div>Loading...</div>;
-    }
 
     return <>{children}</>;
 };

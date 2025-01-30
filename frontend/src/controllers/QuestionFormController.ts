@@ -1,4 +1,4 @@
-// components/common/QuestionFormController.ts
+// frontend/src/components/common/QuestionFormController.ts
 import { QuestionOption } from "@/models/interfaces";
 
 export class QuestionFormController {

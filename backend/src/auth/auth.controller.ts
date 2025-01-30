@@ -11,9 +11,8 @@ export class AuthController {
     @Body('email') email: string,
     @Body('password') password: string
   ) {
-    if (!email) {
-      throw new UnauthorizedException('Profile ID is required');
-    }
+    if (!email) throw new UnauthorizedException('Profile ID is required');
+    if (!password) throw new BadRequestException('Password is required');
     return this.authService.login(email, password);
   }
 
