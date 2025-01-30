@@ -5,10 +5,18 @@ import { HttpUtility } from "./HttpUtility";
 
 export class ProfileService {
   
+  private static instance: ProfileService | null = null;
   private baseUrl: string;
 
-  constructor() {
+  private constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_NEST_URL || '';
+  }
+
+  public static getInstance(): ProfileService {
+    if (!ProfileService.instance) {
+      ProfileService.instance = new ProfileService();
+    }
+    return ProfileService.instance;
   }
 
   async createProfile(data: UserProfile): Promise<{ id: string }> {
@@ -24,7 +32,7 @@ export class ProfileService {
     return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/${id}/initial`);
   }
 
-  async getQuestionWithAnswers(
+  async getQuestionWithOptions(
     uuid: string,
     questionId: number
   ): Promise<QuestionWithOptions> {

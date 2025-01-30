@@ -4,10 +4,19 @@ import { QuestionWithOptions } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class BfiService {
+
+    private static instance: BfiService | null = null;
     private baseUrl: string;
 
     constructor() {
         this.baseUrl = process.env.NEXT_PUBLIC_NEST_URL || '';
+    }
+
+    public static getInstance(): BfiService {
+        if (!BfiService.instance) {
+          BfiService.instance = new BfiService();
+        }
+        return BfiService.instance;
     }
 
     async getInitialQuestionWithOptions(

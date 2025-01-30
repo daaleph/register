@@ -38,7 +38,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   const [formState, setFormState] = useState(() => controller.getState());
   
   useEffect(() => {
-    formState.selectedAnswers.length === 0 ? setAnswerSelected(false) : setAnswerSelected(true);
+    setAnswerSelected(!(formState.selectedAnswers.length === 0));
   }, [formState])
 
   // Reset form when question changes
