@@ -77,7 +77,7 @@ const ProfilePage: React.FC = () => {
 
   // Handle answer selection
   const handleAnswerSelected = useCallback((answer: number[] | number, otherText?: string) => {
-    otherText ? controllerState.controller.handleAnswerSelection(answer, otherText) : controllerState.controller.handleAnswerSelection(answer);
+    controllerState.controller.handleAnswerSelection(answer, otherText);
     setControllerState(current => ({
       ...current,
       state: current.controller.getState()
