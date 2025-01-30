@@ -32,11 +32,14 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Core states
+  
   const router = useRouter();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [responses, setResponsesState] = useState<Map<string, number[] | number>>(new Map());
   const [currentPhase, setCurrentPhase] = useState<Phases>('PROFILE');
+  const [authToken, setAuthToken] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [progress, setProgressState] = useState<Map<Phases, number>>(
     new Map([
       ['PROFILE', ProgressIncrements.PROFILE],
@@ -44,9 +47,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ['PRODUCT', ProgressIncrements.PRODUCT]
     ])
   );
-  const [authToken, setAuthToken] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (progress.get(currentPhase)! > 100) moveToNextPhase();

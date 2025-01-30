@@ -158,7 +158,7 @@ const hooks: HooksDictionary = {
   "esfuerzo": [
     "Olvida el estudio interminable. Abraza el aprendizaje sin esfuerzo.",
     "Muéstrame cómo",
-    "Descubre un enfoque revolucionario para adquirir conocimiento."
+    "Descubre un enfoque revolucionario para adquirir creatividad."
   ],
   "comprension": [
     "Deja atrás el frenesí de subrayar. Desbloquea una comprensión real.",
@@ -166,7 +166,7 @@ const hooks: HooksDictionary = {
     "Nuestro sistema transforma la forma en que aprendes, para siempre."
   ],
   "memoria": [
-    "¿Cansado de olvidar? Prepárate para recordar.",
+    "¿Cansado de olvidar? Prepárate para creativamente recordar.",
     "Necesito ayuda",
     "Experimenta el poder de la práctica de recuperación."
   ],

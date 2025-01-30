@@ -1,6 +1,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary-color: black;
+  --secondary-color: white;
+  --third-color: rgba(255, 255, 255, 0.056);
+  --forth-color: rgb(135, 135, 135);
+  --text-primary-color: white;
+  --text-secondary-color:black;
+  --border-color: rgb(255, 255, 0);
+  --error-color: #e74c3c;
 }
 
 @media (prefers-color-scheme: dark) {

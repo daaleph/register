@@ -6,6 +6,7 @@ import { ProfileService } from '../services/ProfileService';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { UserProfile } from '@/models/interfaces';
 import { LoadingState } from '@/components/common/LoadingState';
+import styles from '../styles/index.module.css';
 
 const InitialRegistration: React.FC = () => {
   const router = useRouter();
@@ -71,16 +72,25 @@ const InitialRegistration: React.FC = () => {
   };
 
   // Show loading state while the profile is being created
-  if (isLoading) {
-    return <LoadingState />
-  }
+  if (isLoading) return <LoadingState />
 
   return (
-    <div className="registration-container">
-      <h1>Registration</h1>
-      <form onSubmit={handleSubmit} className="registration-form">
-        <div className="form-group">
-          <label htmlFor="complete_name">Complete Name *</label>
+    <div className={styles.registrationContainer}>
+      <div className={styles.welcomeSection}>
+        <h1 className={styles.title}>aleph</h1>
+        <p className={styles.hardText}>Increasing universal wisdom.</p>
+      </div>
+
+      <div className={styles.privacyNotice}>
+        <h3 className={styles.privacyTitle} style={{textAlign: 'center'}}>Seguridad</h3>
+        <p className={styles.privacyText} style={{textAlign: 'right'}}>
+          Nuestra información es sagrada. La proteje la misma dedicación de nuestros antepasados guardando sus tesoros en criptas tecnológicamente
+          dentro del aleph comunicadas mejorando tu experiencia humana.
+        </p>
+      </div>
+      <form onSubmit={handleSubmit} className={styles.registrationForm}>
+        <div className={styles.formGroup}>
+          <label htmlFor="complete_name">Nombres y Apellidos *</label>
           <input
             type="text"
             id="complete_name"
@@ -92,8 +102,8 @@ const InitialRegistration: React.FC = () => {
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="preferred_name">Preferred Name *</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="preferred_name">Cómo prefieres ser conocido? *</label>
           <input
             type="text"
             id="preferred_name"
@@ -105,7 +115,7 @@ const InitialRegistration: React.FC = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label htmlFor="email">Email *</label>
           <input
             type="email"
@@ -118,8 +128,8 @@ const InitialRegistration: React.FC = () => {
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="movil">Mobile Number *</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="movil">Número Móvil *</label>
           <input
             type="tel"
             id="movil"
@@ -131,8 +141,8 @@ const InitialRegistration: React.FC = () => {
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="telegram">Telegram Handle</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="telegram">Telegram</label>
           <input
             type="text"
             id="telegram"
@@ -145,14 +155,26 @@ const InitialRegistration: React.FC = () => {
 
         {error && <ErrorDisplay message={error} />}
 
+        <p className={styles.calmText} style={{textAlign: 'right'}}>
+          Toma tu tiempo. Respira. No habrá más prisas.
+        </p>
+
         <button 
           type="submit" 
-          className="submit-button"
+          className={styles.submitButton}
           disabled={isLoading}
         >
-          {isLoading ? 'Creating Profile...' : 'Start Registration'}
+          {isLoading ? 'Creando Perfil...' : 'Comienza'}
         </button>
       </form>
+
+      <div className={styles.formFooter}>
+        <p className={styles.calmText} style={{textAlign: 'right'}}>
+          Toma tu tiempo para asegurar la validez de la información.
+          Nuestra aventura comenzará.
+          Solo si llegas hasta el final.
+        </p>
+      </div>
     </div>
   );
 };

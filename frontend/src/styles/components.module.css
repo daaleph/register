@@ -1,51 +1,113 @@
 /* src/styles/components.css */
+.content {
+  text-align: center;
+  margin: 1rem;
+}
+
 .questionForm {
-  padding: 20px;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  color: black;
+  width: 100%;
+  max-width: 800px;
 }
 
-.optionsContainer {
-  margin-top: 20px;
-}
-
-.option {
-  margin: 10px 0;
+.questionFormLoading {
   display: flex;
   align-items: center;
-  color: black;
-}
-
-.otherInput {
-  margin-left: 10px;
-  padding: 5px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.progressContainer {
-  margin: 20px 0;
-}
-
-.progressBar {
-  height: 10px;
-  background: #eee;
-  border-radius: 5px;
+  justify-content: center;
+  background: black;
+  color: white;
+  border: 2px solid #000000;
+  border-radius: 12px;
+  min-height: 200px;
+  position: relative;
   overflow: hidden;
 }
 
-.progressFill {
-  height: 100%;
-  transition: width 0.3s ease;
+.questionFormLoading::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: #000000;
+  animation: loadingLine 2s infinite linear;
 }
 
-.progressLabel {
-  margin-top: 5px;
-  text-align: center;
-  font-size: 14px;
-  color: #666;
+.optionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.optionButton {
+  width: 100%;
+  padding: 1rem;
+  cursor: pointer;
+  text-align: right;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.optionButton {
+  transition: all 0.3s ease;
+}
+
+.optionButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.optionButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.optionButton.selected {
+  border-color: var(--border-color);
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary-color);
+  }
+}
+
+.optionText {
+  display: block;
+  font-weight: 500;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+/* For better browser compatibility */
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .optionText {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.otherInput {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+.errorMessage {
+  color: var(--error-color);
+  margin-top: 12px;
+  font-size: 0.9rem;
 }
 
 .phaseNavigation {
@@ -74,11 +136,6 @@
   margin: 10px 0;
 }
 
-.errorMessage {
-  color: #c62828;
-  margin: 0;
-}
-
 .retryButton {
   margin-top: 10px;
   padding: 5px 15px;
@@ -92,6 +149,7 @@
 .loading {
   display: flex;
   justify-content: center;
+  margin: 1rem;
   align-items: center;
   min-height: 200px;
   color: #666;
@@ -104,8 +162,7 @@
   position: absolute;
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
+  border-top: 4px solid var(--secondary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-top: 60px;
@@ -114,31 +171,6 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-.questionFormLoading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  background: #ffffff;
-  color: #000000;
-  border: 2px solid #000000;
-  border-radius: 12px;
-  min-height: 200px;
-  position: relative;
-  overflow: hidden;
-}
-
-.questionFormLoading::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 2px;
-  background: #000000;
-  animation: loadingLine 2s infinite linear;
 }
 
 .content {
@@ -150,26 +182,32 @@
   font-weight: 600;
   margin-bottom: 2rem;
   line-height: 1.4;
+  font-family: 'Montserrat', 'Playfair Display', 'Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  letter-spacing: -0.02em;
+  color: white;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .highlight {
-  display: block;
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin: 0.5rem 0;
-  letter-spacing: -0.5px;
+  font-family: 'Playfair Display', 'Baskerville', 'Georgia', serif;
+  font-style: italic;
+  font-weight: 500;
 }
 
 .hookText {
   font-size: 1.2rem;
   margin: 1.5rem 0;
   font-weight: 500;
+  font-family:'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
   opacity: 0.8;
+  color: #6e9e9d99;
 }
 
 .revealButton {
   padding: 0.8rem 1.5rem;
-  background: #000000;
+  background: transparent;
   color: #ffffff;
   border: none;
   border-radius: 6px;
@@ -177,16 +215,29 @@
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+               0 0 20px rgba(220, 196, 19, 0.357),
+               0 0 30px rgba(207, 207, 10, 0.676);
+  backdrop-filter: blur(5px);
 }
 
 .revealButton:hover {
   transform: translateY(-2px);
-  opacity: 0.9;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.7),
+               0 0 25px rgba(255, 255, 255, 0.5),
+               0 0 35px rgba(255, 255, 255, 0.3);
+}
+
+.revealButton:active {
+  transform: translateY(0);
+  opacity: 0.8;
 }
 
 .description {
+  font-family: 'Cinzel', serif;
+  text-align: center;
   margin-top: 1.5rem;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   line-height: 1.6;
   animation: fadeIn 0.5s ease;
 }
@@ -212,36 +263,40 @@
 }
 
 .submitButton {
-  background-color: #0070f3;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 6px;
+  color: var(--primary-text-color);
+  background-color: var(--secondary-text-color);
+  margin-top: 1rem;
+  padding: 1rem;
+  display: flex;
+  justify-content: left;
   border: none;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   min-width: 120px;
-  margin-top: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .submitButton:hover {
-  background-color: #0051b3;
+  color: var(--secondary-text-color);
+  background-color: var(--third-color);
   transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .submitButton:active {
   transform: translateY(0);
+  color: var(--primary-text-color);
+  background-color: var(--primary-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .submitButton:disabled {
-  background-color: #ccc;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  filter: blur(2px);
 }
 
 .loginContainer {
@@ -265,23 +320,4 @@
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-
-.errorMessage {
-  color: red;
-  margin-top: 10px;
-}
-
-.submitButton {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.submitButton:hover {
-  background-color: #0056b3;
 }

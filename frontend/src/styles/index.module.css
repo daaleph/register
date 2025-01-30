@@ -1,0 +1,109 @@
+.registrationContainer {
+  max-width: 600px;
+  padding: 2rem;
+  background: var(--background);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 0 20px rgba(255, 255, 0, 0.1);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  line-height: 1.4;
+  font-family: 'Montserrat', 'Playfair Display', 'Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  letter-spacing: -0.02em;
+  color: var(--secondary-color);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.hardText {
+  margin: 1.5rem 0;
+  font-weight: 500;
+  font-family:'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
+  opacity: 0.8;
+  color: var(--forth-color);
+}
+
+.welcomeSection {
+  text-align: center;
+  padding: 6rem;
+}
+
+.privacyNotice {
+  margin: 2rem 0;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.privacyTitle {
+  padding-bottom: 1rem;
+  font-family: 'Cinzel', serif;
+  color: var(--text-primary-color);
+  font-size: 1.2rem;
+}
+
+.privacyText {
+  color: var(--forth-color);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.gothicInput {
+  width: 100%;
+  padding: 0.8rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary-color);
+  font-family: 'Cinzel', serif;
+  transition: all 0.3s ease;
+}
+
+.gothicInput:focus {
+  outline: none;
+  border-color: var(--text-primary-color);
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.2);
+}
+
+.formFooter {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.calmText {
+  color: var(--forth-color);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.registrationForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup label {
+  color: var(--text-primary-color);
+  font-family: 'Cinzel', serif;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.submitButton {
+  padding: 1rem;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary-color);
+  font-family: 'Cinzel', serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: rgba(255, 255, 0, 0.1);
+  transform: translateY(-2px);
+}

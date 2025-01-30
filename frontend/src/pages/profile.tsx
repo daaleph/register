@@ -3,16 +3,17 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { Phases, useUser } from '../context/UserContext';
 import { QuestionForm } from '../components/common/QuestionForm';
-import { ProgressBar } from '../components/common/ProgressBar';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { QuestionController, QuestionState } from '@/controllers';
 import { ProfileService } from '@/services';
-import styles from '../styles/components.module.css';
+import { LoadingState } from '@/components/common/LoadingState';
 import { hookManager } from '@/marketing/hooks';
+import styles from '../styles/components.module.css';
 
 const ProfilePage: React.FC = () => {
   const QUESTIONTYPE: Phases = 'PROFILE';
   const router = useRouter();
+  const [answerSelected, setAnswerSelected] = useState<boolean>(false);
   const [showDescription, setShowDescription] = useState<boolean>(false);
   const { setResponses, setProgress, progress, userProfile, currentPhase } = useUser();
   const profileService = new ProfileService();
@@ -122,7 +123,7 @@ const ProfilePage: React.FC = () => {
 
   // Loading state
   if (!controllerState.state || !router.isReady) {
-    return <div className={styles.loading}>Creando tu perfil...</div>;
+    return <LoadingState message='Cargando Perfil...'/>;
   }
 
   // Error state
@@ -132,21 +133,18 @@ const ProfilePage: React.FC = () => {
 
   // Not initialized state
   if (!controllerState.state.currentQuestion || !controllerState.state.currentOptions) {
-    return <div className={styles.loading}>Preparing questions...</div>;
+    return <LoadingState message='Personalizando preguntas...'/>;
   }
 
   const isSubmitDisabled = 
+    !answerSelected ||
     controllerState.state.isLoading ||
     controllerState.state.selectedAnswer === null || 
     (controllerState.state.otherText !== undefined && 
      controllerState.state.otherText.trim() === '');
 
   return (
-    <div className={styles.profileContainer}>
-      <ProgressBar 
-        currentProgress={progress.get(currentPhase)!}
-        phase={currentPhase}
-      />
+    <div className={styles.content}>
       <QuestionForm
         hook={hook}
         showDescription={showDescription}
@@ -155,15 +153,21 @@ const ProfilePage: React.FC = () => {
         options={controllerState.state.currentOptions}
         onAnswerSelected={handleAnswerSelected}
         currentPhase={currentPhase}
+        progressPercentage={progress.get(currentPhase)}
+        setAnswerSelected={setAnswerSelected}
         isLoading={controllerState.state.isLoading}
       />
-      <button 
-        className={styles.submitButton}
-        onClick={handleSubmit}
-        disabled={isSubmitDisabled}
-      >
-        {controllerState.state.isLoading ? 'Entendiéndote...' : 'Contestar'}
-      </button>
+      {
+        controllerState.state.isLoading ? 
+        <div className={styles.loading} /> :
+        <button 
+          className={styles.submitButton}
+          onClick={handleSubmit}
+          disabled={isSubmitDisabled}
+        >
+          Contestar
+        </button>
+      }
     </div>
   );
 };
