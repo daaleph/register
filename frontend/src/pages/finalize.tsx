@@ -51,9 +51,9 @@ const FinalizePage: React.FC = () => {
       const { accessToken } = await authService.finalizeRegistrationWithPassword(userProfile.email, password);
       setAuthToken(accessToken);
       router.push('/home');
-    } catch (error: any) {
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message || 'An error occurred');
       console.error('Failed to finalize registration:', error);
-      setError(error.message || 'An error occurred');
       router.push('/login');
     } finally {
       setIsLoading(false);
