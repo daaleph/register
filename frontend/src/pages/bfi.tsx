@@ -132,7 +132,7 @@ const BfiPage: React.FC = () => {
 
   // Not initialized state
   if (!controllerState.state.currentQuestion || !controllerState.state.currentOptions) {
-    return <LoadingState message='Preparando experiencia...'/>;
+    return <LoadingState message='Preparando...'/>;
   }
 
   const isSubmitDisabled = 

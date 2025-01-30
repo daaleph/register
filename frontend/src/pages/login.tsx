@@ -1,15 +1,20 @@
 // frontend/src/pages/login.tsx
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+import styles from '@/styles/index.module.css';
 import { useAuth } from '@/hooks/useAuth';
-import styles from '@/styles/components.module.css';
+import router from 'next/router';
 
 const LoginPage: React.FC = () => {
-    const [email, setProfileId] = useState('');
+
+    const { login } = useAuth();
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
-    const { login } = useAuth();
-    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        await handleLogin();
+    };
 
     const handleLogin = async () => {
         try {
@@ -22,39 +27,60 @@ const LoginPage: React.FC = () => {
                 return;
             }
             await login(email, password);
-            router.push('/home');
         } catch (error) {
             console.error('Login failed:', error);
             setError('Invalid Profile ID, password, or authentication failed');
+        } finally {
+            router.push('/home');
         }
     };
     return (
-        <div className={styles.loginContainer}>
-            <h1>Login</h1>
-            <div className={styles.formGroup}>
-                <label htmlFor="email">eMail</label>
-                <input
-                    type="text"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setProfileId(e.target.value)}
-                    placeholder="tu Email"
-                />
+        <div className={styles.registrationContainer}>
+            <div className={styles.welcomeSection}>
+                <h1 className={styles.title}>aleph</h1>
+                <p className={styles.hardText}>Increasing universal wisdom.</p>
             </div>
-            <div className={styles.formGroup}>
-                <label htmlFor="password">password</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="contraseña"
-                />
-            </div>
-            {error && <p className={styles.errorMessage}>{error}</p>}
-            <button className={styles.submitButton} onClick={handleLogin}>
-                Login
-            </button>
+
+            <form className={styles.registrationForm} onSubmit={handleSubmit}>
+                <div className={styles.formGroup}>
+                    <label htmlFor="email">eMail</label>
+                    <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="tu Email"
+                        required
+                    />
+                </div>
+
+                <div className={styles.formGroup}>
+                    <label htmlFor="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="contraseña"
+                        required
+                    />
+                </div>
+
+                {error && <div className={styles.errorDisplay}>{error}</div>}
+
+                <button 
+                    type="submit" 
+                    className={styles.submitButton}
+                >
+                    Ingresar
+                </button>
+
+                <div className={styles.formFooter}>
+                    <p className={styles.calmText} style={{textAlign: 'right'}}>
+                        Vuelves a tu viaje de sabiduría.
+                    </p>
+                </div>
+            </form>
         </div>
     );
 };

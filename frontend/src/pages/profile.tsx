@@ -133,7 +133,7 @@ const ProfilePage: React.FC = () => {
 
   // Not initialized state
   if (!controllerState.state.currentQuestion || !controllerState.state.currentOptions) {
-    return <LoadingState message='Personalizando preguntas...'/>;
+    return <LoadingState message='Personalizando...'/>;
   }
 
   const isSubmitDisabled = 

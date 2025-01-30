@@ -3,26 +3,25 @@ import { useEffect } from 'react';
 import { useUser } from '@/context/UserContext';
 import AuthService from '@/services/AuthService';
 
-const authService = new AuthService();
-
 export const useAuth = () => {
+
+  const auth = new AuthService();
   const { setAuthToken, authToken } = useUser();
 
   useEffect(() => {
-    const token = authService.getToken();
+    const token = auth.getToken();
     if (token && !authToken) {
       setAuthToken(token);
     }
   }, [authToken, setAuthToken]);
 
   const login = async (email: string, password: string) => {
-    const { accessToken } = await authService.login(email, password);
+    const { accessToken } = await auth.login(email, password);
     setAuthToken(accessToken);
-    return accessToken;
   };
 
   const logout = () => {
-    authService.logout();
+    auth.logout();
     setAuthToken(null);
   };
 

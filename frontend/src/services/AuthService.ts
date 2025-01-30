@@ -16,13 +16,6 @@ export default class AuthService {
         return { accessToken };
     }
 
-    async finalizeRegistration(profileId: string): Promise<{ accessToken: string }> {
-        const response = await axios.post(`${this.baseUrl}auth/finalize`, { profileId });
-        const accessToken = response.data as string;
-        this.storeToken(accessToken);
-        return { accessToken };
-    }
-
     async finalizeRegistrationWithPassword(email: string, password: string): Promise<{ accessToken: string }> {
         const response = await axios.post(`${this.baseUrl}auth/finalize`, { email, password });
         const accessToken = response.data as string;

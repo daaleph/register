@@ -8,6 +8,7 @@ import { QuestionController, QuestionState } from '@/controllers';
 import { ProductService } from '@/services';
 import { hookManager } from '@/marketing/hooks';
 import styles from '../styles/components.module.css';
+import { LoadingState } from '@/components/common/LoadingState';
 
 const ProfilePage: React.FC = () => {
     const QUESTIONTYPE: Phases = 'PRODUCT';
@@ -122,7 +123,7 @@ const ProfilePage: React.FC = () => {
 
     // Loading state
     if (!controllerState.state || !router.isReady) {
-        return <div className={styles.loading}>Loading your profile...</div>;
+        return <LoadingState message='Cargando Perfil...'/>;
     }
 
     // Error state
@@ -132,7 +133,7 @@ const ProfilePage: React.FC = () => {
 
     // Not initialized state
     if (!controllerState.state.currentQuestion || !controllerState.state.currentOptions) {
-        return <div className={styles.loading}>Preparing questions...</div>;
+        return <LoadingState message='Descifrando...'/>;
     }
 
     const isSubmitDisabled = 
@@ -143,7 +144,7 @@ const ProfilePage: React.FC = () => {
         controllerState.state.otherText.trim() === '');
 
     return (
-        <div className={styles.profileContainer}>
+        <div className={styles.content}>
             <QuestionForm
                 hook={hook}
                 showDescription={showDescription}

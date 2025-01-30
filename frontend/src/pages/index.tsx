@@ -103,7 +103,7 @@ const InitialRegistration: React.FC = () => {
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="preferred_name">Cómo prefieres ser conocido? *</label>
+          <label htmlFor="preferred_name">¿Cómo prefieres ser conocido? *</label>
           <input
             type="text"
             id="preferred_name"
@@ -170,7 +170,7 @@ const InitialRegistration: React.FC = () => {
 
       <div className={styles.formFooter}>
         <p className={styles.calmText} style={{textAlign: 'right'}}>
-          Toma tu tiempo para asegurar la validez de la información.
+          Toma tu tiempo para asegurar información válida.
           Nuestra aventura comenzará.
           Solo si llegas hasta el final.
         </p>

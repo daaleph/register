@@ -77,6 +77,16 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
     );
   }
 
+  // Create gradient for both background and text
+  const gradientStyle = `linear-gradient(to right, 
+  var(--primary-color) ${progressPercentage}%, 
+  var(--third-color) ${progressPercentage}%)`;
+  
+  // Create text gradient
+  const textGradientStyle = `linear-gradient(to right, 
+    var(--text-primary-color) ${progressPercentage}%, 
+    var(--text-primary-color) ${progressPercentage}%)`;
+
   const handleOptionSelect = (optionId: number) => {
     if (isLoading) return;
     controller.handleOptionSelect(optionId, options);
@@ -93,7 +103,12 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   return (
     <div className={styles.questionForm}>
       <p className={styles.title}>{question.description_es}</p>
-      <p style={{textAlign: 'center', color: 'var(--forth-color)', marginTop: '1rem'}}>{ isMultiple ? 'Opción múltiple' : '' }</p>
+      { isMultiple && (
+        <p className={styles.multipleChoiceHint} style={{textAlign: 'center', color: 'var(--forth-color)', margin: '1rem'}}>
+          Opción múltiple<br/>
+          Escoje en orden descendente
+        </p>
+      )}
       <div className={styles.optionsContainer}>
         {options?.map((option) => {
           const isSelected = formState.selectedAnswers.includes(option.option_id);
@@ -104,18 +119,8 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
           if (question.type === 'multiple' && isSelected) {
             const weights = calculateFibonacciWeights(options.length);
             const weight = weights[selectionIndex];
-            brightness = 0.5 + (weight * 0.6);
+            brightness = 0.6 + weight / 2;
           }
-          
-          // Create gradient for both background and text
-          const gradientStyle = `linear-gradient(to right, 
-            var(--primary-color) ${progressPercentage}%, 
-            var(--third-color) ${progressPercentage}%)`;
-          
-          // Create text gradient
-          const textGradientStyle = `linear-gradient(to right, 
-            var(--text-primary-color) ${progressPercentage}%, 
-            var(--text-primary-color) ${progressPercentage}%)`;
           
           return (
             <div key={option.option_id} className={styles.option}>

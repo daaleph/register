@@ -26,20 +26,25 @@ let AuthService = class AuthService {
             .select('*')
             .eq('email', email)
             .single();
-        if (!profile.data) {
+        if (!profile.data)
             throw new common_1.UnauthorizedException('Profile not found');
-        }
         return profile.data;
     }
     async login(email, password) {
         const profile = await this.profileExists(email);
+        console.log("PROFILE:", profile);
         const passwordHash = profile.password;
         if (!passwordHash) {
             throw new common_1.UnauthorizedException('Password not set for this profile');
         }
+        console.log("PASSWORD HASH:", passwordHash);
         const [salt, storedHash] = passwordHash.split(':');
+        console.log("SALT:", salt);
+        console.log("STORED HASH:", storedHash);
         const hashedPassword = (0, crypto_1.pbkdf2Sync)(password, salt, 1000, 64, 'sha512').toString('hex');
+        console.log("HASHED PASSWORD?:", hashedPassword);
         if (hashedPassword !== storedHash) {
+            console.log("ARE NOT EQUALS");
             throw new common_1.UnauthorizedException('Invalid credentials');
         }
         const payload = {
@@ -75,17 +80,15 @@ let AuthService = class AuthService {
             .from('profile')
             .update({ password: passwordHash })
             .eq('email', email);
-        if (error) {
+        if (error)
             throw new common_1.BadRequestException('Failed to set password');
-        }
         return { message: 'Password set successfully' };
     }
     async verifyPassword(profileId, password) {
         const profile = await this.profileExists(profileId);
         const passwordHash = profile.password;
-        if (!passwordHash) {
+        if (!passwordHash)
             throw new common_1.UnauthorizedException('Password not set for this profile');
-        }
         const [salt, storedHash] = passwordHash.split(':');
         const hashedPassword = (0, crypto_1.pbkdf2Sync)(password, salt, 1000, 64, 'sha512').toString('hex');
         return hashedPassword === storedHash;

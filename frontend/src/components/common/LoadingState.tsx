@@ -10,6 +10,9 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   message = 'Loading...' 
 }) => {
   return (
-    <div className={styles.loading}>{message}</div>
+    <div style={{gap: '1rem', textAlign: 'center'}}>
+      <div className={styles.loading}/>
+      {message}
+    </div>
   );
 };
