@@ -1,5 +1,4 @@
-// src/services/BFIService.ts
-
+// frontend/src/services/BFIService.ts
 import { QuestionWithOptions } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 

@@ -1,5 +1,4 @@
 // frontend/src/services/ProductService.ts
-
 import { QuestionWithOptions } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 

@@ -40,8 +40,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   useEffect(() => {
     setAnswerSelected(!(formState.selectedAnswers.length === 0));
   }, [formState])
-
-  // Reset form when question changes
+  
   useEffect(() => {
     controller.reset();
     setFormState(controller.getState());
@@ -77,12 +76,10 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
     );
   }
 
-  // Create gradient for both background and text
   const gradientStyle = `linear-gradient(to right, 
   var(--primary-color) ${progressPercentage}%, 
   var(--third-color) ${progressPercentage}%)`;
   
-  // Create text gradient
   const textGradientStyle = `linear-gradient(to right, 
     var(--text-primary-color) ${progressPercentage}%, 
     var(--text-primary-color) ${progressPercentage}%)`;
@@ -111,10 +108,9 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
       )}
       <div className={styles.optionsContainer}>
         {options?.map((option) => {
+
           const isSelected = formState.selectedAnswers.includes(option.option_id);
           const selectionIndex = formState.selectedAnswers.length - formState.selectedAnswers.indexOf(option.option_id);
-
-          // Calculate brightness based on Fibonacci weights only for multiple selection
           let brightness = 1;
           if (question.type === 'multiple' && isSelected) {
             const weights = calculateFibonacciWeights(options.length);
@@ -145,19 +141,21 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
                   {option.description_es}
                 </span>
               </button>
-              {currentPhase !== 'bfi' &&
+              {
+                currentPhase !== 'bfi' &&
                 isSelected && 
                 controller.isOtherOption(option.option_id, options) && (
-                <input
-                  type="text"
-                  className={styles.otherInput}
-                  placeholder="Por favor especifica"
-                  value={formState.otherText}
-                  onChange={handleOtherInput}
-                  disabled={isLoading}
-                  required
-                />
-              )}
+                  <input
+                    type="text"
+                    className={styles.otherInput}
+                    placeholder="Por favor especifica"
+                    value={formState.otherText}
+                    onChange={handleOtherInput}
+                    disabled={isLoading}
+                    required
+                  />
+                )
+              }
             </div>
           );
         })}

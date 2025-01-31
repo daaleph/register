@@ -1,5 +1,4 @@
 // frontend/src/services/ProfileService.ts
-
 import { QuestionWithOptions, UserProfile } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
@@ -73,7 +72,8 @@ export class ProfileService {
       });
       if (!response.ok) return false;
       return true;
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error("The error was:", error);
       return false;
     }
   }

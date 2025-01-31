@@ -8,5 +8,5 @@ export interface PhaseState {
   export interface ErrorState {
     message: string;
     code?: string;
-    details?: any;
+    details?: unknown;
   }

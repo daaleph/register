@@ -1,2 +1,0 @@
-export type SubmitAnswerFunction = (profileId: string, currentQuestion: string, answers: number[]) => Promise<void>;
-export type SubmitOtherAnswerFunction = (profileId: string, currentQuestion: string, otherAnswer: string) => Promise<void>;

@@ -2,8 +2,8 @@
 
 .content {
   width: auto;
-  max-width: 60%;
-  margin: 3rem auto auto auto;
+  max-width: 40rem;
+  margin: 2rem 1rem 2rem 1rem;
 }
 
 .questionForm {
@@ -14,7 +14,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
   background: var(--primary-color);
   color: var(--secondary-color);
   border-radius: 12px;
@@ -266,8 +265,8 @@
 .submitButton {
   color: var(--primary-text-color);
   background-color: var(--secondary-text-color);
-  margin-top: 1rem;
   padding: 1rem;
+  margin-top: 1rem;
   display: flex;
   justify-content: center;
   border: none;
