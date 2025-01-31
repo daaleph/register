@@ -15,9 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
+const crypto_1 = require("crypto");
+const rateLimit_1 = require("../guards/rateLimit");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
+    }
+    getCsrfToken(res) {
+        const csrfToken = (0, crypto_1.randomBytes)(32).toString('hex');
+        res.cookie('csrf-token', csrfToken, { httpOnly: true, secure: true, sameSite: 'strict' });
+        return res.send({ csrfToken });
     }
     async login(email, password) {
         if (!email)
@@ -48,6 +55,14 @@ let AuthController = class AuthController {
     }
 };
 exports.AuthController = AuthController;
+__decorate([
+    (0, common_1.Get)('csrf-token'),
+    (0, common_1.UseGuards)(rateLimit_1.RateLimitGuard),
+    __param(0, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getCsrfToken", null);
 __decorate([
     (0, common_1.Post)('login'),
     __param(0, (0, common_1.Body)('email')),

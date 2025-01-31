@@ -1,6 +1,6 @@
-// src/app.module.ts
-
-import { Module } from '@nestjs/common';
+// backend/src/app.module.ts
+import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,6 +11,8 @@ import { ResponsesModule } from './responses/module';
 import { AbacusModule } from './abacus/module';
 import { SupabaseModule } from './supabase/module';
 import { SharedModule } from './shared/shared.module';
+import { RateLimitGuard } from './guards/rateLimit';
+import { CsrfMiddleware } from './middleware/csrf.middleware';
 
 @Module({
   imports: [
@@ -24,6 +26,16 @@ import { SharedModule } from './shared/shared.module';
     SharedModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RateLimitGuard,
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CsrfMiddleware).forRoutes('*');
+  }
+}

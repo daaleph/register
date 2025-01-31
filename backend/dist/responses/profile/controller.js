@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProfileResponsesController = void 0;
 const common_1 = require("@nestjs/common");
 const service_1 = require("./service");
+const rateLimit_1 = require("../../guards/rateLimit");
 let ProfileResponsesController = class ProfileResponsesController {
     constructor(responsesService) {
         this.responsesService = responsesService;
@@ -29,6 +30,7 @@ let ProfileResponsesController = class ProfileResponsesController {
 exports.ProfileResponsesController = ProfileResponsesController;
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UseGuards)(rateLimit_1.RateLimitGuard),
     __param(0, (0, common_1.Body)('profileId')),
     __param(1, (0, common_1.Body)('variable')),
     __param(2, (0, common_1.Body)('answer')),
@@ -38,6 +40,7 @@ __decorate([
 ], ProfileResponsesController.prototype, "submitAnswer", null);
 __decorate([
     (0, common_1.Post)('other'),
+    (0, common_1.UseGuards)(rateLimit_1.RateLimitGuard),
     __param(0, (0, common_1.Body)('profileId')),
     __param(1, (0, common_1.Body)('variable')),
     __param(2, (0, common_1.Body)('answer')),

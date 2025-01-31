@@ -1,10 +1,21 @@
 // backend/src/auth/auth.controller.ts
-import { Controller, Post, Body, UnauthorizedException, Get, Headers, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException, Get, Headers, BadRequestException, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { randomBytes } from 'crypto';
+import { Response } from 'express';
+import { RateLimitGuard } from 'src/guards/rateLimit';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('csrf-token')
+  @UseGuards(RateLimitGuard)
+  getCsrfToken(@Res() res: Response) {
+    const csrfToken = randomBytes(32).toString('hex');
+    res.cookie('csrf-token', csrfToken, { httpOnly: true, secure: true, sameSite: 'strict' });
+    return res.send({ csrfToken });
+  }
 
   @Post('login')
   async login(

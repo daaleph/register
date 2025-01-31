@@ -19,16 +19,20 @@ export class BfiService {
     }
 
     async getInitialQuestionWithOptions(
-        id: string
+        uuid: string
     ): Promise<QuestionWithOptions> {
-        return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/bfi/${id}/initial`);
+        return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/bfi/initial`, {
+            headers: {'profileId:': uuid}
+        });
     }
 
     async getQuestionWithAnswers(
         uuid: string,
         questionId: number
     ): Promise<QuestionWithOptions> {
-        return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/bfi/${uuid}/questionId/${questionId}`);
+        return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/bfi/questionId/${questionId}`, {
+            headers: {'profileId:': uuid}
+        });
     }
 
     async submitAnswer(

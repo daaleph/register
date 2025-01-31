@@ -1,13 +1,14 @@
-// backend/src/auth/auth.service.ts
 import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { SupabaseService } from '../supabase/service';
 import { ProfileEntity } from 'src/entities/profile';
-import { randomBytes, pbkdf2Sync } from 'crypto';
+import { randomBytes, scrypt as scryptCallback } from 'crypto';
+import { promisify } from 'util';
+
+const scrypt = promisify(scryptCallback);
 
 @Injectable()
 export class AuthService {
-
   constructor(
     private readonly jwtService: JwtService,
     private readonly supabaseService: SupabaseService,
@@ -20,7 +21,7 @@ export class AuthService {
       .select('*')
       .eq('email', email)
       .single();
-    if (!profile.data) throw new UnauthorizedException('Profile not found');
+    if (!profile.data) throw new UnauthorizedException('Invalid credentials');
     return profile.data;
   }
 
@@ -28,13 +29,16 @@ export class AuthService {
     const profile = await this.profileExists(email);
     const passwordHash = profile.password;
     if (!passwordHash) {
-      throw new UnauthorizedException('Password not set for this profile');
+      throw new UnauthorizedException('Invaluid credentials');
     }
+
     const [salt, storedHash] = passwordHash.split(':');
-    const hashedPassword = pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
-    if (hashedPassword !== storedHash) {
+    const hashedPassword = (await scrypt(password, salt, 64)) as Buffer;
+
+    if (hashedPassword.toString('hex') !== storedHash) {
       throw new UnauthorizedException('Invalid credentials');
     }
+
     const payload = {
       sub: profile.id,
       email: (profile as ProfileEntity).email,
@@ -63,8 +67,8 @@ export class AuthService {
       throw new BadRequestException('Password must be at least 8 characters long');
     }
     const salt = randomBytes(16).toString('hex');
-    const hashedPassword = pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
-    const passwordHash = `${salt}:${hashedPassword}`;
+    const hashedPassword = (await scrypt(password, salt, 64)) as Buffer;
+    const passwordHash = `${salt}:${hashedPassword.toString('hex')}`;
     const { error } = await this.supabaseService
       .getConnection()
       .from('profile')
@@ -79,7 +83,7 @@ export class AuthService {
     const passwordHash = profile.password;
     if (!passwordHash) throw new UnauthorizedException('Password not set for this profile');
     const [salt, storedHash] = passwordHash.split(':');
-    const hashedPassword = pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
-    return hashedPassword === storedHash;
+    const hashedPassword = (await scrypt(password, salt, 64)) as Buffer;
+    return hashedPassword.toString('hex') === storedHash;
   }
 }
