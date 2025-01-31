@@ -1,9 +1,9 @@
 // backend/src/questions-options/profile/controller.ts
-
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Headers, UseGuards } from '@nestjs/common';
 import { ProfileQuestionsService } from './service';
+import { RateLimitGuard } from 'src/guards/rateLimit';
 
-@Controller('questions/profile/:uuid')
+@Controller('questions/profile')
 export class ProfileQuestionsController {
     
     constructor(
@@ -11,6 +11,7 @@ export class ProfileQuestionsController {
     ) {}
 
     @Get('initial')
+    @UseGuards(RateLimitGuard)
     async getInitialQuestionWithOptions(): Promise<string> {
         const question = await this.service.getInitialQuestion();
         const options = await this.service.getInitialOptions();
@@ -18,12 +19,13 @@ export class ProfileQuestionsController {
     }
 
     @Get('questionId/:questionId')
+    @UseGuards(RateLimitGuard)
     async getQuestionWithOptions(
-        @Param('uuid') uuid: string,
+        @Headers('profileId') profileId: string,
         @Param('questionId') questionId: number
     ): Promise<string> {
-        const question = await this.service.getContextualizedQuestionById(uuid, questionId);
-        const options = await this.service.getContextualizedOptionsById(uuid, questionId);
+        const question = await this.service.getContextualizedQuestionById(profileId, questionId);
+        const options = await this.service.getContextualizedOptionsById(profileId, questionId);
         return JSON.stringify({ question, options });
     }
 

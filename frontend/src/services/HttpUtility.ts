@@ -27,6 +27,12 @@ export class HttpUtility {
     private static readonly TIMEOUT = 50000;
     private static readonly RETRY_DELAY = 1000;
 
+    private static getCsrfToken(): string | null {
+        const csrfCookie = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrf-token='));
+        return csrfCookie ? csrfCookie.split('=')[1] : null;
+    }
 
     static async get<T>(
         url: string, 
@@ -51,9 +57,12 @@ export class HttpUtility {
         data: Record<string, unknown> | UserProfile, 
         config: Partial<RequestConfig> = {}
     ): Promise<T> {
+        const csrfToken = this.getCsrfToken();
+        if (!csrfToken) throw new Error('CSRF token is missing. Please refresh the page.');
         const defaultConfig: RequestConfig = {
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken,
             },
             withCredentials: true,
         };

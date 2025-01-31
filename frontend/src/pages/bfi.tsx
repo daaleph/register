@@ -9,6 +9,7 @@ import { BfiService } from '@/services';
 import { hookManager } from '@/marketing/hooks';
 import styles from '../styles/components.module.css';
 import { LoadingState } from '@/components/common/LoadingState';
+import Head from 'next/head';
 
 const BfiPage: React.FC = () => {
   const QUESTIONTYPE: Phases = 'BFI';
@@ -141,31 +142,34 @@ const BfiPage: React.FC = () => {
     controllerState.state.selectedAnswer === null;
 
   return (
-    <div className={styles.content}>
-      <QuestionForm
-        hook={hook}
-        showDescription={showDescription}
-        setShowDescription={setShowDescription}
-        question={controllerState.state.currentQuestion}
-        options={controllerState.state.currentOptions}
-        onAnswerSelected={handleAnswerSelected}
-        currentPhase={currentPhase}
-        progressPercentage={progress.get(currentPhase)}
-        setAnswerSelected={setAnswerSelected}
-        isLoading={controllerState.state.isLoading}
-      />
-      {
-        controllerState.controller.getState().isLoading ? 
-        <div className={styles.loading} /> :
-        <button 
-          className={styles.submitButton}
-          onClick={handleSubmit}
-          disabled={isSubmitDisabled}
-        >
-          Contestar
-        </button>
-      }
-    </div>
+    <>
+      <Head><title>Psicología</title></Head>
+      <div className={styles.content}>
+        <QuestionForm
+          hook={hook}
+          showDescription={showDescription}
+          setShowDescription={setShowDescription}
+          question={controllerState.state.currentQuestion}
+          options={controllerState.state.currentOptions}
+          onAnswerSelected={handleAnswerSelected}
+          currentPhase={currentPhase}
+          progressPercentage={progress.get(currentPhase)}
+          setAnswerSelected={setAnswerSelected}
+          isLoading={controllerState.state.isLoading}
+        />
+        {
+          controllerState.controller.getState().isLoading ? 
+          <div className={styles.loading} /> :
+          <button 
+            className={styles.submitButton}
+            onClick={handleSubmit}
+            disabled={isSubmitDisabled}
+          >
+            Contestar
+          </button>
+        }
+      </div>
+    </>
   );
 };
 

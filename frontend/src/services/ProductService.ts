@@ -19,16 +19,20 @@ export class ProductService {
   }
 
   async getInitialQuestionWithOptions(
-    id: string
+    uuid: string
   ): Promise<QuestionWithOptions> {
-    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/${id}/initial`);
+    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/initial`, {
+      headers: {'profileId:': uuid}
+    });
   }
 
   async getQuestionWithAnswers(
     uuid: string,
     questionId: number
   ): Promise<QuestionWithOptions> {
-    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/${uuid}/questionId/${questionId}`);
+    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/questionId/${questionId}`, {
+      headers: {'profileId:': uuid}
+    });
   }
 
   async submitAnswer(

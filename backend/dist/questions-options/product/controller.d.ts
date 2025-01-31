@@ -2,6 +2,6 @@ import { ProductQuestionsService } from './service';
 export declare class ProductQuestionsController {
     private readonly service;
     constructor(service: ProductQuestionsService);
-    getInitialQuestionWithOptions(uuid: string): Promise<string>;
-    getProfiledQuestionWithOptions(uuid: string, questionId: number): Promise<string>;
+    getInitialQuestionWithOptions(profileId: string): Promise<string>;
+    getProfiledQuestionWithOptions(profileId: string, questionId: number): Promise<string>;
 }

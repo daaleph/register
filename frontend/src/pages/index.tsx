@@ -77,9 +77,7 @@ const InitialRegistration: React.FC = () => {
 
   return (
     <>
-      <Head>
-        <title>Aleph</title>
-      </Head>
+      <Head><title>Aleph</title></Head>
       <div className={styles.registrationContainer}>
         <div className={styles.welcomeSection}>
           <h1 className={styles.title}>Aleph</h1>

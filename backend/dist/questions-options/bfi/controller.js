@@ -15,39 +15,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BfiQuestionsController = void 0;
 const common_1 = require("@nestjs/common");
 const service_1 = require("./service");
+const rateLimit_1 = require("../../guards/rateLimit");
 let BfiQuestionsController = class BfiQuestionsController {
     constructor(service) {
         this.service = service;
     }
-    async getInitialQuestionWithOptions(uuid) {
-        const question = await this.service.getContextualizedInitialQuestion(uuid);
-        const options = await this.service.getContextualizedInitialOptions(uuid);
+    async getInitialQuestionWithOptions(profileId) {
+        const question = await this.service.getContextualizedInitialQuestion(profileId);
+        const options = await this.service.getContextualizedInitialOptions(profileId);
         return JSON.stringify({ question, options });
     }
-    async getProfiledQuestionWithOptions(uuid, questionId) {
-        const question = await this.service.getContextualizedQuestionById(uuid, questionId);
-        const options = await this.service.getContextualizedOptionsById(uuid, questionId);
+    async getProfiledQuestionWithOptions(profileId, questionId) {
+        const question = await this.service.getContextualizedQuestionById(profileId, questionId);
+        const options = await this.service.getContextualizedOptionsById(profileId, questionId);
         return JSON.stringify({ question, options });
     }
 };
 exports.BfiQuestionsController = BfiQuestionsController;
 __decorate([
     (0, common_1.Get)('initial'),
-    __param(0, (0, common_1.Param)('uuid')),
+    (0, common_1.UseGuards)(rateLimit_1.RateLimitGuard),
+    __param(0, (0, common_1.Headers)('profileId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], BfiQuestionsController.prototype, "getInitialQuestionWithOptions", null);
 __decorate([
     (0, common_1.Get)('questionId/:questionId'),
-    __param(0, (0, common_1.Param)('uuid')),
+    (0, common_1.UseGuards)(rateLimit_1.RateLimitGuard),
+    __param(0, (0, common_1.Headers)('profileId')),
     __param(1, (0, common_1.Param)('questionId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Number]),
     __metadata("design:returntype", Promise)
 ], BfiQuestionsController.prototype, "getProfiledQuestionWithOptions", null);
 exports.BfiQuestionsController = BfiQuestionsController = __decorate([
-    (0, common_1.Controller)('questions/bfi/:uuid'),
+    (0, common_1.Controller)('questions/bfi'),
     __metadata("design:paramtypes", [service_1.BfiQuestionsService])
 ], BfiQuestionsController);
 //# sourceMappingURL=controller.js.map

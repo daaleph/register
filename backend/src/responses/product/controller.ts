@@ -1,7 +1,8 @@
 // backend/src/responses/profile/controller.ts
 
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { Service } from './service';
+import { RateLimitGuard } from 'src/guards/rateLimit';
 
 @Controller('responses/product')
 export class ProductResponsesController {
@@ -9,6 +10,7 @@ export class ProductResponsesController {
     constructor(private readonly responsesService: Service) {}
 
     @Post()
+    @UseGuards(RateLimitGuard)
     async submitAnswer(
         @Body('profileId') profileId: string,
         @Body('variable') variable: string,
@@ -18,6 +20,7 @@ export class ProductResponsesController {
     }
 
     @Post('other')
+    @UseGuards(RateLimitGuard)
     async submitOtherAnswer(
         @Body('profileId') profileId: string,
         @Body('variable') variable: string,

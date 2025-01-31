@@ -14,6 +14,8 @@ const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const service_1 = require("../supabase/service");
 const crypto_1 = require("crypto");
+const util_1 = require("util");
+const scrypt = (0, util_1.promisify)(crypto_1.scrypt);
 let AuthService = class AuthService {
     constructor(jwtService, supabaseService) {
         this.jwtService = jwtService;
@@ -27,18 +29,18 @@ let AuthService = class AuthService {
             .eq('email', email)
             .single();
         if (!profile.data)
-            throw new common_1.UnauthorizedException('Profile not found');
+            throw new common_1.UnauthorizedException('Invalid credentials');
         return profile.data;
     }
     async login(email, password) {
         const profile = await this.profileExists(email);
         const passwordHash = profile.password;
         if (!passwordHash) {
-            throw new common_1.UnauthorizedException('Password not set for this profile');
+            throw new common_1.UnauthorizedException('Invaluid credentials');
         }
         const [salt, storedHash] = passwordHash.split(':');
-        const hashedPassword = (0, crypto_1.pbkdf2Sync)(password, salt, 1000, 64, 'sha512').toString('hex');
-        if (hashedPassword !== storedHash) {
+        const hashedPassword = (await scrypt(password, salt, 64));
+        if (hashedPassword.toString('hex') !== storedHash) {
             throw new common_1.UnauthorizedException('Invalid credentials');
         }
         const payload = {
@@ -67,8 +69,8 @@ let AuthService = class AuthService {
             throw new common_1.BadRequestException('Password must be at least 8 characters long');
         }
         const salt = (0, crypto_1.randomBytes)(16).toString('hex');
-        const hashedPassword = (0, crypto_1.pbkdf2Sync)(password, salt, 1000, 64, 'sha512').toString('hex');
-        const passwordHash = `${salt}:${hashedPassword}`;
+        const hashedPassword = (await scrypt(password, salt, 64));
+        const passwordHash = `${salt}:${hashedPassword.toString('hex')}`;
         const { error } = await this.supabaseService
             .getConnection()
             .from('profile')
@@ -84,8 +86,8 @@ let AuthService = class AuthService {
         if (!passwordHash)
             throw new common_1.UnauthorizedException('Password not set for this profile');
         const [salt, storedHash] = passwordHash.split(':');
-        const hashedPassword = (0, crypto_1.pbkdf2Sync)(password, salt, 1000, 64, 'sha512').toString('hex');
-        return hashedPassword === storedHash;
+        const hashedPassword = (await scrypt(password, salt, 64));
+        return hashedPassword.toString('hex') === storedHash;
     }
 };
 exports.AuthService = AuthService;

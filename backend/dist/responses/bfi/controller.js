@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BfiResponsesController = void 0;
 const common_1 = require("@nestjs/common");
 const service_1 = require("./service");
+const rateLimit_1 = require("../../guards/rateLimit");
 let BfiResponsesController = class BfiResponsesController {
     constructor(responsesService) {
         this.responsesService = responsesService;
@@ -26,6 +27,7 @@ let BfiResponsesController = class BfiResponsesController {
 exports.BfiResponsesController = BfiResponsesController;
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UseGuards)(rateLimit_1.RateLimitGuard),
     __param(0, (0, common_1.Body)('profileId')),
     __param(1, (0, common_1.Body)('variable')),
     __param(2, (0, common_1.Body)('answer')),

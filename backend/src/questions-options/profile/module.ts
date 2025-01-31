@@ -9,7 +9,7 @@ import { SupabaseModule } from 'src/supabase/module';
 @Module({
   imports: [
     SupabaseModule,
-    AbacusModule
+    AbacusModule,
   ],
   controllers: [ProfileQuestionsController],
   providers: [

@@ -25,17 +25,17 @@ export class ProfileService {
     });
   }
 
-  async getInitialQuestionWithOptions(
-    id: string
-  ): Promise<QuestionWithOptions> {
-    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/${id}/initial`);
+  async getInitialQuestionWithOptions(): Promise<QuestionWithOptions> {
+    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/initial`);
   }
 
   async getQuestionWithOptions(
     uuid: string,
     questionId: number
   ): Promise<QuestionWithOptions> {
-    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/${uuid}/questionId/${questionId}`);
+    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/questionId/${questionId}`, {
+      headers: {'profileId:': uuid}
+    });
   }
 
   async submitAnswer(
@@ -60,22 +60,6 @@ export class ProfileService {
       variable,
       answer
     });
-  }
-
-  async verifyProfileAccess(profileId: string): Promise<boolean> {
-    try {
-      const response = await fetch(`${this.baseUrl}profile/${profileId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      });
-      if (!response.ok) return false;
-      return true;
-    } catch (error: unknown) {
-      console.error("The error was:", error);
-      return false;
-    }
   }
 
 }

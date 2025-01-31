@@ -20,7 +20,7 @@ exports.ProfileQuestionsModule = ProfileQuestionsModule = __decorate([
     (0, common_1.Module)({
         imports: [
             module_2.SupabaseModule,
-            module_1.AbacusModule
+            module_1.AbacusModule,
         ],
         controllers: [controller_1.ProfileQuestionsController],
         providers: [
