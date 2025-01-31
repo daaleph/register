@@ -20,8 +20,12 @@ export class QuestionFormController {
                 this.handleSingleSelect(optionId);
             }
             this.notifyAnswerSelected(options);
-        } catch (err: any) {
-            this.error = err.message;
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                this.error = err.message;
+            } else {
+                this.error = 'An unknown error occurred';
+            }
         }
     }
 

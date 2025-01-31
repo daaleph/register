@@ -37,7 +37,7 @@ const LoginPage: React.FC = () => {
     return (
         <div className={styles.registrationContainer}>
             <div className={styles.welcomeSection}>
-                <h1 className={styles.title}>aleph</h1>
+                <h1 className={styles.title}>Aleph</h1>
                 <p className={styles.hardText}>Increasing universal wisdom.</p>
             </div>
 

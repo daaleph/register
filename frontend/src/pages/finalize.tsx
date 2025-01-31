@@ -16,7 +16,7 @@ const FinalizePage: React.FC = () => {
     number: false,
     uppercase: false,
     lowercase: false,
-    // special: false,
+    special: false,
   });
 
   const validatePassword = (pass: string) => {
@@ -25,7 +25,7 @@ const FinalizePage: React.FC = () => {
       number: /\d/.test(pass),
       uppercase: /[A-Z]/.test(pass),
       lowercase: /[a-z]/.test(pass),
-      // special: /[!@#$%^&*(),.?":{}|<>]/.test(pass),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(pass),
     };
     setValidationErrors(validations);
     return Object.values(validations).every(Boolean);
@@ -51,9 +51,9 @@ const FinalizePage: React.FC = () => {
       const { accessToken } = await authService.finalizeRegistrationWithPassword(userProfile.email, password);
       setAuthToken(accessToken);
       router.push('/home');
-    } catch (error: any) {
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message || 'An error occurred');
       console.error('Failed to finalize registration:', error);
-      setError(error.message || 'An error occurred');
       router.push('/login');
     } finally {
       setIsLoading(false);
@@ -93,9 +93,9 @@ const FinalizePage: React.FC = () => {
               <li className={validationErrors.lowercase ? styles.valid : styles.invalid}>
                 Al menos una minúscula
               </li>
-              {/* <li className={validationErrors.special ? styles.valid : styles.invalid}>
+              <li className={validationErrors.special ? styles.valid : styles.invalid}>
                 Al menos un carácter especial (!@#&#36;%^&amp;*(),.?&quot;:&#123;&#125;|&lt;&gt;)
-              </li> */}
+              </li>
             </ul>
           </div>
         </div>

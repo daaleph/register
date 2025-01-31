@@ -1,8 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactStrictMode: true,
+  poweredByHeader: false,
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
+  env: {
+    NEXT_PUBLIC_NEST_URL: process.env.NEXT_PUBLIC_NEST_URL,
+    TOKEN: process.env.TOKEN
+  },
 };
 
 export default nextConfig;

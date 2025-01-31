@@ -16,7 +16,7 @@ const ProfilePage: React.FC = () => {
     const [answerSelected, setAnswerSelected] = useState<boolean>(false);
     const [showDescription, setShowDescription] = useState<boolean>(false);
     const { setResponses, setProgress, progress, userProfile, currentPhase } = useUser();
-    const productService = new ProductService();
+    const productService = ProductService.getInstance();
 
     const [hook, setHook] = useState<{
         key: string;
@@ -77,7 +77,7 @@ const ProfilePage: React.FC = () => {
 
     // Handle answer selection
     const handleAnswerSelected = useCallback((answer: number[] | number, otherText?: string) => {
-        otherText ? controllerState.controller.handleAnswerSelection(answer, otherText) : controllerState.controller.handleAnswerSelection(answer);
+        controllerState.controller.handleAnswerSelection(answer, otherText);
         setControllerState(current => ({
         ...current,
         state: current.controller.getState()
@@ -119,7 +119,7 @@ const ProfilePage: React.FC = () => {
             console.error('Failed to initialize questions:', error);
         }
 
-    }, [userProfile?.id, controllerState.controller, productService]);
+    }, [userProfile?.id, controllerState.state]);
 
     // Loading state
     if (!controllerState.state || !router.isReady) {
@@ -158,7 +158,7 @@ const ProfilePage: React.FC = () => {
                 isLoading={controllerState.state.isLoading}
             />
             {
-                controllerState.state.isLoading ? 
+                controllerState.controller.getState().isLoading ? 
                 <div className={styles.loading} /> :
                 <button 
                 className={styles.submitButton}

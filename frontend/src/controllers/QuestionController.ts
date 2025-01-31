@@ -1,7 +1,7 @@
 // frontend/src/controllers/QuestionController.ts
 
 import { Phases } from "@/context/UserContext";
-import { Question, QuestionOption } from "@/models/interfaces";
+import { Question, QuestionOption, QuestionWithOptions } from "@/models/interfaces";
 
 export interface QuestionState {
     currentPhase: string;
@@ -37,8 +37,15 @@ export class QuestionController {
     setState(newState: Partial<QuestionState>) {
         this.state = { ...this.state, ...newState };
     }
+
+    // async getInitialQuestionWithOptions(
+    //     id: string
+    // ): Promise<QuestionWithOptions> {
   
-    async initializeQuestions(profileId: string, getInitialQuestion: Function) {
+    async initializeQuestions(
+        profileId: string,
+        getInitialQuestion: (id: string) => Promise<QuestionWithOptions>
+    ) {
         try {
             this.setState({ isLoading: true, error: null });
             const { question, options } = await getInitialQuestion(profileId);
@@ -56,11 +63,18 @@ export class QuestionController {
         }
     }
 
-    async nextQuestionWithOptions(profileId: string, state: QuestionState, getNextQuestion: Function) {
+    // async getQuestionWithAnswers(
+    // uuid: string,
+    // questionId: number
+    // ): Promise<QuestionWithOptions> {
+
+    async nextQuestionWithOptions(
+        profileId: string,
+        state: QuestionState,
+        getNextQuestion: (uuid: string, questionId: number) => Promise<QuestionWithOptions>
+    ) {
         try {
-            if (!state.currentQuestion) {
-                throw new Error('Current question is null');
-            }
+            if (!state.currentQuestion) throw new Error('Current question is null');
             this.setState({ isLoading: true, error: null });
             const nextQuestionId = state.currentPhase === 'PROFILE' ? this.getNextQuestionId(
                 state.currentQuestion.id,
@@ -70,10 +84,8 @@ export class QuestionController {
                 profileId,
                 nextQuestionId
             );
-            if (!question || !options) {
-                throw new Error('Failed to load next question or options');
-            }
-
+            console.log("aaaaaaaaaaaaaaaa:", question, options);
+            if (!question || !options) throw new Error('Failed to load next question or options');
             this.setState({
                 currentQuestion: question,
                 currentOptions: options,
@@ -95,17 +107,28 @@ export class QuestionController {
             otherText
         });
     };
+
+    // async submitAnswer(
+    //     profileId: string,
+    //     variable: string,
+    //     answer: number[]
+    // ): Promise<void> {
+
+    // async submitOtherAnswer(
+    //     profileId: string,
+    //     variable: string,
+    //     answer: string
+    // ): Promise<void> {
   
     async submitAnswer(
         profileId: string,
-        submitAnswer: Function,
+        submitAnswer: (profileId: string, variable: string, answer: number[]) => Promise<void>,
         progress: Map<Phases, number>,
         currentPhase: Phases,
-        submitOtherAnswer?: Function
+        submitOtherAnswer?: (profileId: string, variable: string, answer: string) => Promise<void>
     ) {
         const { currentQuestion, selectedAnswer, otherText } = this.state;
         if (!currentQuestion || selectedAnswer === null) return;
-    
         try {
             this.setState({ isLoading: true, error: null });
             const answers = Array.isArray(selectedAnswer) ? selectedAnswer : [selectedAnswer];

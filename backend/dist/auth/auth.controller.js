@@ -20,13 +20,10 @@ let AuthController = class AuthController {
         this.authService = authService;
     }
     async login(email, password) {
-        console.log("ZZZZZZZZZZZZ:", email, password);
         if (!email)
             throw new common_1.UnauthorizedException('Profile ID is required');
         if (!password)
             throw new common_1.BadRequestException('Password is required');
-        console.log("EMAIL:", email);
-        console.log("PASSWORD:", password);
         return this.authService.login(email, password);
     }
     async validateToken(authHeader) {

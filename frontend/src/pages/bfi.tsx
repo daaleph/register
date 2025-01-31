@@ -16,7 +16,7 @@ const BfiPage: React.FC = () => {
   const [answerSelected, setAnswerSelected] = useState<boolean>(false);
   const [showDescription, setShowDescription] = useState<boolean>(false);
   const { setResponses, setProgress, progress, userProfile, currentPhase } = useUser();
-  const bfiService = new BfiService();
+  const bfiService = BfiService.getInstance();
 
   const [hook, setHook] = useState<{
     key: string;
@@ -78,7 +78,7 @@ const BfiPage: React.FC = () => {
 
   // Handle answer selection
   const handleAnswerSelected = useCallback((answer: number[] | number, otherText?: string) => {
-    otherText ? controllerState.controller.handleAnswerSelection(answer, otherText) : controllerState.controller.handleAnswerSelection(answer);
+    controllerState.controller.handleAnswerSelection(answer, otherText);
     setControllerState(current => ({
       ...current,
       state: current.controller.getState()
@@ -118,7 +118,7 @@ const BfiPage: React.FC = () => {
       console.error('Failed to initialize questions:', error);
     }
 
-  }, [userProfile?.id, controllerState.controller, bfiService]);
+  }, [userProfile?.id, controllerState.state]);
 
   // Loading state
   if (!controllerState.state || !router.isReady) {
@@ -155,7 +155,7 @@ const BfiPage: React.FC = () => {
         isLoading={controllerState.state.isLoading}
       />
       {
-        controllerState.state.isLoading ? 
+        controllerState.controller.getState().isLoading ? 
         <div className={styles.loading} /> :
         <button 
           className={styles.submitButton}

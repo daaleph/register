@@ -32,19 +32,13 @@ let AuthService = class AuthService {
     }
     async login(email, password) {
         const profile = await this.profileExists(email);
-        console.log("PROFILE:", profile);
         const passwordHash = profile.password;
         if (!passwordHash) {
             throw new common_1.UnauthorizedException('Password not set for this profile');
         }
-        console.log("PASSWORD HASH:", passwordHash);
         const [salt, storedHash] = passwordHash.split(':');
-        console.log("SALT:", salt);
-        console.log("STORED HASH:", storedHash);
         const hashedPassword = (0, crypto_1.pbkdf2Sync)(password, salt, 1000, 64, 'sha512').toString('hex');
-        console.log("HASHED PASSWORD?:", hashedPassword);
         if (hashedPassword !== storedHash) {
-            console.log("ARE NOT EQUALS");
             throw new common_1.UnauthorizedException('Invalid credentials');
         }
         const payload = {
