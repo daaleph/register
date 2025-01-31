@@ -36,6 +36,6 @@ import { CsrfMiddleware } from './middleware/csrf.middleware';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CsrfMiddleware).forRoutes('*'); // Apply CSRF middleware to all routes
+    consumer.apply(CsrfMiddleware).forRoutes('*');
   }
 }

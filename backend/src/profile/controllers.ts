@@ -22,7 +22,9 @@ export class ProfileController {
   async createProfile(
     @Body() profile: ProfileEntity
   ): Promise<{ id: string }> {
+    console.log("oasidjfoasidfj");
     const id = await this.profileService.createProfile(profile);
+    console.log("xxxxxxxxxxxxx");
     return { id };
   }
 

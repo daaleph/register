@@ -25,7 +25,9 @@ let ProfileController = class ProfileController {
         return this.profileService.retrieveProfile(id);
     }
     async createProfile(profile) {
+        console.log("oasidjfoasidfj");
         const id = await this.profileService.createProfile(profile);
+        console.log("xxxxxxxxxxxxx");
         return { id };
     }
     async updateProfile(profile) {

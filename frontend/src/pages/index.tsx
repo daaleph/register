@@ -1,8 +1,9 @@
 // frontend/src/pages/index.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '../context/UserContext';
 import { ProfileService } from '../services/ProfileService';
+import AuthService from '../services/AuthService';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { UserProfile } from '@/models/interfaces';
 import { LoadingState } from '@/components/common/LoadingState';
@@ -14,6 +15,7 @@ const InitialRegistration: React.FC = () => {
   const { setUserProfile } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [initialToken, setInitialToken] = useState<string | null>('');
   const [formData, setFormData] = useState<UserProfile>({
     id: '',
     complete_name: '',
@@ -22,6 +24,19 @@ const InitialRegistration: React.FC = () => {
     movil: '',
     telegram: ''
   });
+
+  const authService = AuthService.getInstance();
+
+  useEffect(() => {
+    async function getInitialToken() {
+      setInitialToken(await authService.intialToken());
+    }
+    getInitialToken();
+  }, [])
+
+  useEffect(() => {
+    if (initialToken) storeCsrfTokenAsCookie(initialToken);
+  }, [initialToken])
 
   const validateForm = (): boolean => {
     if (!formData.complete_name.trim()) {
@@ -54,7 +69,6 @@ const InitialRegistration: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-    
     try {
       setIsLoading(true);
       const profileService = ProfileService.getInstance();
@@ -72,7 +86,6 @@ const InitialRegistration: React.FC = () => {
     }
   };
 
-  // Show loading state while the profile is being created
   if (isLoading) return <LoadingState />
 
   return (
@@ -184,3 +197,14 @@ const InitialRegistration: React.FC = () => {
 };
 
 export default InitialRegistration;
+
+
+const storeCsrfTokenAsCookie = (csrfToken: string) => {
+  const cookieName = 'csrfToken';
+  const maxAge = 60 * 60 * 24;
+  const secure = process.env.NODE_ENV === 'production';
+  const sameSite = 'Strict';
+  document.cookie = `${cookieName}=${csrfToken}; Max-Age=${maxAge}; Path=/; ${
+    secure ? 'Secure;' : ''
+  } SameSite=${sameSite}`;
+};

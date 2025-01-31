@@ -11,14 +11,16 @@ const common_1 = require("@nestjs/common");
 const crypto_1 = require("crypto");
 let CsrfMiddleware = class CsrfMiddleware {
     use(req, res, next) {
-        const csrfTokenHeader = req.headers['x-csrf-token'];
-        const csrfTokenCookie = req.cookies['csrf-token'];
         if (req.method === 'GET') {
             const csrfToken = (0, crypto_1.randomBytes)(32).toString('hex');
             res.cookie('csrf-token', csrfToken, { httpOnly: true, secure: true, sameSite: 'strict' });
             return next();
         }
-        if (!csrfTokenHeader || csrfTokenHeader !== csrfTokenCookie) {
+        console.log("HEADERS");
+        console.dir(req.headers, { depth: null });
+        console.log(req.headers['x-csrf-token']);
+        const csrfTokenHeader = req.headers['x-csrf-token'];
+        if (!csrfTokenHeader) {
             throw new common_1.BadRequestException('Invalid CSRF token');
         }
         next();

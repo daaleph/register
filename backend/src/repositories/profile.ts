@@ -16,7 +16,6 @@ export class ProfileRepository {
       }])
       .select('id')
       .single();
-
     if (error) throw error;
     return data.id;
   }
@@ -35,4 +34,5 @@ export class ProfileRepository {
   async saveProfile(profile: ProfileEntity): Promise<void> {
     await this.supabaseService.query('profile', profile);
   }
+
 }

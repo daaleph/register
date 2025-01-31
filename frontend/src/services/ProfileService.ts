@@ -18,7 +18,9 @@ export class ProfileService {
     return ProfileService.instance;
   }
 
-  async createProfile(data: UserProfile): Promise<{ id: string }> {
+  async createProfile(
+    data: UserProfile
+  ): Promise<{ id: string }> {
     return HttpUtility.post(`${this.baseUrl}profile/create`, data, {
       headers: {'Content-Type': 'application/json'},
       withCredentials: true
