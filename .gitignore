@@ -5,3 +5,5 @@
 /frontend/.next/
 /frontend/.wrangler/
 /frontend/.open-next/
+/frontend/src/data/hooks.ts
+/frontend/src/data/
