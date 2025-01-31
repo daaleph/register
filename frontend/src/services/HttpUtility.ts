@@ -27,10 +27,6 @@ export class HttpUtility {
     private static readonly TIMEOUT = 50000;
     private static readonly RETRY_DELAY = 1000;
 
-    private static getAuthHeader(): Record<string, string> {
-        const token = localStorage.getItem('auth_token');
-        return token ? { Authorization: `Bearer ${token}` } : {};
-    }
 
     static async get<T>(
         url: string, 
@@ -38,7 +34,7 @@ export class HttpUtility {
         retryCount = 0
     ): Promise<T> {
         try {
-            const headers = this.getAuthHeader();
+            const headers = {};
             const response = await axios.get<T>(url, { 
                 params,
                 headers,
@@ -92,7 +88,6 @@ export class HttpUtility {
         retryCount: number
     ): Promise<T> {
         if (error.response?.status === 401) {
-            localStorage.removeItem('auth_token');
             window.location.href = '/';
             throw new Error('Authentication failed');
         }

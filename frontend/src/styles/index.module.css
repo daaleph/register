@@ -2,6 +2,7 @@
 
 .registrationContainer {
   width: auto;
+  min-height: 100vh;
   max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
