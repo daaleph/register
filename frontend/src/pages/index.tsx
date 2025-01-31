@@ -89,8 +89,19 @@ const InitialRegistration: React.FC = () => {
   if (isLoading) return <LoadingState />
 
   return (
-    <>
-      <Head><title>Aleph</title></Head>
+    <>  
+      <Head>
+        <title>Aleph</title>
+        <meta name="title" content="Aleph - increasing universal wisdom" />
+        <meta name="description" content="Discover Aleph, the site where eternity tends to converge." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.aleph-space.org/" />
+        <meta property="og:title" content="Aleph - increasing universal wisdom" />
+        <meta property="og:description" content="Discover Aleph, the site where eternity tends to converge." />
+        <meta property="twitter:url" content="https://www.aleph-space.org/" />
+        <meta property="twitter:title" content="Aleph - increasing universal wisdom" />
+        <meta property="twitter:description" content="Discover Aleph, the site where eternity tends to converge." />
+      </Head>
       <div className={styles.registrationContainer}>
         <div className={styles.welcomeSection}>
           <h1 className={styles.title}>Aleph</h1>
