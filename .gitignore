@@ -2,3 +2,6 @@
 /backend/node_modules/*
 *.env.local
 *.env
+/frontend/.next/
+/frontend/.wrangler/
+/frontend/.open-next/

@@ -7,6 +7,7 @@ import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { UserProfile } from '@/models/interfaces';
 import { LoadingState } from '@/components/common/LoadingState';
 import styles from '../styles/index.module.css';
+import Head from 'next/head';
 
 const InitialRegistration: React.FC = () => {
   const router = useRouter();
@@ -75,107 +76,112 @@ const InitialRegistration: React.FC = () => {
   if (isLoading) return <LoadingState />
 
   return (
-    <div className={styles.registrationContainer}>
-      <div className={styles.welcomeSection}>
-        <h1 className={styles.title}>Aleph</h1>
-        <p className={styles.hardText}>Increasing universal wisdom.</p>
+    <>
+      <Head>
+        <title>Aleph</title>
+      </Head>
+      <div className={styles.registrationContainer}>
+        <div className={styles.welcomeSection}>
+          <h1 className={styles.title}>Aleph</h1>
+          <p className={styles.hardText}>Increasing universal wisdom.</p>
+        </div>
+
+        <div className={styles.privacyNotice}>
+          <h3 className={styles.privacyTitle} style={{textAlign: 'center'}}>Seguridad</h3>
+          <p className={styles.privacyText} style={{textAlign: 'right'}}>
+            Nuestra información es sagrada. La proteje la misma dedicación de nuestros antepasados guardando sus tesoros en criptas tecnológicamente
+            dentro del aleph comunicadas mejorando tu experiencia humana.
+          </p>
+        </div>
+        <form onSubmit={handleSubmit} className={styles.registrationForm}>
+          <div className={styles.formGroup}>
+            <label htmlFor="complete_name">Nombres y Apellidos *</label>
+            <input
+              type="text"
+              id="complete_name"
+              name="complete_name"
+              value={formData.complete_name}
+              onChange={handleChange}
+              disabled={isLoading}
+              required
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="preferred_name">¿Cómo prefieres ser conocido? *</label>
+            <input
+              type="text"
+              id="preferred_name"
+              name="preferred_name"
+              value={formData.preferred_name}
+              onChange={handleChange}
+              disabled={isLoading}
+              required
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="email">Email *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              disabled={isLoading}
+              required
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="movil">Número Móvil *</label>
+            <input
+              type="tel"
+              id="movil"
+              name="movil"
+              value={formData.movil}
+              onChange={handleChange}
+              disabled={isLoading}
+              required
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="telegram">Telegram</label>
+            <input
+              type="text"
+              id="telegram"
+              name="telegram"
+              value={formData.telegram}
+              onChange={handleChange}
+              disabled={isLoading}
+            />
+          </div>
+
+          {error && <ErrorDisplay message={error} />}
+
+          <p className={styles.calmText} style={{textAlign: 'right'}}>
+            Toma tu tiempo. Respira. No habrá más prisas.
+          </p>
+
+          <button 
+            type="submit" 
+            className={styles.submitButton}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Creando Perfil...' : 'Comienza'}
+          </button>
+        </form>
+
+        <div className={styles.formFooter}>
+          <p className={styles.calmText} style={{textAlign: 'right'}}>
+            Toma tu tiempo para asegurar información válida.
+            Nuestra aventura comenzará.
+            Solo si llegas hasta el final.
+          </p>
+        </div>
       </div>
-
-      <div className={styles.privacyNotice}>
-        <h3 className={styles.privacyTitle} style={{textAlign: 'center'}}>Seguridad</h3>
-        <p className={styles.privacyText} style={{textAlign: 'right'}}>
-          Nuestra información es sagrada. La proteje la misma dedicación de nuestros antepasados guardando sus tesoros en criptas tecnológicamente
-          dentro del aleph comunicadas mejorando tu experiencia humana.
-        </p>
-      </div>
-      <form onSubmit={handleSubmit} className={styles.registrationForm}>
-        <div className={styles.formGroup}>
-          <label htmlFor="complete_name">Nombres y Apellidos *</label>
-          <input
-            type="text"
-            id="complete_name"
-            name="complete_name"
-            value={formData.complete_name}
-            onChange={handleChange}
-            disabled={isLoading}
-            required
-          />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="preferred_name">¿Cómo prefieres ser conocido? *</label>
-          <input
-            type="text"
-            id="preferred_name"
-            name="preferred_name"
-            value={formData.preferred_name}
-            onChange={handleChange}
-            disabled={isLoading}
-            required
-          />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="email">Email *</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            disabled={isLoading}
-            required
-          />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="movil">Número Móvil *</label>
-          <input
-            type="tel"
-            id="movil"
-            name="movil"
-            value={formData.movil}
-            onChange={handleChange}
-            disabled={isLoading}
-            required
-          />
-        </div>
-
-        <div className={styles.formGroup}>
-          <label htmlFor="telegram">Telegram</label>
-          <input
-            type="text"
-            id="telegram"
-            name="telegram"
-            value={formData.telegram}
-            onChange={handleChange}
-            disabled={isLoading}
-          />
-        </div>
-
-        {error && <ErrorDisplay message={error} />}
-
-        <p className={styles.calmText} style={{textAlign: 'right'}}>
-          Toma tu tiempo. Respira. No habrá más prisas.
-        </p>
-
-        <button 
-          type="submit" 
-          className={styles.submitButton}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Creando Perfil...' : 'Comienza'}
-        </button>
-      </form>
-
-      <div className={styles.formFooter}>
-        <p className={styles.calmText} style={{textAlign: 'right'}}>
-          Toma tu tiempo para asegurar información válida.
-          Nuestra aventura comenzará.
-          Solo si llegas hasta el final.
-        </p>
-      </div>
-    </div>
+    </>
   );
 };
 
