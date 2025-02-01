@@ -16,9 +16,6 @@ let CsrfMiddleware = class CsrfMiddleware {
             res.cookie('csrf-token', csrfToken, { httpOnly: true, secure: true, sameSite: 'strict' });
             return next();
         }
-        console.log("HEADERS");
-        console.dir(req.headers, { depth: null });
-        console.log(req.headers['x-csrf-token']);
         const csrfTokenHeader = req.headers['x-csrf-token'];
         if (!csrfTokenHeader) {
             throw new common_1.BadRequestException('Invalid CSRF token');
