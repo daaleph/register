@@ -1,4 +1,5 @@
 // frontend/src/pages/index.tsx
+import styles from '../styles/index.module.css';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '../context/UserContext';
@@ -7,7 +8,6 @@ import AuthService from '../services/AuthService';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { UserProfile } from '@/models/interfaces';
 import { LoadingState } from '@/components/common/LoadingState';
-import styles from '../styles/index.module.css';
 import Head from 'next/head';
 
 const InitialRegistration: React.FC = () => {
@@ -111,7 +111,7 @@ const InitialRegistration: React.FC = () => {
           <h3 className={styles.privacyTitle} style={{textAlign: 'center'}}>Seguridad</h3>
           <p className={styles.privacyText} style={{textAlign: 'right'}}>
             Nuestra información es sagrada. La proteje la misma dedicación de nuestros antepasados guardando sus tesoros en criptas tecnológicamente
-            dentro del aleph comunicadas mejorando tu experiencia humana.
+            dentro del Aleph comunicadas mejorando tu experiencia humana.
           </p>
         </div>
         <form onSubmit={handleSubmit} className={styles.registrationForm}>
