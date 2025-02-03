@@ -1,5 +1,5 @@
 // frontend/src/services/ProfileService.ts
-import { QuestionWithOptions, UserProfile } from "@/models/interfaces";
+import { UserProfile } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class ProfileService {
@@ -18,24 +18,44 @@ export class ProfileService {
     return ProfileService.instance;
   }
 
-  async createProfile(
+  async login<T>(
+    email: string,
+    password: string
+  ): Promise<T> {
+      return await HttpUtility.withRetry(() => 
+        HttpUtility.post<T>(`${this.baseUrl}auth/login`, {
+          email,
+          password
+        })
+      );
+  }
+
+  async createProfile<T>(
     data: UserProfile
-  ): Promise<{ id: string }> {
-    return HttpUtility.post<{ id: string }>(`${this.baseUrl}profile/create`, data);
+  ): Promise<T> {
+    return await HttpUtility.withRetry(() => 
+      HttpUtility.post<T>(`${this.baseUrl}profile/create`, data)
+    );
   }
 
-  async getInitialQuestionWithOptions(): Promise<QuestionWithOptions> {
-    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/initial`);
+  async getInitialQuestionWithOptions<T>(): Promise<T> {
+    return await HttpUtility.withRetry(() => 
+      HttpUtility.get<T>(`${this.baseUrl}questions/profile/initial`)
+    );
   }
 
-  async getQuestionWithOptions(
+  async getQuestionWithOptions<T>(
     uuid: string,
     questionId: number
-  ): Promise<QuestionWithOptions> {
+  ): Promise<T> {
+
     const profileId = uuid;
-    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/questionId/${questionId}/`, {
-      profileId
-    });
+    return await HttpUtility.withRetry(() => 
+      HttpUtility.get<T>(`${this.baseUrl}questions/profile/questionId/${questionId}/`, {
+        profileId
+      })
+    );
+
   }
 
   async submitAnswer(
@@ -43,11 +63,13 @@ export class ProfileService {
     variable: string,
     answer: number[]
   ): Promise<void> {
-    return HttpUtility.post(`${this.baseUrl}responses/profile`, {
-      profileId,
-      variable,
-      answer
-    });
+    return await HttpUtility.withRetry(() => 
+      HttpUtility.post(`${this.baseUrl}responses/profile`, { 
+        profileId, 
+        variable, 
+        answer 
+      })
+    );
   }
 
   async submitOtherAnswer(
@@ -55,11 +77,13 @@ export class ProfileService {
     variable: string,
     answer: string
   ): Promise<void> {
-    return HttpUtility.post(`${this.baseUrl}responses/profile/other`, {
-      profileId,
-      variable,
-      answer
-    });
+    return await HttpUtility.withRetry(() => 
+      HttpUtility.post(`${this.baseUrl}responses/profile/other`, {
+        profileId,
+        variable,
+        answer
+      })
+    );
   }
 
 }

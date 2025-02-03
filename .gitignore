@@ -1,4 +1,5 @@
 /frontend/node_modules/*
+/frontend/src/types/security.ts
 /backend/node_modules/*
 /backend/.env
 /frontend/.env.local

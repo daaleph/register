@@ -10,6 +10,7 @@ import { LoadingState } from '@/components/common/LoadingState';
 import { hookManager } from '@/marketing/hooks';
 import styles from '../styles/components.module.css';
 import Head from 'next/head';
+import { QuestionWithOptions } from '@/models/interfaces';
 
 const ProfilePage: React.FC = () => {
   const QUESTIONTYPE: Phases = 'PROFILE';
@@ -61,7 +62,7 @@ const ProfilePage: React.FC = () => {
     const initQuestions = async () => {
       if (!router.isReady || typeof userProfile?.id !== "string") return;
       try {
-        await controllerState.controller.initializeQuestions(
+        await controllerState.controller.initializeQuestions<QuestionWithOptions>(
           userProfile.id,
           profileService.getInitialQuestionWithOptions.bind(profileService)
         );
@@ -104,7 +105,7 @@ const ProfilePage: React.FC = () => {
         state: controllerState.controller.getState()
       }));
       if (progress.get(currentPhase)! > 100 && QUESTIONTYPE !== currentPhase) return;
-      await controllerState.controller.nextQuestionWithOptions(
+      await controllerState.controller.nextQuestionWithOptions<QuestionWithOptions>(
         userProfile.id,
         controllerState.state,
         profileService.getQuestionWithOptions.bind(profileService)

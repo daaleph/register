@@ -1,5 +1,4 @@
 // frontend/src/services/BFIService.ts
-import { QuestionWithOptions } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class BfiService {
@@ -18,23 +17,31 @@ export class BfiService {
         return BfiService.instance;
     }
 
-    async getInitialQuestionWithOptions(
+    async getInitialQuestionWithOptions<T>(
         uuid: string
-    ): Promise<QuestionWithOptions> {
+    ): Promise<T> {
+
         const profileId = uuid;
-        return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/bfi/initial`, {
-            profileId
-        });
+        return await HttpUtility.withRetry(() => 
+            HttpUtility.get<T>(`${this.baseUrl}questions/bfi/initial`, {
+                profileId
+            })
+        );
+
     }
 
-    async getQuestionWithAnswers(
+    async getQuestionWithOptions<T>(
         uuid: string,
         questionId: number
-    ): Promise<QuestionWithOptions> {
+    ): Promise<T> {
+
         const profileId = uuid;
-        return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/bfi/questionId/${questionId}`, {
-            profileId
-        });
+        return await HttpUtility.withRetry(() => 
+            HttpUtility.get<T>(`${this.baseUrl}questions/bfi/questionId/${questionId}/`, {
+                profileId
+            })
+        );
+        
     }
 
     async submitAnswer(
@@ -42,11 +49,13 @@ export class BfiService {
         variable: string,
         answer: number[]
     ): Promise<void> {
-        return await HttpUtility.post(`${this.baseUrl}responses/bfi`, {
-            profileId,
-            variable,
-            answer
-        });
+        return await HttpUtility.withRetry(() => 
+            HttpUtility.post(`${this.baseUrl}responses/bfi`, { 
+                profileId, 
+                variable, 
+                answer 
+            })
+        );
     }
 
 }

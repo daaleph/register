@@ -24,8 +24,6 @@ let CsrfMiddleware = CsrfMiddleware_1 = class CsrfMiddleware {
         if (req.path === '/auth/csrf-token')
             return next();
         try {
-            console.log("HEADERS:", req.headers);
-            console.log("COOKIES:", req.cookies);
             const xCsrfToken = req.headers['x-csrf-token'];
             const csrfToken = req.cookies['csrf-token'];
             if (!xCsrfToken || !csrfToken) {

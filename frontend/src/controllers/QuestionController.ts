@@ -38,13 +38,13 @@ export class QuestionController {
         this.state = { ...this.state, ...newState };
     }
   
-    async initializeQuestions(
+    async initializeQuestions<T extends QuestionWithOptions>(
         profileId: string,
-        getInitialQuestion: (id: string) => Promise<QuestionWithOptions>
+        getInitialQuestion: (id: string) => Promise<T>
     ) {
         try {
             this.setState({ isLoading: true, error: null });
-            const { question, options } = await getInitialQuestion(profileId);
+            const { question, options } = await getInitialQuestion(profileId) as T;
             this.setState({
                 currentQuestion: question,
                 currentOptions: options,
@@ -59,10 +59,10 @@ export class QuestionController {
         }
     }
 
-    async nextQuestionWithOptions(
+    async nextQuestionWithOptions<T extends QuestionWithOptions>(
         profileId: string,
         state: QuestionState,
-        getNextQuestion: (uuid: string, questionId: number) => Promise<QuestionWithOptions>
+        getNextQuestion: (uuid: string, questionId: number) => Promise<T>
     ) {
         try {
             if (!state.currentQuestion) throw new Error('Current question is null');

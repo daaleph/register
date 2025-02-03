@@ -12,10 +12,8 @@ export class ProductQuestionsController {
   async getInitialQuestionWithOptions(
     @Body('profileId') profileId: string,
   ): Promise<string> {
-    const question =
-      await this.service.getContextualizedInitialQuestion(profileId);
-    const options =
-      await this.service.getContextualizedInitialOptions(profileId);
+    const question = await this.service.getContextualizedInitialQuestion(profileId);
+    const options = await this.service.getContextualizedInitialOptions(profileId);
     return JSON.stringify({ question, options });
   }
 
