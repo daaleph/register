@@ -37,7 +37,16 @@ const LoginPage: React.FC = () => {
     };
     return (
         <>
-            <Head><title>Aleph</title></Head>
+            <Head><title>Entrar - AS</title></Head>
+            <meta name="title" content="Aleph Space - Increasing universal wisdom" />
+            <meta name="description" content="The space where eternity tends to converge." />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content="https://www.aleph-space.org/" />
+            <meta property="og:title" content="Aleph Space - Increasing universal wisdom" />
+            <meta property="og:description" content="The space where eternity tends to converge." />
+            <meta property="twitter:url" content="https://www.aleph-space.org/" />
+            <meta property="twitter:title" content="Aleph Space - Increasing universal wisdom" />
+            <meta property="twitter:description" content="The space where eternity tends to converge." />
             <div className={styles.registrationContainer}>
                 <div className={styles.welcomeSection}>
                     <h1 className={styles.title}>Aleph</h1>

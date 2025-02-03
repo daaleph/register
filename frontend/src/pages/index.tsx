@@ -91,15 +91,15 @@ const InitialRegistration: React.FC = () => {
     <>  
       <Head>
         <title>Aleph Space</title>
-        <meta name="title" content="Aleph - increasing universal wisdom" />
-        <meta name="description" content="Discover Aleph, the site where eternity tends to converge." />
+        <meta name="title" content="Aleph Space - Increasing universal wisdom" />
+        <meta name="description" content="The space where eternity tends to converge." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.aleph-space.org/" />
-        <meta property="og:title" content="Aleph - increasing universal wisdom" />
-        <meta property="og:description" content="Discover Aleph, the site where eternity tends to converge." />
+        <meta property="og:title" content="Aleph Space - Increasing universal wisdom" />
+        <meta property="og:description" content="The space where eternity tends to converge." />
         <meta property="twitter:url" content="https://www.aleph-space.org/" />
-        <meta property="twitter:title" content="Aleph - increasing universal wisdom" />
-        <meta property="twitter:description" content="Discover Aleph, the site where eternity tends to converge." />
+        <meta property="twitter:title" content="Aleph Space - Increasing universal wisdom" />
+        <meta property="twitter:description" content="The space where eternity tends to converge." />
       </Head>
       <div className={styles.registrationContainer}>
         <div className={styles.welcomeSection}>
