@@ -18,6 +18,7 @@ import {
   MiddlewareConsumer,
   RequestMethod,
 } from '@nestjs/common';
+import { CsrfModule } from './auth/csrf.module';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import {
     AbacusModule,
     SupabaseModule,
     SharedModule,
-    AuthModule,
+    CsrfModule
   ],
   controllers: [AppController],
   providers: [
@@ -38,7 +39,7 @@ import {
       provide: APP_GUARD,
       useClass: RateLimitGuard,
     },
-  ],
+  ]
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -46,7 +47,7 @@ export class AppModule implements NestModule {
       .apply(CsrfMiddleware)
       .exclude(
         { path: 'auth/csrf-token', method: RequestMethod.GET },
-        { path: 'health', method: RequestMethod.GET },
+        // { path: 'health', method: RequestMethod.GET }, ???????????????
       )
       .forRoutes('*');
   }

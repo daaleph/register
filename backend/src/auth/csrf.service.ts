@@ -9,7 +9,7 @@ export class CsrfService {
 
   generateToken() {
     return {
-      token: randomBytes(this.TOKEN_LENGTH).toString('hex'),
+      csrfToken: randomBytes(this.TOKEN_LENGTH).toString('hex'),
       expiresIn: this.TOKEN_EXPIRY,
     };
   }
@@ -17,4 +17,5 @@ export class CsrfService {
   validateToken(headerToken: string, cookieToken: string): boolean {
     return headerToken === cookieToken;
   }
+  
 }

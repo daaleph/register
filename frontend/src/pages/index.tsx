@@ -29,9 +29,9 @@ const InitialRegistration: React.FC = () => {
   useEffect(() => {
     async function getInitialToken() {
         try {
-            await authService.initialToken(); // This will set up the token for all future requests
+          await authService.initialToken();
         } catch (error) {
-            console.error('Failed to get CSRF token:', error);
+          console.error('Failed to get CSRF token:', error);
         }
     }
     getInitialToken();

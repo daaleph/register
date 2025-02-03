@@ -21,7 +21,7 @@ export class ProfileService {
   async createProfile(
     data: UserProfile
   ): Promise<{ id: string }> {
-    return HttpUtility.post(`${this.baseUrl}profile/create`, data);
+    return HttpUtility.post<{ id: string }>(`${this.baseUrl}profile/create`, data);
   }
 
   async getInitialQuestionWithOptions(): Promise<QuestionWithOptions> {

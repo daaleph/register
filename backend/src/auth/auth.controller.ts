@@ -25,9 +25,9 @@ export class AuthController {
   @Get('csrf-token')
   @UseGuards(RateLimitGuard)
   getCsrfToken(@Res() res: Response) {
-    const { token, expiresIn } = this.csrfService.generateToken();
 
-    res.cookie('csrf-token', token, {
+    const { csrfToken, expiresIn } = this.csrfService.generateToken();
+    res.cookie('csrf-token', csrfToken, {
       secure: true,
       httpOnly: true,
       sameSite: 'strict',
@@ -36,9 +36,10 @@ export class AuthController {
     });
 
     return res.json({
-      csrfToken: token,
+      csrfToken: csrfToken,
       expiresIn,
     });
+
   }
 
   @Post('login')
@@ -47,17 +48,22 @@ export class AuthController {
     @Body('email') email: string,
     @Body('password') password: string,
   ) {
+
     if (!email) throw new UnauthorizedException('Profile ID is required');
     if (!password) throw new BadRequestException('Password is required');
+
     return this.authService.login(email, password);
+
   }
 
   @Get('validate')
   async validateToken(@Headers('Authorization') authHeader: string) {
-    if (!authHeader)
-      throw new UnauthorizedException('Authorization header is required');
+
+    if (!authHeader) throw new UnauthorizedException('Authorization header is required');
     const token = authHeader.split(' ')[1];
+
     return this.authService.validateToken(token);
+
   }
 
   @Post('finalize')
@@ -65,9 +71,12 @@ export class AuthController {
     @Body('email') email: string,
     @Body('password') password: string,
   ) {
+
     if (!email) throw new UnauthorizedException('Profile ID is required');
     if (!password) throw new BadRequestException('Password is required');
+
     return this.authService.finalizeRegistration(email, password);
+
   }
 
   @Post('set-password')
@@ -75,8 +84,11 @@ export class AuthController {
     @Body('email') email: string,
     @Body('password') password: string,
   ) {
+
     if (!email) throw new UnauthorizedException('Profile ID is required');
     if (!password) throw new BadRequestException('Password is required');
+    
     return this.authService.setPassword(email, password);
+
   }
 }

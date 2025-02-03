@@ -1,8 +1,10 @@
 import { AuthService } from './auth.service';
 import { Response } from 'express';
+import { CsrfService } from './csrf.service';
 export declare class AuthController {
     private readonly authService;
-    constructor(authService: AuthService);
+    private readonly csrfService;
+    constructor(authService: AuthService, csrfService: CsrfService);
     getCsrfToken(res: Response): Response<any, Record<string, any>>;
     login(email: string, password: string): Promise<{
         accessToken: string;

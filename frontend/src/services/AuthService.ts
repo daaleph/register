@@ -18,7 +18,10 @@ export default class AuthService {
     }
 
     async initialToken(): Promise<string> {
-        const response = await axiosInstance.get(`${this.baseUrl}auth/csrf-token`);
+        const response = await axiosInstance.get<{
+            csrfToken: string;
+            expiresIn: number;
+        }>(`${this.baseUrl}auth/csrf-token`);
         const { csrfToken } = response.data as { csrfToken: string, expiresIn: number};
         setCsrfToken(csrfToken);
         return csrfToken;
@@ -28,10 +31,12 @@ export default class AuthService {
         email: string,
         password: string
     ): Promise<T> {
-        return await HttpUtility.post<T>(`${this.baseUrl}auth/login`, {
-            email,
-            password
-        });
+        return await HttpUtility.withRetry(() => 
+            HttpUtility.post<T>(`${this.baseUrl}auth/login`, {
+                email,
+                password
+            })
+        );
     }
 
     async finalizeRegistrationWithPassword<T>(

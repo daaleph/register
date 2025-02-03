@@ -7,7 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
-const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
 const config_1 = require("@nestjs/config");
 const app_controller_1 = require("./app.controller");
@@ -21,9 +20,14 @@ const module_5 = require("./supabase/module");
 const shared_module_1 = require("./shared/shared.module");
 const rateLimit_1 = require("./guards/rateLimit");
 const csrf_middleware_1 = require("./middleware/csrf.middleware");
+const common_1 = require("@nestjs/common");
+const csrf_module_1 = require("./auth/csrf.module");
 let AppModule = class AppModule {
     configure(consumer) {
-        consumer.apply(csrf_middleware_1.CsrfMiddleware).forRoutes('*');
+        consumer
+            .apply(csrf_middleware_1.CsrfMiddleware)
+            .exclude({ path: 'auth/csrf-token', method: common_1.RequestMethod.GET })
+            .forRoutes('*');
     }
 };
 exports.AppModule = AppModule;
@@ -38,6 +42,7 @@ exports.AppModule = AppModule = __decorate([
             module_4.AbacusModule,
             module_5.SupabaseModule,
             shared_module_1.SharedModule,
+            csrf_module_1.CsrfModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [
@@ -46,7 +51,7 @@ exports.AppModule = AppModule = __decorate([
                 provide: core_1.APP_GUARD,
                 useClass: rateLimit_1.RateLimitGuard,
             },
-        ],
+        ]
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

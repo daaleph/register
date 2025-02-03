@@ -15,6 +15,7 @@ const auth_controller_1 = require("./auth.controller");
 const jwt_strategy_1 = require("./jwt.strategy");
 const module_1 = require("../supabase/module");
 const dotenv = require("dotenv");
+const csrf_module_1 = require("./csrf.module");
 dotenv.config();
 if (!process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET environment variable is not set');
@@ -31,6 +32,7 @@ exports.AuthModule = AuthModule = __decorate([
                 signOptions: { expiresIn: '24h' },
             }),
             module_1.SupabaseModule,
+            csrf_module_1.CsrfModule
         ],
         providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy],
         controllers: [auth_controller_1.AuthController],
