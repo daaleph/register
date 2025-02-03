@@ -18,6 +18,7 @@ export class HttpUtility {
             throw error;
         }
     }
+
     static async post<T>(
         url: string,
         data: Record<string, unknown> | UserProfile,
@@ -62,8 +63,8 @@ export class HttpUtility {
 
     static async withRetry<T>(
         operation: () => Promise<T>,
-        maxRetries: number = 3,
-        delay: number = 1000
+        maxRetries: number = 7,
+        delay: number = 5000
     ): Promise<T> {
         let lastError: Error;
         for (let i = 0; i < maxRetries; i++) {

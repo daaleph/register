@@ -8,12 +8,11 @@ import { Request } from 'express';
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {
-  private readonly requestCounts = new Map<
-    string,
-    { count: number; lastRequest: number }
-  >();
+
+  private readonly requestCounts = new Map<string, { count: number; lastRequest: number }>();
   private readonly limit = 100;
   private readonly timeWindow = 60 * 1000;
+
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
     const ip = request.ip;
