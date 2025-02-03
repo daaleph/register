@@ -7,5 +7,4 @@ export declare class ProfileController {
     createProfile(profile: ProfileEntity): Promise<{
         id: string;
     }>;
-    updateProfile(profile: ProfileEntity): Promise<void>;
 }

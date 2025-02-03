@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+// backend/src/auth/auth.service.ts
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { SupabaseService } from '../supabase/service';
 import { ProfileEntity } from 'src/entities/profile';
@@ -25,7 +30,10 @@ export class AuthService {
     return profile.data;
   }
 
-  async login(email: string, password: string): Promise<{ accessToken: string }> {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{ accessToken: string }> {
     const profile = await this.profileExists(email);
     const passwordHash = profile.password;
     if (!passwordHash) {
@@ -56,15 +64,23 @@ export class AuthService {
     }
   }
 
-  async finalizeRegistration(email: string, password: string): Promise<{ accessToken: string }> {
+  async finalizeRegistration(
+    email: string,
+    password: string,
+  ): Promise<{ accessToken: string }> {
     await this.setPassword(email, password);
     return this.login(email, password);
   }
 
-  async setPassword(email: string, password: string): Promise<{ message: string }> {
+  async setPassword(
+    email: string,
+    password: string,
+  ): Promise<{ message: string }> {
     await this.profileExists(email);
     if (password.length < 8) {
-      throw new BadRequestException('Password must be at least 8 characters long');
+      throw new BadRequestException(
+        'Password must be at least 8 characters long',
+      );
     }
     const salt = randomBytes(16).toString('hex');
     const hashedPassword = (await scrypt(password, salt, 64)) as Buffer;
@@ -81,7 +97,8 @@ export class AuthService {
   async verifyPassword(profileId: string, password: string): Promise<boolean> {
     const profile = await this.profileExists(profileId);
     const passwordHash = profile.password;
-    if (!passwordHash) throw new UnauthorizedException('Password not set for this profile');
+    if (!passwordHash)
+      throw new UnauthorizedException('Password not set for this profile');
     const [salt, storedHash] = passwordHash.split(':');
     const hashedPassword = (await scrypt(password, salt, 64)) as Buffer;
     return hashedPassword.toString('hex') === storedHash;

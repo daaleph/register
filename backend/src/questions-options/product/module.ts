@@ -6,7 +6,7 @@ import { ProductQuestionsService } from './service';
 import {
   ProfileQuestionsRepository,
   BfiQuestionsRepository,
-  ProductQuestionsRepository
+  ProductQuestionsRepository,
 } from 'src/repositories/questions';
 import { ProductQuestionsController } from './controller';
 
@@ -17,9 +17,8 @@ import { ProductQuestionsController } from './controller';
     ProductQuestionsService,
     ProductQuestionsRepository,
     ProfileQuestionsRepository,
-    BfiQuestionsRepository
+    BfiQuestionsRepository,
   ],
-  exports: [ProductQuestionsService]
+  exports: [ProductQuestionsService],
 })
-
 export class ProductQuestionsModule {}

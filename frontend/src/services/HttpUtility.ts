@@ -49,30 +49,20 @@ export class HttpUtility {
 
     static async post<T>(
         url: string,
-        data: Record<string, unknown> | UserProfile,
-        config: Partial<RequestConfig> = {}
+        data: Record<string, unknown> | UserProfile
     ): Promise<T> {
         const csrfToken = this.getCsrfToken();
         if (!csrfToken) throw new Error('CSRF token is missing. Please refresh the page.');
     
-        const defaultConfig: RequestConfig = {
+        const config: RequestConfig = {
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-Token': csrfToken,
+                'x-csrf-token': csrfToken
             },
             withCredentials: true,
         };
     
-        const finalConfig = {
-            ...defaultConfig,
-            ...config,
-            headers: {
-                ...defaultConfig.headers,
-                ...config.headers,
-            },
-        };
-    
-        return axios.post<T>(url, data, finalConfig)
+        return axios.post<T>(url, data, config)
           .then(response => response.data)
           .catch(error => {
             throw error;

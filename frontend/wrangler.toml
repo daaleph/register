@@ -3,10 +3,17 @@ name = "frontend"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 assets = { directory = ".open-next/assets", binding = "ASSETS" }
-[env]
-NEXT_PUBLIC_NEST_URL="http://localhost:3000/"
+routes = [
+  { pattern = "aleph-space.org", custom_domain = true }
+]
+
+[env.production.vars]
+NEXT_PUBLIC_BACKEND_CLIENT_ID="ddc231b1e13da2509bfc5059abbdd7f7.access"
+NEXT_PUBLIC_BACKEND_CLIENT_SECRET="d02541005159fe06d5008f930211c45b87ad8abe7bfc084af3004bb04a3e5718"
+NEXT_PUBLIC_NEST_URL="https://api.aleph-space.org/"
 TOKEN="5sQPEJspKvBjXK2D2rupmecTR6OxiClD5AqjMwWESKeI0Tw3QOSMHBWsCcMwTC1x"
 NODE_ENV="production"
+
 [[kv_namespaces]]
 binding = "NEXT_CACHE_WORKERS_KV"
 id = "d733d44d173243bbb0847b9fe4bfffc4"

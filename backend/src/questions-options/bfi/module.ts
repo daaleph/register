@@ -10,7 +10,11 @@ import { ProfileQuestionsRepository } from 'src/repositories/questions';
 @Module({
   imports: [AbacusModule, SupabaseModule],
   controllers: [BfiQuestionsController],
-  providers: [BfiQuestionsService, BfiQuestionsRepository, ProfileQuestionsRepository],
-  exports: [BfiQuestionsService]
+  providers: [
+    BfiQuestionsService,
+    BfiQuestionsRepository,
+    ProfileQuestionsRepository,
+  ],
+  exports: [BfiQuestionsService],
 })
 export class BfiQuestionsModule {}

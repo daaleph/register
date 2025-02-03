@@ -8,9 +8,8 @@ import { ProfileQuestionEntity } from 'src/entities/profile/question';
 
 @Injectable()
 export class ProfileQuestionsRepository {
-
   constructor(
-    private readonly supabaseService: SupabaseService = new SupabaseService()
+    private readonly supabaseService: SupabaseService = new SupabaseService(),
   ) {}
 
   async findQuestion(id: number): Promise<ProfileQuestionEntity> {
@@ -30,7 +29,10 @@ export class ProfileQuestionsRepository {
   }
 
   async getPreviousQuestions(currentId: number): Promise<any[]> {
-    const variables = Array.from({ length: currentId }, (_, i) => `var${String(i + 1).padStart(2, '0')}`);
+    const variables = Array.from(
+      { length: currentId },
+      (_, i) => `var${String(i + 1).padStart(2, '0')}`,
+    );
     const { data } = await this.supabaseService
       .getConnection()
       .from('profile_questions')
@@ -48,7 +50,10 @@ export class ProfileQuestionsRepository {
   }
 
   async getPreviousResponses(uuid: string, currentId: number): Promise<any[]> {
-    const variables = Array.from({ length: currentId }, (_, i) => `var${String(i + 1).padStart(2, '0')}`);
+    const variables = Array.from(
+      { length: currentId },
+      (_, i) => `var${String(i + 1).padStart(2, '0')}`,
+    );
     const { data } = await this.supabaseService
       .getConnection()
       .from('profile_responses_with_descriptions')
@@ -67,9 +72,13 @@ export class ProfileQuestionsRepository {
     return data;
   }
 
-  async saveProfileResponse(response: ResponsesEntity): Promise<ResponsesEntity> {
-    const { data } = await this.supabaseService.query('profile_responses', response);
+  async saveProfileResponse(
+    response: ResponsesEntity,
+  ): Promise<ResponsesEntity> {
+    const { data } = await this.supabaseService.query(
+      'profile_responses',
+      response,
+    );
     return data;
   }
-
 }

@@ -25,13 +25,8 @@ let ProfileController = class ProfileController {
         return this.profileService.retrieveProfile(id);
     }
     async createProfile(profile) {
-        console.log("oasidjfoasidfj");
         const id = await this.profileService.createProfile(profile);
-        console.log("xxxxxxxxxxxxx");
         return { id };
-    }
-    async updateProfile(profile) {
-        await this.profileService.updateProfileData(profile);
     }
 };
 exports.ProfileController = ProfileController;
@@ -51,14 +46,6 @@ __decorate([
     __metadata("design:paramtypes", [entities_1.ProfileEntity]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "createProfile", null);
-__decorate([
-    (0, common_1.Post)(),
-    (0, common_1.UseGuards)(rateLimit_1.RateLimitGuard),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [entities_1.ProfileEntity]),
-    __metadata("design:returntype", Promise)
-], ProfileController.prototype, "updateProfile", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)('profile'),
     __metadata("design:paramtypes", [service_1.ProfileService])

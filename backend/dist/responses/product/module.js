@@ -19,11 +19,8 @@ exports.ProductResponsesModule = ProductResponsesModule = __decorate([
     (0, common_1.Module)({
         imports: [module_1.SupabaseModule],
         controllers: [controller_1.ProductResponsesController],
-        providers: [
-            service_1.Service,
-            product_1.Repository
-        ],
-        exports: [service_1.Service]
+        providers: [service_1.Service, product_1.Repository],
+        exports: [service_1.Service],
     })
 ], ProductResponsesModule);
 //# sourceMappingURL=module.js.map

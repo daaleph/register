@@ -37,7 +37,7 @@ exports.AppModule = AppModule = __decorate([
             module_3.ResponsesModule,
             module_4.AbacusModule,
             module_5.SupabaseModule,
-            shared_module_1.SharedModule
+            shared_module_1.SharedModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [

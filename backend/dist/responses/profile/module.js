@@ -19,11 +19,8 @@ exports.ProfileResponsesModule = ProfileResponsesModule = __decorate([
     (0, common_1.Module)({
         imports: [module_1.SupabaseModule],
         controllers: [controller_1.ProfileResponsesController],
-        providers: [
-            service_1.Service,
-            profile_1.Repository
-        ],
-        exports: [service_1.Service]
+        providers: [service_1.Service, profile_1.Repository],
+        exports: [service_1.Service],
     })
 ], ProfileResponsesModule);
 //# sourceMappingURL=module.js.map

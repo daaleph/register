@@ -23,7 +23,7 @@ import { CsrfMiddleware } from './middleware/csrf.middleware';
     ResponsesModule,
     AbacusModule,
     SupabaseModule,
-    SharedModule
+    SharedModule,
   ],
   controllers: [AppController],
   providers: [

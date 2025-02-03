@@ -18,14 +18,12 @@ let Repository = class Repository {
     }
     async saveResponse(response) {
         const connection = this.supabaseService.getConnection();
-        const { data, error } = await connection
-            .from('profile_responses')
-            .insert([
+        const { data, error } = await connection.from('profile_responses').insert([
             {
                 profile: response.profile,
                 variable: response.variable,
-                answer_options: response.answer_options
-            }
+                answer_options: response.answer_options,
+            },
         ]);
         if (error) {
             throw new Error(`Failed to insert profile response: ${error.message}`);
@@ -34,15 +32,13 @@ let Repository = class Repository {
     }
     async saveOtherResponse(profile, variable, answer) {
         const connection = this.supabaseService.getConnection();
-        const { data, error } = await connection
-            .from('others')
-            .insert([
+        const { data, error } = await connection.from('others').insert([
             {
                 profile,
                 variable,
                 answer,
-                nature: 1
-            }
+                nature: 1,
+            },
         ]);
         if (error) {
             throw new Error(`Failed to insert profile response: ${error.message}`);

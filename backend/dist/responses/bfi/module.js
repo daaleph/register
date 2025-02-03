@@ -19,11 +19,8 @@ exports.BfiResponsesModule = BfiResponsesModule = __decorate([
     (0, common_1.Module)({
         imports: [module_1.SupabaseModule],
         controllers: [controller_1.BfiResponsesController],
-        providers: [
-            service_1.Service,
-            bfi_1.Repository
-        ],
-        exports: [service_1.Service]
+        providers: [service_1.Service, bfi_1.Repository],
+        exports: [service_1.Service],
     })
 ], BfiResponsesModule);
 //# sourceMappingURL=module.js.map

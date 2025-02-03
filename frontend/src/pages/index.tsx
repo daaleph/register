@@ -29,14 +29,10 @@ const InitialRegistration: React.FC = () => {
 
   useEffect(() => {
     async function getInitialToken() {
-      setInitialToken(await authService.intialToken());
+      setInitialToken(await authService.initialToken());
     }
-    getInitialToken();
-  }, [])
-
-  useEffect(() => {
-    if (initialToken) storeCsrfTokenAsCookie(initialToken);
-  }, [initialToken])
+    if (!initialToken) getInitialToken();
+  }, [initialToken]);
 
   const validateForm = (): boolean => {
     if (!formData.complete_name.trim()) {
@@ -211,10 +207,10 @@ export default InitialRegistration;
 
 
 const storeCsrfTokenAsCookie = (csrfToken: string) => {
-  const cookieName = 'csrfToken';
+  const cookieName = 'csrf-token';
   const maxAge = 60 * 60 * 24;
   const secure = process.env.NODE_ENV === 'production';
-  const sameSite = 'Strict';
+  const sameSite = 'strict';
   document.cookie = `${cookieName}=${csrfToken}; Max-Age=${maxAge}; Path=/; ${
     secure ? 'Secure;' : ''
   } SameSite=${sameSite}`;

@@ -21,8 +21,9 @@ export class ProductService {
   async getInitialQuestionWithOptions(
     uuid: string
   ): Promise<QuestionWithOptions> {
+    const profileId = uuid;
     return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/initial`, {
-      headers: {'profileId:': uuid}
+      profileId
     });
   }
 
@@ -30,8 +31,9 @@ export class ProductService {
     uuid: string,
     questionId: number
   ): Promise<QuestionWithOptions> {
+    const profileId = uuid;
     return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/questionId/${questionId}`, {
-      headers: {'profileId:': uuid}
+      profileId
     });
   }
 
@@ -40,7 +42,7 @@ export class ProductService {
     variable: string,
     answer: number[]
   ): Promise<void> {
-    return HttpUtility.post(`${this.baseUrl}responses/product`, {
+    return HttpUtility.post(`${this.baseUrl}responses/product/`, {
       profileId,
       variable,
       answer
@@ -52,7 +54,7 @@ export class ProductService {
     variable: string,
     answer: string
   ): Promise<void> {
-    return HttpUtility.post(`${this.baseUrl}responses/product/other`, {
+    return HttpUtility.post(`${this.baseUrl}responses/product/other/`, {
       profileId,
       variable,
       answer

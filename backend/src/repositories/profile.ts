@@ -8,12 +8,15 @@ export class ProfileRepository {
   constructor(private readonly supabaseService: SupabaseService) {}
 
   async createProfile(profile: ProfileEntity): Promise<string> {
-    const { data, error } = await this.supabaseService.getConnection()
+    const { data, error } = await this.supabaseService
+      .getConnection()
       .from('profile')
-      .insert([{
-        ...profile,
-        id: crypto.randomUUID()
-      }])
+      .insert([
+        {
+          ...profile,
+          id: crypto.randomUUID(),
+        },
+      ])
       .select('id')
       .single();
     if (error) throw error;
@@ -21,7 +24,8 @@ export class ProfileRepository {
   }
 
   async findProfileById(id: string): Promise<ProfileEntity> {
-    const { data, error } = await this.supabaseService.getConnection()
+    const { data, error } = await this.supabaseService
+      .getConnection()
       .from('profile')
       .select('*')
       .eq('id', id)
@@ -34,5 +38,4 @@ export class ProfileRepository {
   async saveProfile(profile: ProfileEntity): Promise<void> {
     await this.supabaseService.query('profile', profile);
   }
-
 }

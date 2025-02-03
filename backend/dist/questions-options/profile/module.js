@@ -18,16 +18,10 @@ let ProfileQuestionsModule = class ProfileQuestionsModule {
 exports.ProfileQuestionsModule = ProfileQuestionsModule;
 exports.ProfileQuestionsModule = ProfileQuestionsModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            module_2.SupabaseModule,
-            module_1.AbacusModule,
-        ],
+        imports: [module_2.SupabaseModule, module_1.AbacusModule],
         controllers: [controller_1.ProfileQuestionsController],
-        providers: [
-            service_1.ProfileQuestionsService,
-            profile_1.ProfileQuestionsRepository
-        ],
-        exports: [service_1.ProfileQuestionsService]
+        providers: [service_1.ProfileQuestionsService, profile_1.ProfileQuestionsRepository],
+        exports: [service_1.ProfileQuestionsService],
     })
 ], ProfileQuestionsModule);
 //# sourceMappingURL=module.js.map

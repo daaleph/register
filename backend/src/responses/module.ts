@@ -4,17 +4,8 @@ import { ProfileResponsesModule } from './profile/module';
 import { BfiResponsesModule } from './bfi/module';
 import { ProductResponsesModule } from './product/module';
 
-
 @Module({
-  imports: [ 
-    ProfileResponsesModule,
-    BfiResponsesModule,
-    ProductResponsesModule
-  ],
-  exports: [ 
-    ProfileResponsesModule,
-    BfiResponsesModule,
-    ProductResponsesModule
-  ]
+  imports: [ProfileResponsesModule, BfiResponsesModule, ProductResponsesModule],
+  exports: [ProfileResponsesModule, BfiResponsesModule, ProductResponsesModule],
 })
 export class ResponsesModule {}

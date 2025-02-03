@@ -18,7 +18,7 @@ exports.AbacusModule = AbacusModule = __decorate([
     (0, common_1.Module)({
         imports: [axios_1.HttpModule],
         providers: [personalization_service_1.AbacusPersonalizationService, context_service_1.AbacusContextService],
-        exports: [personalization_service_1.AbacusPersonalizationService]
+        exports: [personalization_service_1.AbacusPersonalizationService],
     })
 ], AbacusModule);
 //# sourceMappingURL=module.js.map

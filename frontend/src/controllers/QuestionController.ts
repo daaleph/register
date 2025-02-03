@@ -37,10 +37,6 @@ export class QuestionController {
     setState(newState: Partial<QuestionState>) {
         this.state = { ...this.state, ...newState };
     }
-
-    // async getInitialQuestionWithOptions(
-    //     id: string
-    // ): Promise<QuestionWithOptions> {
   
     async initializeQuestions(
         profileId: string,
@@ -63,11 +59,6 @@ export class QuestionController {
         }
     }
 
-    // async getQuestionWithAnswers(
-    // uuid: string,
-    // questionId: number
-    // ): Promise<QuestionWithOptions> {
-
     async nextQuestionWithOptions(
         profileId: string,
         state: QuestionState,
@@ -84,7 +75,6 @@ export class QuestionController {
                 profileId,
                 nextQuestionId
             );
-            console.log("aaaaaaaaaaaaaaaa:", question, options);
             if (!question || !options) throw new Error('Failed to load next question or options');
             this.setState({
                 currentQuestion: question,
@@ -107,18 +97,6 @@ export class QuestionController {
             otherText
         });
     };
-
-    // async submitAnswer(
-    //     profileId: string,
-    //     variable: string,
-    //     answer: number[]
-    // ): Promise<void> {
-
-    // async submitOtherAnswer(
-    //     profileId: string,
-    //     variable: string,
-    //     answer: string
-    // ): Promise<void> {
   
     async submitAnswer(
         profileId: string,

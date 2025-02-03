@@ -7,4 +7,4 @@ export class ProductQuestionEntity {
   description_es: string;
   description_en: string;
   type: string;
-} 
+}

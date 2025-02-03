@@ -8,6 +8,6 @@ import { AbacusContextService } from './context.service';
 @Module({
   imports: [HttpModule],
   providers: [AbacusPersonalizationService, AbacusContextService],
-  exports: [AbacusPersonalizationService]
+  exports: [AbacusPersonalizationService],
 })
 export class AbacusModule {}

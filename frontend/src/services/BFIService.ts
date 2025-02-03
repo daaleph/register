@@ -21,8 +21,9 @@ export class BfiService {
     async getInitialQuestionWithOptions(
         uuid: string
     ): Promise<QuestionWithOptions> {
+        const profileId = uuid;
         return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/bfi/initial`, {
-            headers: {'profileId:': uuid}
+            profileId
         });
     }
 
@@ -30,8 +31,9 @@ export class BfiService {
         uuid: string,
         questionId: number
     ): Promise<QuestionWithOptions> {
+        const profileId = uuid;
         return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/bfi/questionId/${questionId}`, {
-            headers: {'profileId:': uuid}
+            profileId
         });
     }
 
@@ -40,10 +42,11 @@ export class BfiService {
         variable: string,
         answer: number[]
     ): Promise<void> {
-        return HttpUtility.post(`${this.baseUrl}responses/bfi`, {
+        return await HttpUtility.post(`${this.baseUrl}responses/bfi`, {
             profileId,
             variable,
             answer
         });
     }
+
 }

@@ -2,13 +2,13 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+"scripts": {
+    "dev": "dotenv -e .env.local next dev",
+    "build": "dotenv -e .env.production next build",
+    "start": "dotenv -e .env.production next start",
     "lint": "next lint",
-    "build:worker": "opennextjs-cloudflare",
-    "dev:worker": "wrangler dev --port 8771",
+    "build:worker": "dotenv -e .env.production opennextjs-cloudflare",
+    "dev:worker": "dotenv -e .env.local wrangler dev --port 8771",
     "preview:worker": "npm run build:worker && npm run dev:worker",
     "deploy:worker": "npm run build:worker && wrangler deploy"
   },
@@ -25,6 +25,7 @@
     "@types/node": "^20",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.5",
     "typescript": "^5"

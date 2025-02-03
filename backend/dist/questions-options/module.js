@@ -21,9 +21,9 @@ exports.QuestionsModule = QuestionsModule = __decorate([
             module_1.ProfileQuestionsModule,
             module_2.BfiQuestionsModule,
             module_3.ProductQuestionsModule,
-            module_4.AbacusModule
+            module_4.AbacusModule,
         ],
-        exports: [module_1.ProfileQuestionsModule, module_2.BfiQuestionsModule, module_3.ProductQuestionsModule]
+        exports: [module_1.ProfileQuestionsModule, module_2.BfiQuestionsModule, module_3.ProductQuestionsModule],
     })
 ], QuestionsModule);
 //# sourceMappingURL=module.js.map

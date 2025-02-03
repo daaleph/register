@@ -42,7 +42,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)('questionId/:questionId'),
     (0, common_1.UseGuards)(rateLimit_1.RateLimitGuard),
-    __param(0, (0, common_1.Headers)('profileId')),
+    __param(0, (0, common_1.Body)('profileId')),
     __param(1, (0, common_1.Param)('questionId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Number]),

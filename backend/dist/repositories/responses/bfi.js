@@ -18,19 +18,17 @@ let Repository = class Repository {
     }
     async saveResponse(response) {
         const connection = this.supabaseService.getConnection();
-        const { data, error } = response.variable === 'var01' ?
-            await connection
-                .from('bfi_responses')
-                .insert([
+        const { data, error } = response.variable === 'var01'
+            ? await connection.from('bfi_responses').insert([
                 {
                     profile: response.profile,
-                    [response.variable]: response.answer_options[0]
-                }
-            ]) :
-            await connection
+                    [response.variable]: response.answer_options[0],
+                },
+            ])
+            : await connection
                 .from('bfi_responses')
                 .update({
-                [response.variable]: response.answer_options[0]
+                [response.variable]: response.answer_options[0],
             })
                 .eq('profile', response.profile);
         if (error) {
