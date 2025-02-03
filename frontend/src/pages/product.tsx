@@ -147,7 +147,7 @@ const ProfilePage: React.FC = () => {
 
     return (
         <>
-            <Head><title>Tecnología</title></Head>
+            <Head><title>Tecnología - AS</title></Head>
             <div className={styles.content}>
                 <QuestionForm
                     hook={hook}

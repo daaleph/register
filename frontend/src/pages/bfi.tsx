@@ -144,7 +144,7 @@ const BfiPage: React.FC = () => {
 
   return (
     <>
-      <Head><title>Psicología</title></Head>
+      <Head><title>Psicología - AS</title></Head>
       <div className={styles.content}>
         <QuestionForm
           hook={hook}

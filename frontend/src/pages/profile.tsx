@@ -145,7 +145,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <>
-      <Head><title>Perfil</title></Head>
+      <Head><title>Perfil - AS</title></Head>
       <div className={styles.content}>
         <QuestionForm
           hook={hook}

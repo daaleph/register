@@ -90,7 +90,7 @@ const InitialRegistration: React.FC = () => {
   return (
     <>  
       <Head>
-        <title>Aleph</title>
+        <title>Aleph Space</title>
         <meta name="title" content="Aleph - increasing universal wisdom" />
         <meta name="description" content="Discover Aleph, the site where eternity tends to converge." />
         <meta property="og:type" content="website" />
