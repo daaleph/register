@@ -1,6 +1,5 @@
 // frontend/src/services/axios.config.ts
 import axios from 'axios';
-import { useEffect } from 'react';
 
 const axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_NEST_URL,

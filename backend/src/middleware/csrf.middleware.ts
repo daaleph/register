@@ -18,8 +18,6 @@ export class CsrfMiddleware implements NestMiddleware {
     if (req.method === 'GET' || req.method === 'HEAD') return next();
     if (req.path === '/auth/csrf-token') return next();
     try {
-      console.log("HEADERS:", req.headers);
-      console.log("COOKIES:", req.cookies);
       const xCsrfToken = req.headers['x-csrf-token'] as string;
       const csrfToken = req.cookies['csrf-token'];
       if (!xCsrfToken || !csrfToken) {
