@@ -1,6 +1,6 @@
 // frontend/src/services/AuthService.ts
-import axios from 'axios';
 import { HttpUtility } from './HttpUtility';
+import axiosInstance, { setCsrfToken } from './axios.config';
 
 export default class AuthService {
     private baseUrl: string;
@@ -18,11 +18,10 @@ export default class AuthService {
     }
 
     async initialToken(): Promise<string> {
-        const response = await axios.get(`${this.baseUrl}auth/csrf-token`, {
-            withCredentials: true
-        });
-        const accessToken = response.data as {csrfToken: string}
-        return accessToken.csrfToken;
+        const response = await axiosInstance.get(`${this.baseUrl}auth/csrf-token`);
+        const { csrfToken } = response.data as { csrfToken: string, expiresIn: number};
+        setCsrfToken(csrfToken);
+        return csrfToken;
     }
 
     async login<T>(

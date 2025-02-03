@@ -15,7 +15,6 @@ const InitialRegistration: React.FC = () => {
   const { setUserProfile } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [initialToken, setInitialToken] = useState<string | null>('');
   const [formData, setFormData] = useState<UserProfile>({
     id: '',
     complete_name: '',
@@ -29,10 +28,14 @@ const InitialRegistration: React.FC = () => {
 
   useEffect(() => {
     async function getInitialToken() {
-      setInitialToken(await authService.initialToken());
+        try {
+            await authService.initialToken(); // This will set up the token for all future requests
+        } catch (error) {
+            console.error('Failed to get CSRF token:', error);
+        }
     }
-    if (!initialToken) getInitialToken();
-  }, [initialToken]);
+    getInitialToken();
+}, []);
 
   const validateForm = (): boolean => {
     if (!formData.complete_name.trim()) {
@@ -204,14 +207,3 @@ const InitialRegistration: React.FC = () => {
 };
 
 export default InitialRegistration;
-
-
-const storeCsrfTokenAsCookie = (csrfToken: string) => {
-  const cookieName = 'csrf-token';
-  const maxAge = 60 * 60 * 24;
-  const secure = process.env.NODE_ENV === 'production';
-  const sameSite = 'strict';
-  document.cookie = `${cookieName}=${csrfToken}; Max-Age=${maxAge}; Path=/; ${
-    secure ? 'Secure;' : ''
-  } SameSite=${sameSite}`;
-};
