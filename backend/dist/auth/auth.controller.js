@@ -23,7 +23,11 @@ let AuthController = class AuthController {
     }
     getCsrfToken(res) {
         const csrfToken = (0, crypto_1.randomBytes)(32).toString('hex');
-        res.cookie('csrf-token', csrfToken, { httpOnly: true, secure: true, sameSite: 'strict' });
+        res.cookie('csrf-token', csrfToken, {
+            secure: true,
+            httpOnly: true,
+            sameSite: 'strict',
+        });
         return res.send({ csrfToken });
     }
     async login(email, password) {
@@ -65,6 +69,7 @@ __decorate([
 ], AuthController.prototype, "getCsrfToken", null);
 __decorate([
     (0, common_1.Post)('login'),
+    (0, common_1.UseGuards)(rateLimit_1.RateLimitGuard),
     __param(0, (0, common_1.Body)('email')),
     __param(1, (0, common_1.Body)('password')),
     __metadata("design:type", Function),

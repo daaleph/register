@@ -4,6 +4,7 @@ import AuthService from '@/services/AuthService';
 import { useUser } from '@/context/UserContext';
 import styles from '../styles/index.module.css';
 import Head from 'next/head';
+import { TokenResponse } from '@/types/services';
 
 const FinalizePage: React.FC = () => {
   const { setAuthToken, userProfile } = useUser();
@@ -49,7 +50,7 @@ const FinalizePage: React.FC = () => {
     try {
       if (!userProfile?.id) throw new Error('Profile ID not found');
       if (!password) throw new Error('Password is required');
-      const { accessToken } = await authService.finalizeRegistrationWithPassword(userProfile.email, password);
+      const  { accessToken } = await authService.finalizeRegistrationWithPassword<TokenResponse>(userProfile.email, password);
       setAuthToken(accessToken);
       router.push('/home');
     } catch (err: unknown) {

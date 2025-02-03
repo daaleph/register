@@ -9,15 +9,17 @@ import { ProfileQuestionsRepository } from './profile';
 
 @Injectable()
 export class BfiQuestionsRepository {
-
   constructor(
     private readonly supabaseService: SupabaseService = new SupabaseService(),
-    private readonly profileRepository: ProfileQuestionsRepository = new ProfileQuestionsRepository()
+    private readonly profileRepository: ProfileQuestionsRepository = new ProfileQuestionsRepository(),
   ) {}
 
   async getPreviousQuestions(currentId: number): Promise<any> {
     const profileQuestions = await this.profileRepository.getAllQuestions();
-    const variables = Array.from({ length: currentId }, (_, i) => `var${String(i + 1).padStart(2, '0')}`);
+    const variables = Array.from(
+      { length: currentId },
+      (_, i) => `var${String(i + 1).padStart(2, '0')}`,
+    );
     const { data } = await this.supabaseService
       .getConnection()
       .from('bfi_questions')
@@ -35,7 +37,10 @@ export class BfiQuestionsRepository {
   }
 
   async getPreviousResponses(uuid: string, currentId: number): Promise<any> {
-    const variables = Array.from({ length: currentId }, (_, i) => `var${String(i + 1).padStart(2, '0')}`);
+    const variables = Array.from(
+      { length: currentId },
+      (_, i) => `var${String(i + 1).padStart(2, '0')}`,
+    );
     const profileResponses = await this.profileRepository.getAllResponses(uuid);
     const { data } = await this.supabaseService
       .getConnection()
@@ -73,8 +78,10 @@ export class BfiQuestionsRepository {
   }
 
   async saveResponse(response: ResponsesEntity): Promise<ResponsesEntity> {
-    const { data } = await this.supabaseService.query('bfi_responses', response);
+    const { data } = await this.supabaseService.query(
+      'bfi_responses',
+      response,
+    );
     return data;
   }
-
 }

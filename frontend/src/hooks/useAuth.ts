@@ -1,6 +1,7 @@
 // frontend/src/hooks/useAuth.ts
 import { useUser } from '@/context/UserContext';
 import AuthService from '@/services/AuthService';
+import { TokenResponse } from '@/types/services';
 
 export const useAuth = () => {
 
@@ -8,7 +9,7 @@ export const useAuth = () => {
   const { setAuthToken, authToken } = useUser();
 
   const login = async (email: string, password: string) => {
-    const { accessToken } = await auth.login(email, password);
+    const { accessToken } = await auth.login<TokenResponse>(email, password);
     setAuthToken(accessToken);
   };
 

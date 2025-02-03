@@ -7,15 +7,9 @@ import { AbacusModule } from '../../abacus/module';
 import { SupabaseModule } from 'src/supabase/module';
 
 @Module({
-  imports: [
-    SupabaseModule,
-    AbacusModule,
-  ],
+  imports: [SupabaseModule, AbacusModule],
   controllers: [ProfileQuestionsController],
-  providers: [
-    ProfileQuestionsService,
-    ProfileQuestionsRepository
-  ],
-  exports: [ProfileQuestionsService]
+  providers: [ProfileQuestionsService, ProfileQuestionsRepository],
+  exports: [ProfileQuestionsService],
 })
 export class ProfileQuestionsModule {}

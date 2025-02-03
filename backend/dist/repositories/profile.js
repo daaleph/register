@@ -17,12 +17,15 @@ let ProfileRepository = class ProfileRepository {
         this.supabaseService = supabaseService;
     }
     async createProfile(profile) {
-        const { data, error } = await this.supabaseService.getConnection()
+        const { data, error } = await this.supabaseService
+            .getConnection()
             .from('profile')
-            .insert([{
+            .insert([
+            {
                 ...profile,
-                id: crypto.randomUUID()
-            }])
+                id: crypto.randomUUID(),
+            },
+        ])
             .select('id')
             .single();
         if (error)
@@ -30,7 +33,8 @@ let ProfileRepository = class ProfileRepository {
         return data.id;
     }
     async findProfileById(id) {
-        const { data, error } = await this.supabaseService.getConnection()
+        const { data, error } = await this.supabaseService
+            .getConnection()
             .from('profile')
             .select('*')
             .eq('id', id)

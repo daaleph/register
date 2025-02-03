@@ -1,5 +1,4 @@
 // backend/src/app.module.ts
-import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
@@ -13,6 +12,12 @@ import { SupabaseModule } from './supabase/module';
 import { SharedModule } from './shared/shared.module';
 import { RateLimitGuard } from './guards/rateLimit';
 import { CsrfMiddleware } from './middleware/csrf.middleware';
+import {
+  Module,
+  NestModule,
+  MiddlewareConsumer,
+  RequestMethod,
+} from '@nestjs/common';
 
 @Module({
   imports: [
@@ -23,7 +28,8 @@ import { CsrfMiddleware } from './middleware/csrf.middleware';
     ResponsesModule,
     AbacusModule,
     SupabaseModule,
-    SharedModule
+    SharedModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
@@ -34,8 +40,14 @@ import { CsrfMiddleware } from './middleware/csrf.middleware';
     },
   ],
 })
-export class AppModule {
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CsrfMiddleware).forRoutes('*');
+    consumer
+      .apply(CsrfMiddleware)
+      .exclude(
+        { path: 'auth/csrf-token', method: RequestMethod.GET },
+        { path: 'health', method: RequestMethod.GET },
+      )
+      .forRoutes('*');
   }
 }

@@ -22,7 +22,6 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
     }
     async personalizesProfileQuestion(question, previousQuestions, previousResponses) {
         const context = this.contextService.buildContext({ profile: previousQuestions }, { profile: previousResponses }, 'profile');
-        inspector_1.console.log("CONTEXT:", context);
         return this.personalizeQuestion(question, context);
     }
     async personalizesProfileOptions(options, previousQuestions, previousResponses) {
@@ -56,16 +55,20 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
         return JSON.parse(response.result.messages[1].text).options;
     }
     createQuestionPayload(question, context) {
-        return createPayload([{
+        return createPayload([
+            {
                 is_user: true,
-                text: `context:${JSON.stringify(context)},question:${JSON.stringify(question)}`
-            }]);
+                text: `context:${JSON.stringify(context)},question:${JSON.stringify(question)}`,
+            },
+        ]);
     }
     createOptionsPayload(options, context) {
-        return createPayload([{
+        return createPayload([
+            {
                 is_user: true,
-                text: `context:${JSON.stringify(context)},options:${JSON.stringify(options)}`
-            }]);
+                text: `context:${JSON.stringify(context)},options:${JSON.stringify(options)}`,
+            },
+        ]);
     }
     async makeAbacusRequest(token, projectId, payload) {
         try {
@@ -77,13 +80,13 @@ let AbacusPersonalizationService = class AbacusPersonalizationService {
         }
     }
     handleError(error, payload) {
-        inspector_1.console.error("Error occurred while making Abacus request:", {
+        inspector_1.console.error('Error occurred while making Abacus request:', {
             message: error.message,
             status: error.response?.status,
             statusText: error.response?.statusText,
             data: error.response?.data,
             config: error.config,
-            payload
+            payload,
         });
         throw error;
     }
@@ -103,7 +106,7 @@ const createPayload = (messages) => {
         temperature: 0.0,
         filterKeyValues: null,
         searchScoreCutoff: null,
-        chatConfig: null
+        chatConfig: null,
     };
 };
 //# sourceMappingURL=personalization.service.js.map

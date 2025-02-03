@@ -28,5 +28,4 @@ if (!process.env.JWT_SECRET) {
   controllers: [AuthController],
   exports: [AuthService, JwtModule],
 })
-
-export class AuthModule {};
+export class AuthModule {}

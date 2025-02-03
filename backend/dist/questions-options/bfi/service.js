@@ -43,7 +43,13 @@ let BfiQuestionsService = class BfiQuestionsService {
         const question = await this.getQuestionById(id);
         const previousQuestions = await this.repository.getPreviousQuestions(id);
         const previousResponses = await this.repository.getPreviousResponses(uuid, id);
-        const personalizedQuestion = await this.personalizationService.personalizesBfiQuestion(question, { profile: previousQuestions.profileQuestions, bfi: previousQuestions.bfiQuestions }, { profile: previousResponses.profileResponses, bfi: previousResponses.bfiResponses });
+        const personalizedQuestion = await this.personalizationService.personalizesBfiQuestion(question, {
+            profile: previousQuestions.profileQuestions,
+            bfi: previousQuestions.bfiQuestions,
+        }, {
+            profile: previousResponses.profileResponses,
+            bfi: previousResponses.bfiResponses,
+        });
         question.description_en = personalizedQuestion.description_en;
         question.description_es = personalizedQuestion.description_es;
         return question;
@@ -52,7 +58,13 @@ let BfiQuestionsService = class BfiQuestionsService {
         const options = await this.getOptionsById();
         const previousQuestions = await this.repository.getPreviousQuestions(id);
         const previousResponses = await this.repository.getPreviousResponses(uuid, id);
-        const personalizedOptions = await this.personalizationService.personalizesBfiOptions(options, { profile: previousQuestions.profileQuestions, bfi: previousQuestions.bfiQuestions }, { profile: previousResponses.profileResponses, bfi: previousResponses.bfiResponses });
+        const personalizedOptions = await this.personalizationService.personalizesBfiOptions(options, {
+            profile: previousQuestions.profileQuestions,
+            bfi: previousQuestions.bfiQuestions,
+        }, {
+            profile: previousResponses.profileResponses,
+            bfi: previousResponses.bfiResponses,
+        });
         options.map((currentOption, index) => {
             currentOption.description_en = personalizedOptions[index].description_en;
             currentOption.description_es = personalizedOptions[index].description_es;

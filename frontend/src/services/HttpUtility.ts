@@ -1,120 +1,81 @@
 // frontend/src/services/HttpUtility.ts
+import axiosInstance from './axios.config';
 import { UserProfile } from '@/models/interfaces';
-import axios from 'axios';
+import { AxiosError } from 'node_modules/axios/index.cjs';
 
-interface ErrorResponse {
-    message?: string;
-    status?: number;
-    statusText?: string;
-}
-
-interface RequestConfig {
-    headers?: Record<string, string>;
-    withCredentials?: boolean;
-    timeout?: number;
-    params?: Record<string, unknown>;
-}
-
-interface HttpResponse<T> {
-    data: T;
-    status: number;
-    statusText: string;
-}
 
 export class HttpUtility {
 
-    private static readonly MAX_RETRIES = 3;
-    private static readonly TIMEOUT = 50000;
-    private static readonly RETRY_DELAY = 1000;
-
     static async get<T>(
         url: string,
-        params?: Record<string, unknown>,
-        config: Partial<RequestConfig> = {},
-        retryCount = 0
+        params?: Record<string, unknown>
     ): Promise<T> {
         try {
-            const headers = config.headers || {};
-            const response = await axios.get<T>(url, {
-                params,
-                headers,
-                timeout: this.TIMEOUT,
-                ...config,
-            });
-            return this.handleResponse<T>(response);
+            const response = await axiosInstance.get(url, { params });
+            return response.data as T;
         } catch (error) {
-            return this.handleError<T>(error as Error, () => this.get(url, params, config, retryCount + 1), retryCount);
+            this.handleError(error as AxiosError);
+            throw error;
         }
     }
-
     static async post<T>(
         url: string,
         data: Record<string, unknown> | UserProfile,
-        config: Partial<RequestConfig> = {}
     ): Promise<T> {
-        const csrfToken = this.getCsrfToken();
-        if (!csrfToken) throw new Error('CSRF token is missing. Please refresh the page.');
-    
-        const defaultConfig: RequestConfig = {
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': csrfToken,
-            },
-            withCredentials: true,
-        };
-    
-        const finalConfig = {
-            ...defaultConfig,
-            ...config,
-            headers: {
-                ...defaultConfig.headers,
-                ...config.headers,
-            },
-        };
-    
-        return axios.post<T>(url, data, finalConfig)
-          .then(response => response.data)
-          .catch(error => {
+        try {
+            const response = await axiosInstance.post(url, data);
+            return response.data as T;
+        } catch (error) {
+            this.handleError(error as AxiosError);
             throw error;
-        });
-        
-    }
-
-    private static handleResponse<T>(response: HttpResponse<T>): T {
-        if (response.status >= 200 && response.status < 300) return response.data;
-        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
-    }
-
-    private static getCsrfToken = (): string | null => {
-        const csrfCookie = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('csrfToken='));
-        return csrfCookie ? csrfCookie.split('=')[1] : null;
-    };
-
-    private static async handleError<T>(
-        error: Error & { 
-            response?: ErrorResponse; 
-            code?: string 
-        }, 
-        retryFn: () => Promise<T>, 
-        retryCount: number
-    ): Promise<T> {
-        if (error.response?.status === 401) {
-            window.location.href = '/';
-            throw new Error('Authentication failed');
         }
-        if (retryCount < this.MAX_RETRIES && 
-            (
-                error.code === 'ECONNABORTED' || 
-                error.response && error.response.status && error.response?.status >= 500 || 
-                !error.response)
-            ) {
-                await new Promise(resolve => setTimeout(resolve, this.RETRY_DELAY));
-                return retryFn();
+    }
+
+    private static handleError(error: AxiosError): void {
+        if (error.response) {
+            console.error('Response error:', error.response.data);
+            console.error('Status:', error.response.status);
+            console.error('Headers:', error.response.headers);
+            switch (error.response.status) {
+                case 401:
+                    console.error('Unauthorized access');
+                    break;
+                case 403:
+                    console.error('Forbidden access');
+                    break;
+                case 404:
+                    console.error('Resource not found');
+                    break;
+                case 422:
+                    console.error('Validation failed');
+                    break;
+                case 500:
+                    console.error('Internal server error');
+                    break;
             }
-        const errorMessage = error.response?.message || error.message || 'An error occurred';
-        throw new Error(errorMessage);
+        } else if (error.request) {
+            console.error('Request error:', error.request);
+        } else {
+            console.error('Error:', error.message);
+        }
+    }
+
+    static async withRetry<T>(
+        operation: () => Promise<T>,
+        maxRetries: number = 3,
+        delay: number = 1000
+    ): Promise<T> {
+        let lastError: Error;
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                return await operation();
+            } catch (error) {
+                lastError = error as Error;
+                if (i === maxRetries - 1) break;
+                await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+            }
+        }
+        throw lastError!;
     }
 
 }

@@ -8,20 +8,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CsrfMiddleware = void 0;
 const common_1 = require("@nestjs/common");
-const crypto_1 = require("crypto");
 let CsrfMiddleware = class CsrfMiddleware {
     use(req, res, next) {
-        if (req.method === 'GET') {
-            const csrfToken = (0, crypto_1.randomBytes)(32).toString('hex');
-            res.cookie('csrf-token', csrfToken, { httpOnly: true, secure: true, sameSite: 'strict' });
-            return next();
-        }
-        console.log("HEADERS");
-        console.dir(req.headers, { depth: null });
-        console.log(req.headers['x-csrf-token']);
-        const csrfTokenHeader = req.headers['x-csrf-token'];
-        if (!csrfTokenHeader) {
-            throw new common_1.BadRequestException('Invalid CSRF token');
+        if (req.method !== 'GET') {
+            const csrfTokenHeader = req.headers['x-csrf-token'];
+            const cookieToken = req.cookies['csrf-token'];
+            if (!csrfTokenHeader || !cookieToken || csrfTokenHeader !== cookieToken) {
+                throw new common_1.BadRequestException('Invalid CSRF token');
+            }
         }
         next();
     }

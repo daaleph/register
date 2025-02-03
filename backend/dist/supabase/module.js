@@ -15,7 +15,7 @@ exports.SupabaseModule = SupabaseModule;
 exports.SupabaseModule = SupabaseModule = __decorate([
     (0, common_1.Module)({
         providers: [service_1.SupabaseService],
-        exports: [service_1.SupabaseService]
+        exports: [service_1.SupabaseService],
     })
 ], SupabaseModule);
 //# sourceMappingURL=module.js.map

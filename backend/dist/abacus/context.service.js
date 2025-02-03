@@ -16,7 +16,7 @@ let AbacusContextService = class AbacusContextService {
         this.contextBuilders = new Map([
             ['profile', new ProfileContextBuilder()],
             ['bfi', new BfiContextBuilder()],
-            ['product', new ProductContextBuilder()]
+            ['product', new ProductContextBuilder()],
         ]);
     }
     buildContext(questions, responses, questionType) {
@@ -25,7 +25,7 @@ let AbacusContextService = class AbacusContextService {
         return {
             type: validatedType,
             context,
-            order: this.calculateTotalQuestions(questions)
+            order: this.calculateTotalQuestions(questions),
         };
     }
     buildQuestionContext(questions, responses) {
@@ -35,7 +35,7 @@ let AbacusContextService = class AbacusContextService {
             const profileBuilder = this.contextBuilders.get('profile');
             context = {
                 ...context,
-                ...profileBuilder.buildQuestionContext(questions.profile, responses.profile, varIndexStart)
+                ...profileBuilder.buildQuestionContext(questions.profile, responses.profile, varIndexStart),
             };
             varIndexStart += questions.profile.length;
         }
@@ -43,7 +43,7 @@ let AbacusContextService = class AbacusContextService {
             const bfiBuilder = this.contextBuilders.get('bfi');
             context = {
                 ...context,
-                ...bfiBuilder.buildQuestionContext(questions.bfi, responses.bfi, varIndexStart)
+                ...bfiBuilder.buildQuestionContext(questions.bfi, responses.bfi, varIndexStart),
             };
             varIndexStart += questions.bfi.length;
         }
@@ -51,18 +51,20 @@ let AbacusContextService = class AbacusContextService {
             const productBuilder = this.contextBuilders.get('product');
             context = {
                 ...context,
-                ...productBuilder.buildQuestionContext(questions.product, responses.product, varIndexStart)
+                ...productBuilder.buildQuestionContext(questions.product, responses.product, varIndexStart),
             };
         }
         return context;
     }
     calculateTotalQuestions(questions) {
-        return (questions.profile?.length || 0) +
+        return ((questions.profile?.length || 0) +
             (questions.bfi?.length || 0) +
-            (questions.product?.length || 0);
+            (questions.product?.length || 0));
     }
     validateQuestionType(type) {
-        return ['profile', 'bfi', 'product'].includes(type) ? type : 'unknown';
+        return ['profile', 'bfi', 'product'].includes(type)
+            ? type
+            : 'unknown';
     }
 };
 exports.AbacusContextService = AbacusContextService;
@@ -73,7 +75,7 @@ exports.AbacusContextService = AbacusContextService = __decorate([
 class ProfileContextBuilder {
     buildQuestionContext(questions, responses, varIndexStart) {
         return questions.reduce((acc, question, index) => {
-            const response = responses.find(resp => resp.variable === question.variable);
+            const response = responses.find((resp) => resp.variable === question.variable);
             if (!response)
                 return acc;
             return {
@@ -85,8 +87,8 @@ class ProfileContextBuilder {
                     description_en: question.description_en,
                     description_es: question.description_es,
                     answer_es: response.answer_options_es,
-                    answer_en: response.answer_options_en
-                }
+                    answer_en: response.answer_options_en,
+                },
             };
         }, {});
     }
@@ -94,7 +96,7 @@ class ProfileContextBuilder {
 class BfiContextBuilder {
     buildQuestionContext(questions, responses, varIndexStart) {
         return questions.reduce((acc, question, index) => {
-            const response = responses.find(resp => resp.variable === question.variable);
+            const response = responses.find((resp) => resp.variable === question.variable);
             if (!response)
                 return acc;
             return {
@@ -103,8 +105,8 @@ class BfiContextBuilder {
                     description_en: question.description_en,
                     description_es: question.description_es,
                     answer_es: response.answer_options_es,
-                    answer_en: response.answer_options_en
-                }
+                    answer_en: response.answer_options_en,
+                },
             };
         }, {});
     }
@@ -112,7 +114,7 @@ class BfiContextBuilder {
 class ProductContextBuilder {
     buildQuestionContext(questions, responses, varIndexStart) {
         return questions.reduce((acc, question, index) => {
-            const response = responses.find(resp => resp.variable === question.variable);
+            const response = responses.find((resp) => resp.variable === question.variable);
             if (!response)
                 return acc;
             return {
@@ -124,8 +126,8 @@ class ProductContextBuilder {
                     description_en: question.description_en,
                     description_es: question.description_es,
                     answer_es: response.answer_options_es,
-                    answer_en: response.answer_options_en
-                }
+                    answer_en: response.answer_options_en,
+                },
             };
         }, {});
     }

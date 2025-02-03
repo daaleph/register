@@ -24,9 +24,9 @@ exports.ProductQuestionsModule = ProductQuestionsModule = __decorate([
             service_1.ProductQuestionsService,
             questions_1.ProductQuestionsRepository,
             questions_1.ProfileQuestionsRepository,
-            questions_1.BfiQuestionsRepository
+            questions_1.BfiQuestionsRepository,
         ],
-        exports: [service_1.ProductQuestionsService]
+        exports: [service_1.ProductQuestionsService],
     })
 ], ProductQuestionsModule);
 //# sourceMappingURL=module.js.map

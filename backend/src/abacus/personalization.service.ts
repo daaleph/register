@@ -8,46 +8,48 @@ import {
   BfiQuestionEntity,
   BfiOptionEntity,
   ProductQuestionEntity,
-  ProductOptionEntity
+  ProductOptionEntity,
 } from 'src/entities';
 import { firstValueFrom } from 'rxjs';
 import { AbacusContextEntity } from 'src/entities/abacus-context';
 import { console } from 'inspector';
 import { AbacusContextService } from './context.service';
 
-type QuestionEntity = ProfileQuestionEntity | BfiQuestionEntity | ProductQuestionEntity;
+type QuestionEntity =
+  | ProfileQuestionEntity
+  | BfiQuestionEntity
+  | ProductQuestionEntity;
 type OptionEntity = ProfileOptionEntity | BfiOptionEntity | ProductOptionEntity;
 
 @Injectable()
 export class AbacusPersonalizationService {
   constructor(
     private readonly httpService: HttpService,
-    private readonly contextService: AbacusContextService
+    private readonly contextService: AbacusContextService,
   ) {}
 
   async personalizesProfileQuestion(
     question: ProfileQuestionEntity,
     previousQuestions: ProfileQuestionEntity[],
-    previousResponses: PreviousResponsesEntity[]
+    previousResponses: PreviousResponsesEntity[],
   ): Promise<ProfileQuestionEntity> {
     const context = this.contextService.buildContext(
       { profile: previousQuestions },
       { profile: previousResponses },
-      'profile'
+      'profile',
     );
-    console.log("CONTEXT:", context);
     return this.personalizeQuestion(question, context);
   }
 
   async personalizesProfileOptions(
     options: ProfileOptionEntity[],
     previousQuestions: ProfileQuestionEntity[],
-    previousResponses: PreviousResponsesEntity[]
+    previousResponses: PreviousResponsesEntity[],
   ): Promise<ProfileOptionEntity[]> {
     const context = this.contextService.buildContext(
       { profile: previousQuestions },
       { profile: previousResponses },
-      'profile'
+      'profile',
     );
     return this.personalizeOptions(options, context);
   }
@@ -55,115 +57,142 @@ export class AbacusPersonalizationService {
   async personalizesBfiQuestion(
     question: BfiQuestionEntity,
     questions: {
-      profile: ProfileQuestionEntity[],
-      bfi?: BfiQuestionEntity[]
+      profile: ProfileQuestionEntity[];
+      bfi?: BfiQuestionEntity[];
     },
     responses: {
-      profile: PreviousResponsesEntity[],
-      bfi?: PreviousResponsesEntity[]
-    }
+      profile: PreviousResponsesEntity[];
+      bfi?: PreviousResponsesEntity[];
+    },
   ): Promise<BfiQuestionEntity> {
-    const context = this.contextService.buildContext(questions, responses, 'bfi');
+    const context = this.contextService.buildContext(
+      questions,
+      responses,
+      'bfi',
+    );
     return this.personalizeQuestion(question, context);
   }
 
   async personalizesBfiOptions(
     options: BfiOptionEntity[],
     questions: {
-      profile: ProfileQuestionEntity[],
-      bfi?: BfiQuestionEntity[]
+      profile: ProfileQuestionEntity[];
+      bfi?: BfiQuestionEntity[];
     },
     responses: {
-      profile: PreviousResponsesEntity[],
-      bfi?: PreviousResponsesEntity[]
-    }
+      profile: PreviousResponsesEntity[];
+      bfi?: PreviousResponsesEntity[];
+    },
   ): Promise<BfiOptionEntity[]> {
-    const context = this.contextService.buildContext(questions, responses, 'bfi');
+    const context = this.contextService.buildContext(
+      questions,
+      responses,
+      'bfi',
+    );
     return this.personalizeOptions(options, context);
   }
 
   async personalizesProductQuestion(
     question: ProductQuestionEntity,
     questions: {
-      profile: ProfileQuestionEntity[],
-      bfi: BfiQuestionEntity[],
-      product?: ProductQuestionEntity[]
+      profile: ProfileQuestionEntity[];
+      bfi: BfiQuestionEntity[];
+      product?: ProductQuestionEntity[];
     },
     responses: {
-      profile: PreviousResponsesEntity[],
-      bfi: PreviousResponsesEntity[],
-      product?: PreviousResponsesEntity[]
-    }
+      profile: PreviousResponsesEntity[];
+      bfi: PreviousResponsesEntity[];
+      product?: PreviousResponsesEntity[];
+    },
   ): Promise<ProductQuestionEntity> {
-    const context = this.contextService.buildContext(questions, responses, 'product');
+    const context = this.contextService.buildContext(
+      questions,
+      responses,
+      'product',
+    );
     return this.personalizeQuestion(question, context);
   }
 
   async personalizesProductOptions(
     options: ProductOptionEntity[],
     questions: {
-      profile: ProfileQuestionEntity[],
-      bfi: BfiQuestionEntity[],
-      product?: ProductQuestionEntity[]
+      profile: ProfileQuestionEntity[];
+      bfi: BfiQuestionEntity[];
+      product?: ProductQuestionEntity[];
     },
     responses: {
-      profile: PreviousResponsesEntity[],
-      bfi: PreviousResponsesEntity[],
-      product: PreviousResponsesEntity[]
-    }
+      profile: PreviousResponsesEntity[];
+      bfi: PreviousResponsesEntity[];
+      product: PreviousResponsesEntity[];
+    },
   ): Promise<BfiOptionEntity[]> {
-    const context = this.contextService.buildContext(questions, responses, 'product');
+    const context = this.contextService.buildContext(
+      questions,
+      responses,
+      'product',
+    );
     return this.personalizeOptions(options, context);
   }
 
   private async personalizeQuestion<T extends QuestionEntity>(
     question: T,
-    context: AbacusContextEntity
+    context: AbacusContextEntity,
   ): Promise<T> {
     const payload = this.createQuestionPayload(question, context);
     const response = await this.makeAbacusRequest(
       process.env.CUSTOMIZE_QUESTION_TOKEN,
       process.env.CUSTOMIZE_QUESTION_PROJECT,
-      payload
+      payload,
     );
     return JSON.parse(response.result.messages[1].text);
   }
 
   private async personalizeOptions<T extends OptionEntity>(
     options: T[],
-    context: AbacusContextEntity
+    context: AbacusContextEntity,
   ): Promise<T[]> {
     const payload = this.createOptionsPayload(options, context);
     const response = await this.makeAbacusRequest(
       process.env.CUSTOMIZE_OPTIONS_TOKEN,
       process.env.CUSTOMIZE_OPTIONS_PROJECT,
-      payload
+      payload,
     );
     return JSON.parse(response.result.messages[1].text).options;
   }
 
-  private createQuestionPayload(question: QuestionEntity, context: AbacusContextEntity) {
-    return createPayload([{
-      is_user: true,
-      text: `context:${JSON.stringify(context)},question:${JSON.stringify(question)}`
-    }]);
+  private createQuestionPayload(
+    question: QuestionEntity,
+    context: AbacusContextEntity,
+  ) {
+    return createPayload([
+      {
+        is_user: true,
+        text: `context:${JSON.stringify(context)},question:${JSON.stringify(question)}`,
+      },
+    ]);
   }
 
   private createOptionsPayload(options: any[], context: AbacusContextEntity) {
-    return createPayload([{
-      is_user: true,
-      text: `context:${JSON.stringify(context)},options:${JSON.stringify(options)}`
-    }]);
+    return createPayload([
+      {
+        is_user: true,
+        text: `context:${JSON.stringify(context)},options:${JSON.stringify(options)}`,
+      },
+    ]);
   }
 
-  private async makeAbacusRequest(token: string, projectId: string, payload: any) {
+  private async makeAbacusRequest(
+    token: string,
+    projectId: string,
+    payload: any,
+  ) {
     try {
       const response = await firstValueFrom(
         this.httpService.post(
           `https://pa002.abacus.ai/api/v0/getChatResponse?deploymentToken=${token}&deploymentId=${projectId}`,
           payload,
-          { headers: { 'Content-Type': 'application/json' } }
-        )
+          { headers: { 'Content-Type': 'application/json' } },
+        ),
       );
       return response.data;
     } catch (error) {
@@ -172,19 +201,19 @@ export class AbacusPersonalizationService {
   }
 
   private handleError(error: any, payload: any) {
-    console.error("Error occurred while making Abacus request:", {
+    console.error('Error occurred while making Abacus request:', {
       message: error.message,
       status: error.response?.status,
       statusText: error.response?.statusText,
       data: error.response?.data,
       config: error.config,
-      payload
+      payload,
     });
     throw error;
   }
 }
 
-const createPayload = (messages: {is_user: boolean, text: string}[]) => {
+const createPayload = (messages: { is_user: boolean; text: string }[]) => {
   return {
     messages,
     llmName: null,
@@ -193,6 +222,6 @@ const createPayload = (messages: {is_user: boolean, text: string}[]) => {
     temperature: 0.0,
     filterKeyValues: null,
     searchScoreCutoff: null,
-    chatConfig: null
+    chatConfig: null,
   };
-}
+};

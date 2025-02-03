@@ -11,5 +11,4 @@ import { SupabaseModule } from '../supabase/module';
   providers: [ProfileService, ProfileRepository],
   exports: [ProfileService],
 })
-
 export class ProfileModule {}

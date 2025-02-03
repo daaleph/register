@@ -4,7 +4,6 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class SupabaseService {
-  
   private client: SupabaseClient;
 
   constructor() {
@@ -21,5 +20,4 @@ export class SupabaseService {
   async query(table: string, params?: any): Promise<any> {
     return this.client.from(table).select().match(params);
   }
-
 }

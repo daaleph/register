@@ -8,10 +8,10 @@ import { AbacusModule } from '../abacus/module';
 @Module({
   imports: [
     ProfileQuestionsModule,
-    BfiQuestionsModule, 
+    BfiQuestionsModule,
     ProductQuestionsModule,
-    AbacusModule
+    AbacusModule,
   ],
-  exports: [ProfileQuestionsModule, BfiQuestionsModule, ProductQuestionsModule]
+  exports: [ProfileQuestionsModule, BfiQuestionsModule, ProductQuestionsModule],
 })
 export class QuestionsModule {}

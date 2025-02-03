@@ -21,8 +21,12 @@ exports.BfiQuestionsModule = BfiQuestionsModule = __decorate([
     (0, common_1.Module)({
         imports: [module_1.AbacusModule, module_2.SupabaseModule],
         controllers: [controller_1.BfiQuestionsController],
-        providers: [service_1.BfiQuestionsService, bfi_1.BfiQuestionsRepository, questions_1.ProfileQuestionsRepository],
-        exports: [service_1.BfiQuestionsService]
+        providers: [
+            service_1.BfiQuestionsService,
+            bfi_1.BfiQuestionsRepository,
+            questions_1.ProfileQuestionsRepository,
+        ],
+        exports: [service_1.BfiQuestionsService],
     })
 ], BfiQuestionsModule);
 //# sourceMappingURL=module.js.map

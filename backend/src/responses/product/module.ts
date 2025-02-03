@@ -9,10 +9,7 @@ import { SupabaseModule } from 'src/supabase/module';
 @Module({
   imports: [SupabaseModule],
   controllers: [ProductResponsesController],
-  providers: [
-    Service,
-    Repository
-  ],
-  exports: [Service]
+  providers: [Service, Repository],
+  exports: [Service],
 })
 export class ProductResponsesModule {}

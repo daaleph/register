@@ -16,16 +16,8 @@ let ResponsesModule = class ResponsesModule {
 exports.ResponsesModule = ResponsesModule;
 exports.ResponsesModule = ResponsesModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            module_1.ProfileResponsesModule,
-            module_2.BfiResponsesModule,
-            module_3.ProductResponsesModule
-        ],
-        exports: [
-            module_1.ProfileResponsesModule,
-            module_2.BfiResponsesModule,
-            module_3.ProductResponsesModule
-        ]
+        imports: [module_1.ProfileResponsesModule, module_2.BfiResponsesModule, module_3.ProductResponsesModule],
+        exports: [module_1.ProfileResponsesModule, module_2.BfiResponsesModule, module_3.ProductResponsesModule],
     })
 ], ResponsesModule);
 //# sourceMappingURL=module.js.map

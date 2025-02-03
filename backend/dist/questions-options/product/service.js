@@ -49,7 +49,15 @@ let ProductQuestionsService = class ProductQuestionsService {
         const previousQuestions = await this.repository.getPreviousQuestions(id);
         const previousResponses = await this.repository.getPreviousResponses(uuid, id);
         const question = await this.getQuestionById(id);
-        const personalizedQuestion = await this.personalizationService.personalizesProductQuestion(question, { profile: previousQuestions.profileQuestions, bfi: previousQuestions.bfiQuestions, product: previousQuestions.data }, { profile: previousResponses.profileResponses, bfi: previousResponses.bfiResponses, product: previousQuestions.data });
+        const personalizedQuestion = await this.personalizationService.personalizesProductQuestion(question, {
+            profile: previousQuestions.profileQuestions,
+            bfi: previousQuestions.bfiQuestions,
+            product: previousQuestions.data,
+        }, {
+            profile: previousResponses.profileResponses,
+            bfi: previousResponses.bfiResponses,
+            product: previousQuestions.data,
+        });
         question.description_en = personalizedQuestion.description_en;
         question.description_es = personalizedQuestion.description_es;
         return question;
@@ -58,7 +66,15 @@ let ProductQuestionsService = class ProductQuestionsService {
         const previousQuestions = await this.repository.getPreviousQuestions(id);
         const previousResponses = await this.repository.getPreviousResponses(uuid, id);
         const options = await this.getOptionsById(id);
-        const personalizedOptions = await this.personalizationService.personalizesProductOptions(options, { profile: previousQuestions.profileQuestions, bfi: previousQuestions.bfiQuestions, product: previousQuestions.data }, { profile: previousResponses.profileResponses, bfi: previousResponses.bfiResponses, product: previousQuestions.data });
+        const personalizedOptions = await this.personalizationService.personalizesProductOptions(options, {
+            profile: previousQuestions.profileQuestions,
+            bfi: previousQuestions.bfiQuestions,
+            product: previousQuestions.data,
+        }, {
+            profile: previousResponses.profileResponses,
+            bfi: previousResponses.bfiResponses,
+            product: previousQuestions.data,
+        });
         options.map((currentOption, index) => {
             currentOption.description_en = personalizedOptions[index].description_en;
             currentOption.description_es = personalizedOptions[index].description_es;

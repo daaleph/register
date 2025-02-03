@@ -21,10 +21,7 @@ export class ProfileService {
   async createProfile(
     data: UserProfile
   ): Promise<{ id: string }> {
-    return HttpUtility.post(`${this.baseUrl}profile/create`, data, {
-      headers: {'Content-Type': 'application/json'},
-      withCredentials: true
-    });
+    return HttpUtility.post(`${this.baseUrl}profile/create`, data);
   }
 
   async getInitialQuestionWithOptions(): Promise<QuestionWithOptions> {
@@ -35,8 +32,9 @@ export class ProfileService {
     uuid: string,
     questionId: number
   ): Promise<QuestionWithOptions> {
-    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/questionId/${questionId}`, {
-      headers: {'profileId:': uuid}
+    const profileId = uuid;
+    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/profile/questionId/${questionId}/`, {
+      profileId
     });
   }
 
@@ -45,7 +43,7 @@ export class ProfileService {
     variable: string,
     answer: number[]
   ): Promise<void> {
-    return HttpUtility.post(`${this.baseUrl}responses/profile/`, {
+    return HttpUtility.post(`${this.baseUrl}responses/profile`, {
       profileId,
       variable,
       answer

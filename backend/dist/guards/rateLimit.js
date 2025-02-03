@@ -11,7 +11,7 @@ const common_1 = require("@nestjs/common");
 let RateLimitGuard = class RateLimitGuard {
     constructor() {
         this.requestCounts = new Map();
-        this.limit = 10;
+        this.limit = 100;
         this.timeWindow = 60 * 1000;
     }
     canActivate(context) {
@@ -31,7 +31,10 @@ let RateLimitGuard = class RateLimitGuard {
         if (requestInfo.count >= this.limit) {
             throw new common_1.BadRequestException('Too many requests. Please try again later.');
         }
-        this.requestCounts.set(ip, { count: requestInfo.count + 1, lastRequest: currentTime });
+        this.requestCounts.set(ip, {
+            count: requestInfo.count + 1,
+            lastRequest: currentTime,
+        });
         return true;
     }
 };

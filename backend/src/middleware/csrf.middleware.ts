@@ -1,27 +1,41 @@
 // backend/src/middleware/csrf.middleware.ts
-import { Injectable, NestMiddleware, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NestMiddleware,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { randomBytes } from 'crypto';
+import { CsrfService } from '../auth/csrf.service';
 
 @Injectable()
 export class CsrfMiddleware implements NestMiddleware {
+  private readonly logger = new Logger(CsrfMiddleware.name);
 
-    use(req: Request, res: Response, next: NextFunction) {
+  constructor(private readonly csrfService: CsrfService) {}
 
-        if (req.method === 'GET') {
-            const csrfToken = randomBytes(32).toString('hex');
-            res.cookie('csrf-token', csrfToken, { httpOnly: true, secure: true, sameSite: 'strict' });
-            return next();
-        }
+  use(req: Request, res: Response, next: NextFunction) {
+    if (req.method === 'GET' || req.method === 'HEAD') return next();
+    if (req.path === '/auth/csrf-token') return next();
 
-        const csrfTokenHeader = req.headers['x-csrf-token'];
-
-        if (!csrfTokenHeader) {
-            throw new BadRequestException('Invalid CSRF token');
-        }
-
-        next();
-
+    try {
+      const csrfTokenHeader = req.headers['x-csrf-token'] as string;
+      const cookieToken = req.cookies['csrf-token'];
+      if (!csrfTokenHeader || !cookieToken) {
+        this.logger.warn(
+          `Missing CSRF token - Header: ${!!csrfTokenHeader}, Cookie: ${!!cookieToken}`,
+        );
+        throw new BadRequestException('Missing CSRF token');
+      }
+      if (!this.csrfService.validateToken(csrfTokenHeader, cookieToken)) {
+        this.logger.warn('CSRF token mismatch');
+        throw new BadRequestException('Invalid CSRF token');
+      }
+      next();
+    } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      this.logger.error('CSRF validation error', error);
+      throw new BadRequestException('CSRF validation failed');
     }
-
+  }
 }
