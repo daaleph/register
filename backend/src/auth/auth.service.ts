@@ -9,11 +9,13 @@ import { SupabaseService } from '../supabase/service';
 import { ProfileEntity } from 'src/entities/profile';
 import { randomBytes, scrypt as scryptCallback } from 'crypto';
 import { promisify } from 'util';
+import { AccessToken } from 'src/types/security';
 
 const scrypt = promisify(scryptCallback);
 
 @Injectable()
 export class AuthService {
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly supabaseService: SupabaseService,
@@ -33,7 +35,8 @@ export class AuthService {
   async login(
     email: string,
     password: string,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<AccessToken> {
+
     const profile = await this.profileExists(email);
     const passwordHash = profile.password;
     if (!passwordHash) {
@@ -54,6 +57,7 @@ export class AuthService {
     return {
       accessToken: this.jwtService.sign(payload),
     };
+
   }
 
   async validateToken(token: string): Promise<any> {
@@ -67,7 +71,7 @@ export class AuthService {
   async finalizeRegistration(
     email: string,
     password: string,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<AccessToken> {
     await this.setPassword(email, password);
     return this.login(email, password);
   }

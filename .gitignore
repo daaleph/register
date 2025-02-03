@@ -1,4 +1,6 @@
 /frontend/node_modules/*
+/frontend/src/types/security*
+/backend/src/types/security*
 /backend/node_modules/*
 /backend/.env
 /frontend/.env.local

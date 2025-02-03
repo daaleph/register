@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { SupabaseModule } from '../supabase/module';
 import * as dotenv from 'dotenv';
+import { CsrfModule } from './csrf.module';
 
 // Load environment variables
 dotenv.config();
@@ -23,6 +24,7 @@ if (!process.env.JWT_SECRET) {
       signOptions: { expiresIn: '24h' },
     }),
     SupabaseModule,
+    CsrfModule
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],

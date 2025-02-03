@@ -1,6 +1,7 @@
 // frontend/src/services/AuthService.ts
+import { CsrfToken } from '@/types/security';
 import { HttpUtility } from './HttpUtility';
-import axiosInstance, { setCsrfToken } from './axios.config';
+import { setCsrfToken } from './axios.config';
 
 export default class AuthService {
     private baseUrl: string;
@@ -17,31 +18,35 @@ export default class AuthService {
         return AuthService.instance;
     }
 
-    async initialToken(): Promise<string> {
-        const response = await axiosInstance.get(`${this.baseUrl}auth/csrf-token`);
-        const { csrfToken } = response.data as { csrfToken: string, expiresIn: number};
-        setCsrfToken(csrfToken);
-        return csrfToken;
+    async initialToken(): Promise<void> {
+        const response = await HttpUtility.withRetry(() => 
+            HttpUtility.get<CsrfToken>(`${this.baseUrl}auth/csrf-token`)
+        );
+        setCsrfToken(response.csrfToken)
     }
 
     async login<T>(
         email: string,
         password: string
     ): Promise<T> {
-        return await HttpUtility.post<T>(`${this.baseUrl}auth/login`, {
-            email,
-            password
-        });
+        return await HttpUtility.withRetry(() => 
+            HttpUtility.post<T>(`${this.baseUrl}auth/login`, {
+                email,
+                password
+            })
+        );
     }
 
     async finalizeRegistrationWithPassword<T>(
         email: string,
         password: string
     ): Promise<T> {
-        return await HttpUtility.post<T>(`${this.baseUrl}auth/finalize`, { 
-            email,
-            password
-        });
+        return await HttpUtility.withRetry(() => 
+            HttpUtility.post<T>(`${this.baseUrl}auth/finalize`, { 
+                email,
+                password
+            })
+        );
     }
 
 }

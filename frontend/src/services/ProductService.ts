@@ -1,5 +1,4 @@
 // frontend/src/services/ProductService.ts
-import { QuestionWithOptions } from "@/models/interfaces";
 import { HttpUtility } from "./HttpUtility";
 
 export class ProductService {
@@ -18,23 +17,31 @@ export class ProductService {
     return ProductService.instance;
   }
 
-  async getInitialQuestionWithOptions(
+  async getInitialQuestionWithOptions<T>(
     uuid: string
-  ): Promise<QuestionWithOptions> {
+  ): Promise<T> {
+
     const profileId = uuid;
-    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/initial`, {
-      profileId
-    });
+    return await HttpUtility.withRetry(() => 
+      HttpUtility.get<T>(`${this.baseUrl}questions/product/initial/`, {
+        profileId
+      })
+    );
+
   }
 
-  async getQuestionWithAnswers(
+  async getQuestionWithOptions<T>(
     uuid: string,
     questionId: number
-  ): Promise<QuestionWithOptions> {
+  ): Promise<T> {
+
     const profileId = uuid;
-    return await HttpUtility.get<QuestionWithOptions>(`${this.baseUrl}questions/product/questionId/${questionId}`, {
-      profileId
-    });
+    return await HttpUtility.withRetry(() => 
+      HttpUtility.get<T>(`${this.baseUrl}questions/product/questionId/${questionId}/`, {
+        profileId
+      })
+    );
+
   }
 
   async submitAnswer(
@@ -42,23 +49,28 @@ export class ProductService {
     variable: string,
     answer: number[]
   ): Promise<void> {
-    return HttpUtility.post(`${this.baseUrl}responses/product/`, {
-      profileId,
-      variable,
-      answer
-    });
+    return await HttpUtility.withRetry(() => 
+      HttpUtility.post(`${this.baseUrl}responses/product`, { 
+        profileId, 
+        variable, 
+        answer 
+      })
+    );
   }
+
 
   async submitOtherAnswer(
     profileId: string,
     variable: string,
     answer: string
   ): Promise<void> {
-    return HttpUtility.post(`${this.baseUrl}responses/product/other/`, {
-      profileId,
-      variable,
-      answer
-    });
+    return await HttpUtility.withRetry(() => 
+      HttpUtility.post(`${this.baseUrl}responses/product/other`, {
+        profileId,
+        variable,
+        answer
+      })
+    );
   }
 
 }

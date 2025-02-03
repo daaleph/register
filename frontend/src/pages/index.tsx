@@ -29,9 +29,9 @@ const InitialRegistration: React.FC = () => {
   useEffect(() => {
     async function getInitialToken() {
         try {
-            await authService.initialToken(); // This will set up the token for all future requests
+          await authService.initialToken();
         } catch (error) {
-            console.error('Failed to get CSRF token:', error);
+          console.error('Failed to get CSRF token:', error);
         }
     }
     getInitialToken();
@@ -71,7 +71,7 @@ const InitialRegistration: React.FC = () => {
     try {
       setIsLoading(true);
       const profileService = ProfileService.getInstance();
-      const response = await profileService.createProfile(formData);
+      const response = await profileService.createProfile<{ id: string }>(formData);
       const newProfile = {
         ...formData,
         id: response.id
@@ -90,7 +90,7 @@ const InitialRegistration: React.FC = () => {
   return (
     <>  
       <Head>
-        <title>Aleph</title>
+        <title>Aleph Space</title>
         <meta name="title" content="Aleph - increasing universal wisdom" />
         <meta name="description" content="Discover Aleph, the site where eternity tends to converge." />
         <meta property="og:type" content="website" />
