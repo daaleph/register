@@ -10,7 +10,7 @@ import { Request } from 'express';
 export class RateLimitGuard implements CanActivate {
 
   private readonly requestCounts = new Map<string, { count: number; lastRequest: number }>();
-  private readonly limit = 100;
+  private readonly limit = 1000;
   private readonly timeWindow = 60 * 1000;
 
   canActivate(context: ExecutionContext): boolean {
