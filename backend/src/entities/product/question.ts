@@ -1,4 +1,4 @@
-// src/entities/product/question.ts
+// backend/src/entities/product/question.ts
 export class ProductQuestionEntity {
   id: number;
   variable: string;

@@ -1,4 +1,4 @@
-// src/entities/product/options.ts
+// backend/src/entities/product/options.ts
 export class ProductOptionEntity {
   variable: string;
   option_id: number;

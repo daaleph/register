@@ -12,6 +12,7 @@ export class HttpUtility {
     ): Promise<T> {
         try {
             const response = await axiosInstance.get(url, { params });
+            console.log("RESPONSE:", response);
             return response.data as T;
         } catch (error) {
             this.handleError(error as AxiosError);
@@ -73,7 +74,7 @@ export class HttpUtility {
             } catch (error) {
                 lastError = error as Error;
                 if (i === maxRetries - 1) break;
-                await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+                await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
         throw lastError!;

@@ -4,7 +4,7 @@ import axios from 'axios';
 const axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_NEST_URL,
     withCredentials: true,
-    timeout: 10000,
+    timeout: 100000,
     headers: {
         'Content-Type': 'application/json',
     },

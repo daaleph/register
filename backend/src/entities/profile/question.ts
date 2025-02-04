@@ -1,4 +1,4 @@
-// src/entities/profile/question.ts
+// backend/src/entities/profile/question.ts
 export class ProfileQuestionEntity {
   id: number;
   variable: string;
