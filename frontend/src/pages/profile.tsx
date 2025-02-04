@@ -104,7 +104,9 @@ const ProfilePage: React.FC = () => {
         ...current,
         state: controllerState.controller.getState()
       }));
-      if (progress.get(currentPhase)! > 100 && QUESTIONTYPE !== currentPhase) return;
+
+      if (progress.get(currentPhase)! >= 100 || QUESTIONTYPE !== currentPhase) return;
+
       await controllerState.controller.nextQuestionWithOptions<QuestionWithOptions>(
         userProfile.id,
         controllerState.state,

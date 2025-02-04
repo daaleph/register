@@ -1,4 +1,4 @@
-// src/entities/profile/options.ts
+// backend/src/entities/profile/options.ts
 export class ProfileOptionEntity {
   variable: string;
   option_id: number;

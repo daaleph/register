@@ -46,8 +46,7 @@ export class AppModule implements NestModule {
     consumer
       .apply(CsrfMiddleware)
       .exclude(
-        { path: 'auth/csrf-token', method: RequestMethod.GET },
-        // { path: 'health', method: RequestMethod.GET }, ???????????????
+        { path: 'auth/csrf-token', method: RequestMethod.GET }
       )
       .forRoutes('*');
   }

@@ -4,6 +4,7 @@ import { randomBytes } from 'crypto';
 
 @Injectable()
 export class CsrfService {
+  
   private readonly TOKEN_LENGTH = 32;
   private readonly TOKEN_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 

@@ -23,6 +23,7 @@ type OptionEntity = ProfileOptionEntity | BfiOptionEntity | ProductOptionEntity;
 
 @Injectable()
 export class AbacusPersonalizationService {
+
   constructor(
     private readonly httpService: HttpService,
     private readonly contextService: AbacusContextService,
@@ -211,6 +212,7 @@ export class AbacusPersonalizationService {
     });
     throw error;
   }
+
 }
 
 const createPayload = (messages: { is_user: boolean; text: string }[]) => {
