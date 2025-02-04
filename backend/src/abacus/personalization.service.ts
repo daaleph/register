@@ -195,7 +195,6 @@ export class AbacusPersonalizationService {
           { headers: { 'Content-Type': 'application/json' } },
         ),
       );
-      console.log("ABACUS RESPONSE:", response);
       return response.data;
     } catch (error) {
       this.handleError(error, payload);

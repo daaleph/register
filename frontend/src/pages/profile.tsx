@@ -105,12 +105,6 @@ const ProfilePage: React.FC = () => {
         state: controllerState.controller.getState()
       }));
 
-      console.log("A - PROGRESS:", progress.get(currentPhase));
-      console.log("A - CURRENT PHASE:", currentPhase);
-      console.log("A - COMPARISONS:", progress.get(currentPhase)! >= 100 || QUESTIONTYPE !== currentPhase);
-      console.log("A - QUESTION:", controllerState.state.currentQuestion);
-      console.log("A - OPTIONS:", controllerState.state.currentOptions);
-
       if (progress.get(currentPhase)! >= 100 || QUESTIONTYPE !== currentPhase) return;
 
       await controllerState.controller.nextQuestionWithOptions<QuestionWithOptions>(
@@ -122,11 +116,6 @@ const ProfilePage: React.FC = () => {
         ...current,
         state: controllerState.controller.getState()
       }));
-
-      console.log("B - PROGRESS:", progress.get(currentPhase));
-      console.log("B - CURRENT PHASE:", currentPhase);
-      console.log("B - QUESTION:", controllerState.state.currentQuestion);
-      console.log("B - OPTIONS:", controllerState.state.currentOptions);
       
     } catch (error) {
       console.error('Failed to initialize questions:', error);
