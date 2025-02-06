@@ -1,9 +1,9 @@
 :root {
-  --background: #171717;
+  --background: #000000;
   --foreground: white;
   --primary-color: black;
   --secondary-color: white;
-  --third-color: rgba(255, 255, 255, 0.056);
+  --third-color: rgba(255, 255, 255, 0.45);
   --forth-color: rgb(135, 135, 135);
   --text-primary-color: white;
   --text-secondary-color:black;
@@ -13,7 +13,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #000000;
     --foreground: #ededed;
   }
 }

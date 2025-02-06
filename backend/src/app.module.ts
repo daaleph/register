@@ -41,6 +41,7 @@ import { CsrfModule } from './auth/csrf.module';
     },
   ]
 })
+
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer

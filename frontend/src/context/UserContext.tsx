@@ -49,7 +49,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 
   useEffect(() => {
-    if (progress.get(currentPhase)! >= 100) moveToNextPhase();
+    if (progress.get(currentPhase) === 100) moveToNextPhase();
   }, [progress]);
 
   // Response management

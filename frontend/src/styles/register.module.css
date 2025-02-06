@@ -1,13 +1,14 @@
-/* frontend/src/styles/index.module.css */
+/* frontend/src/styles/register.module.css */
 
 .registrationContainer {
   width: auto;
   min-height: 100vh;
-  max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background: var(--background);
   border: 1px solid var(--border-color);
   box-shadow: 0 0 20px rgba(255, 255, 0, 0.1);
@@ -15,6 +16,7 @@
 }
 
 .welcomeSection {
+  max-width: 600px;
   text-align: center;
   margin-bottom: 3rem;
 }
@@ -22,8 +24,7 @@
 .title {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
+  margin: 10rem 0 10rem;
   line-height: 1.4;
   font-family: 'Montserrat', 'Playfair Display', 'Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', Arial, sans-serif;
   letter-spacing: -0.02em;
@@ -44,6 +45,7 @@
 .privacyNotice {
   margin: 2rem 0;
   padding: 1rem;
+  max-width: 600px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(0, 0, 0, 0.2);
   border-radius: 6px;
@@ -66,10 +68,25 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+.formWrapper {
+  width: 100%;
+  margin: 10%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
 }
 
 .formGroup {
-  margin-bottom: 0rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .formGroup label {
@@ -77,6 +94,38 @@
   font-family: 'Cinzel', serif;
   margin-bottom: 0.5rem;
   display: block;
+  text-align: left;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--secondary-color);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-primary-color);
+  font-family: 'Arial', sans-serif;
+  font-size: 1rem;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.formGroup label {
+  color: var(--text-primary-color);
+  font-family: 'Cinzel', serif;
+  margin-bottom: 0.5rem;
+  display: block;
+  text-align: left;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 0, 0.8);
+  box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
 }
 
 .gothicText {
@@ -100,7 +149,7 @@
 }
 
 .submitButton {
-  width: auto;
+  width: fit-content;
   margin-top: 2rem;
   padding: 1.2rem;
   background: transparent;
@@ -113,7 +162,6 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   border-radius: 6px;
-  align-self: center;
 }
 
 .submitButton:hover:not(:disabled) {
@@ -129,13 +177,15 @@
 
 .formFooter {
   margin-top: 2rem;
-  text-align: center;
+  text-align: left;
+  text-align: left; /* Aligns footer text to the left */
 }
 
 .calmText {
   color: var(--forth-color);
   font-size: 0.9rem;
   font-style: italic;
+  text-align: left; /* Aligns the text to the left */
 }
 
 @keyframes fadeIn {
