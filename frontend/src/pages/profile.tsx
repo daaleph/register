@@ -13,6 +13,7 @@ import Head from 'next/head';
 import { QuestionWithOptions } from '@/models/interfaces';
 
 const ProfilePage: React.FC = () => {
+  
   const QUESTIONTYPE: Phases = 'PROFILE';
   const router = useRouter();
   const [answerSelected, setAnswerSelected] = useState<boolean>(false);

@@ -1,9 +1,10 @@
-/frontend/node_modules/*
-/frontend/src/types/security*
 /backend/src/types/security*
 /backend/node_modules/*
 /backend/dist*
 /backend/.env
+/backend/src/auth/*
+/frontend/node_modules/*
+/frontend/src/types/security*
 /frontend/.env.local
 /frontend/.env.production
 /frontend/.next/
