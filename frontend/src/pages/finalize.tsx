@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import AuthService from '@/services/AuthService';
 import { useUser } from '@/context/UserContext';
-import styles from '../styles/index.module.css';
+import styles from '../styles/landing.module.css';
 import Head from 'next/head';
 import { AccessToken } from '@/types/security';
 
@@ -65,62 +65,103 @@ const FinalizePage: React.FC = () => {
   return (
     <>
       <Head><title>Sellar</title></Head>
-      <div className={styles.registrationContainer}>
-        <div className={styles.welcomeSection}>
-          <h1 className={styles.title}>Casi Listo</h1>
-          <p className={styles.hardText}>Elige tu llave para el <span className={styles.gothicText}>aleph</span></p>
+      <div className={styles.landingContainer}>
+        <div className={styles.heroSection} style={{margin: '4rem 4rem 4rem 4rem'}}>
+          <h1 className={styles.heroQuestion}>Casi Listo</h1>
+          <p className={styles.subHeroQuestion}>
+            Elige tu llave
+          </p>
         </div>
-
-        <form onSubmit={handleFinalize} className={styles.registrationForm}>
-          <div className={styles.formGroup} style={{textAlign: 'center'}}>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={handlePasswordChange}
-              required
-              placeholder="Contraseña"
-            />
-            
-            <div className={styles.passwordRequirements}>
-              <p>Tu contraseña debe tener:</p>
-              <ul>
-                <li className={validationErrors.length ? styles.valid : styles.invalid}>
-                  Mínimo 8 caracteres
-                </li>
-                <li className={validationErrors.number ? styles.valid : styles.invalid}>
-                  Al menos un número
-                </li>
-                <li className={validationErrors.uppercase ? styles.valid : styles.invalid}>
-                  Al menos una mayúscula
-                </li>
-                <li className={validationErrors.lowercase ? styles.valid : styles.invalid}>
-                  Al menos una minúscula
-                </li>
-                <li className={validationErrors.special ? styles.valid : styles.invalid}>
-                  Al menos un carácter especial (!@#&#36;%^&amp;*(),.?&quot;:&#123;&#125;|&lt;&gt;)
-                </li>
-              </ul>
+  
+          <form onSubmit={handleFinalize}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '2rem'
+            }}>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={handlePasswordChange}
+                required
+                placeholder="Contraseña"
+                style={{
+                  width: '100%',
+                  maxWidth: '320px',
+                  padding: '1rem',
+                  background: 'transparent',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '6px',
+                  color: 'var(--text-primary-color)',
+                  fontSize: '1rem',
+                  textAlign: 'center'
+                }}
+              />
+              
+              <div className={styles.solutionFeatures}>
+                <p style={{
+                  color: 'var(--forth-color)',
+                  marginBottom: '1rem',
+                  fontSize: '1.1rem'
+                }}>Tu contraseña debe tener:</p>
+                
+                <div className={styles.feature}>
+                  <span className={validationErrors.length ? '✓' : '×'}>
+                    Mínimo 8 caracteres
+                  </span>
+                </div>
+                <div className={styles.feature}>
+                  <span className={validationErrors.number ? '✓' : '×'}>
+                    Al menos un número
+                  </span>
+                </div>
+                <div className={styles.feature}>
+                  <span className={validationErrors.uppercase ? '✓' : '×'}>
+                    Al menos una mayúscula
+                  </span>
+                </div>
+                <div className={styles.feature}>
+                  <span className={validationErrors.lowercase ? '✓' : '×'}>
+                    Al menos una minúscula
+                  </span>
+                </div>
+                <div className={styles.feature}>
+                  <span className={validationErrors.special ? '✓' : '×'}>
+                    Al menos un carácter especial
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
-
-          {error && <div className={styles.errorDisplay}>{error}</div>}
-
-          <button 
-            type="submit" 
-            disabled={isLoading || !Object.values(validationErrors).every(Boolean)}
-            className={styles.submitButton}
-            style={{width: 'auto'}}
-          >
-            {isLoading ? 'Sellando Tu Futuro...' : 'Terminar'}
-          </button>
-
-          <div className={styles.formFooter}>
-            <p className={styles.calmText}>
-              Escoge una fuerte contraseña que proteja tu santuario
-            </p>
-          </div>
-        </form>
+  
+            {error && (
+              <div style={{
+                color: '#ff4444',
+                textAlign: 'center',
+                margin: '1rem 0',
+                padding: '0.5rem',
+                borderRadius: '4px',
+                fontSize: '0.9rem'
+              }}>
+                {error}
+              </div>
+            )}
+  
+            <div className={styles.ctaSection}>
+              <button 
+                type="submit" 
+                disabled={isLoading || !Object.values(validationErrors).every(Boolean)}
+                className={styles.submitButton}
+              >
+                {isLoading ? 'Sellando Tu Futuro...' : 'Terminar'}
+              </button>
+  
+              <p className={styles.calmText}>
+                Escoge una fuerte contraseña que proteja tu santuario
+              </p>
+            </div>
+          </form>
       </div>
     </>
   );
