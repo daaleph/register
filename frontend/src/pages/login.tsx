@@ -92,13 +92,13 @@ const LoginPage: React.FC = () => {
                             )}
 
                             <button type="submit" className={styles.submitButton}>
-                                Login
+                                Entrar
                             </button>
                         </div>
                     </form>
 
                     <p className={styles.calmText}>
-                        Continue your wisdom journey
+                        Continua tu jornada con propósito
                     </p>
                 </div>
             </div>

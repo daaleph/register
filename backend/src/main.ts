@@ -9,7 +9,9 @@ async function bootstrap() {
     origin: [
       'http://localhost:3001',
       'http://localhost:8771',
-      'https://aleph-space.org'
+      'https://aleph-space.org',
+      'https://aleph-space.org/login',
+      'https://aleph-space.org/register',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
