@@ -130,7 +130,8 @@
 .solutionSection {
   display: grid;
   grid-template-rows: 1fr;
-  margin: 6rem auto 6rem auto;
+  margin: 4rem auto;
+  padding: 2rem;
   width: fit-content;
   max-width: 35rem;
 }
