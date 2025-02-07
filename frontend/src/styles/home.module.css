@@ -183,3 +183,17 @@
         opacity: 0.5;
     }
 }
+
+.fixedImage {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 100px;
+    height: auto;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+  
+.fixedImage:hover {
+    transform: scale(1.1);
+}

@@ -27,6 +27,7 @@
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "^11.0.2",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/schedule": "^5.0.1",
     "@supabase/supabase-js": "^2.47.16",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
