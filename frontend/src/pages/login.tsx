@@ -69,7 +69,7 @@ const LoginPage: React.FC = () => {
             <div className={styles.landingContainer}>
                 <div className={styles.heroSection}>
                     <h1 className={styles.title}>Aleph Space</h1>
-                    <p className={styles.calmText}>Increasing universal wisdom</p>
+                    <p className={styles.subTitle}>Increasing universal wisdom</p>
                     
                     <form className={styles.solutionSection} style={{maxWidth: '15rem'}} onSubmit={handleSubmit}>
                         <div className={styles.solutionFeatures}>

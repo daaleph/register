@@ -13,7 +13,6 @@ const HomePage: React.FC = () => {
 
     return (
         <AuthGuard>
-            <>
                 <Head><title>Home - AS</title></Head>
                 <Image 
                     src="https://pub-dbd642a535de4512bfae0a5fd40ab343.r2.dev/CULTURE/soft-logo-white-reduced.png"
@@ -29,7 +28,7 @@ const HomePage: React.FC = () => {
                         <h1 className={styles.title}>
                             Bienvenido, {userProfile?.preferred_name || 'Usuario'}!
                         </h1>
-                        <p className={styles.subtitle}>
+                        <p className={styles.subTitle}>
                             Has completado exitosamente el proceso de registro.
                         </p>
                     </section>
@@ -71,7 +70,6 @@ const HomePage: React.FC = () => {
                         Cerrar Sesión
                     </button>
                 </div>
-            </>
         </AuthGuard>
     );
 };
