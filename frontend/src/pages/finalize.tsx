@@ -129,7 +129,7 @@ const FinalizePage: React.FC = () => {
                 </div>
                 <div className={styles.feature}>
                   <span className={validationErrors.special ? '✓' : '×'}>
-                    Al menos un carácter especial
+                    Al menos un carácter especial (!@#$%^&amp;*(),.?&quot;:{}|&lt;&gt;)
                   </span>
                 </div>
               </div>

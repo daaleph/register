@@ -63,7 +63,7 @@ export class HttpUtility {
 
     static async withRetry<T>(
         operation: () => Promise<T>,
-        maxRetries: number = 3,
+        maxRetries: number = 7,
         delay: number = 5000
     ): Promise<T> {
         let lastError: Error;

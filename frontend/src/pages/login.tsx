@@ -47,7 +47,15 @@ const LoginPage: React.FC = () => {
         <>
             <Head>
                 <title>Login - AS</title>
-                <meta name="description" content="Where eternity tends to converge" />
+                <meta name="title" content="Aleph Space - Login" />
+                <meta name="description" content="Enter to the space where eternity tends to converge." />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://www.aleph-space.org/" />
+                <meta property="og:title" content="Aleph Space - Login" />
+                <meta property="og:description" content="Enter to the space where eternity tends to converge." />
+                <meta property="twitter:url" content="https://www.aleph-space.org/" />
+                <meta property="twitter:title" content="Aleph Space - Login" />
+                <meta property="twitter:description" content="Enter to the space where eternity tends to converge." />
             </Head>
             <Image 
                 src="https://pub-dbd642a535de4512bfae0a5fd40ab343.r2.dev/CULTURE/soft-logo-white-reduced.png"

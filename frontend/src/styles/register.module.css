@@ -1,5 +1,4 @@
 /* frontend/src/styles/register.module.css */
-
 .registrationContainer {
   width: auto;
   min-height: 100vh;
@@ -13,6 +12,24 @@
   border: 1px solid var(--border-color);
   box-shadow: 0 0 20px rgba(255, 255, 0, 0.1);
   border-radius: 8px;
+  animation: fadeIn 1s ease-out;
+  position: relative;
+}
+
+.registrationContainer:after {
+  content: '';
+  position: fixed;
+  left: 10%;
+  bottom: 0;
+  width: 80%;
+  height: 1px;
+  background: var(--secondary-color);
+  box-shadow: 
+    0 0 5px var(--secondary-color),
+    0 0 10px var(--secondary-color),
+    0 0 15px var(--secondary-color);
+  animation: glowPulse 2s ease-in-out infinite;
+  z-index: 1000;
 }
 
 .welcomeSection {
