@@ -10,7 +10,7 @@ export class AbacusHealthCheckService {
 
     constructor(private readonly httpService: HttpService) {}
 
-    @Cron(CronExpression.EVERY_30_MINUTES)
+    @Cron(CronExpression.EVERY_HOUR)
     async keepAlive() {
         await this.pingDeployment(
             process.env.CUSTOMIZE_QUESTION_TOKEN,

@@ -15,14 +15,6 @@
 }
 
 
-.title {
-  font-size: 2.5rem;
-  color: var(--text-primary-color);
-  font-family: Helvetica, Sans-Serif;
-  line-height: 1.2;
-}
-
-
 .landingContainer::after {
   content: '';
   position: fixed;
@@ -45,17 +37,33 @@
   margin: 14rem 2rem 14rem 2rem;
 }
 
-.heroQuestion {
-  font-size: 2.5rem;
+.title {
+  font-size: 3rem;
   color: var(--text-primary-color);
-  font-family: Helvetica, Sans-Serif;
+  font-family: 'Montserrat', Sans-Serif;
+  line-height: 1.2;
+}
+
+.subTitle {
+  font-size: 2rem;
+  color: var(--forth-color);
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: lighter;
+  margin: 1rem;
+}
+
+.heroQuestion {
+  font-size: 3rem;
+  color: var(--text-primary-color);
+  font-family: 'Montserrat', Sans-Serif;
   line-height: 1.2;
 }
 
 .subHeroQuestion {
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: var(--forth-color);
-  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: lighter;
   margin: 1rem;
 }
 
@@ -70,13 +78,13 @@
 }
 
 @media (aspect-ratio < 1/1) {
-    .characterSection {
-        grid-template-columns: 1fr;
-    }
+  .characterSection {
+    grid-template-columns: 1fr;
+  }
 }
 
 .characterCard {
-  padding: 2rem;
+  padding: 1rem;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background: rgba(255, 255, 0, 0.02);
@@ -100,11 +108,15 @@
 
 .obstacle {
   display: flex;
-  align-items: center;
   gap: 1rem;
   padding: 1rem;
   border: 1px solid rgba(255, 255, 0, 0.1);
   border-radius: 6px;
+}
+
+.obstacle p {
+  font-family: 'Space Mono', monospace;
+  text-align: left;
 }
 
 .obstacleIcon {
@@ -124,13 +136,13 @@
   font-size: 1.2rem;
   line-height: 1.6;
   color: var(--text-primary-color);
-  font-style: italic;
+  font-family: 'IBM Mono Space', monospace;
 }
 
 .solutionSection {
   display: grid;
   grid-template-rows: 1fr;
-  margin: 6rem auto 6rem auto;
+  margin: 4rem auto;
   width: fit-content;
   max-width: 35rem;
 }
@@ -153,9 +165,11 @@
 
 .featureIcon {
   flex-shrink: 0;
+  margin-right: 1rem;
 }
 
 .feature p {
+  font-family: 'IBM Monospace', monospace;
   flex: 1;
   margin: 0;
 }
@@ -183,17 +197,65 @@
 }
 
 .gothicText {
-  font-family: 'Cinzel', serif;
+  font-family: 'Cormorant Garamond', serif;
   color: var(--text-primary-color);
-  font-weight: 600;
+  font-weight: 6000;
+  font-size: 2rem;
   letter-spacing: 2px;
-  animation: glowPulse 3s infinite ease-in-out;
 }
 
 .calmText {
   color: var(--forth-color);
-  font-size: 0.9rem;
-  font-style: italic;
+  font-size: 1rem;
+  padding: 2rem 0 1rem 0;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.passwordForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  
+}
+
+.formWrapper {
+  width: 100%;
+  margin: 10%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.formGroup label {
+  font-family: 'Merryweather', sans-serif;
+}
+
+.formGroup input {
+  font-family: 'IBM Mono Space', monospace;
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--secondary-color);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-primary-color);
+  font-size: 1rem;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 0, 0.8);
+  box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
 }
 
 .submitButton {
@@ -203,8 +265,9 @@
   background: transparent;
   border: 1px solid var(--border-color);
   color: var(--text-primary-color);
-  font-family: 'Cinzel', serif;
-  font-size: 1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: bolder;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
@@ -216,6 +279,11 @@
   background: rgba(255, 255, 0, 0.1);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(255, 255, 0, 0.1);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @keyframes fadeIn {

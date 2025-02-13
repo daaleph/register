@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import AuthService from '@/services/AuthService';
 import { useUser } from '@/context/UserContext';
-import styles from '../styles/landing.module.css';
+import styles from '../styles/register.module.css';
+import landingStyles from '../styles/landing.module.css';
 import Head from 'next/head';
 import { AccessToken } from '@/types/security';
 
@@ -65,21 +66,19 @@ const FinalizePage: React.FC = () => {
   return (
     <>
       <Head><title>Sellar</title></Head>
-      <div className={styles.landingContainer}>
-        <div className={styles.heroSection} style={{margin: '4rem 4rem 4rem 4rem'}}>
-          <h1 className={styles.heroQuestion}>Casi Listo</h1>
-          <p className={styles.subHeroQuestion}>
+      <div className={styles.registrationContainer}>
+        
+        <div className={styles.welcomeSection} style={{margin: '4rem 4rem 4rem 4rem'}}>
+          <h1 className={styles.title} style={{marginBottom:0}}>Casi Listo</h1>
+          <p className={styles.subTitle }>
             Elige tu llave
           </p>
         </div>
-  
-          <form onSubmit={handleFinalize}>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '2rem'
-            }}>
+
+        <div className={styles.formWrapper}>
+          <form className={styles.registrationForm} onSubmit={handleFinalize}>
+            
+            <div className={landingStyles.solutionSection}>
               <input
                 type="password"
                 id="password"
@@ -99,42 +98,41 @@ const FinalizePage: React.FC = () => {
                   textAlign: 'center'
                 }}
               />
-              
-              <div className={styles.solutionFeatures}>
+              <div className={landingStyles.solutionFeatures}>
                 <p style={{
                   color: 'var(--forth-color)',
                   marginBottom: '1rem',
                   fontSize: '1.1rem'
                 }}>Tu contraseña debe tener:</p>
                 
-                <div className={styles.feature}>
+                <div className={landingStyles.feature}>
                   <span className={validationErrors.length ? '✓' : '×'}>
                     Mínimo 8 caracteres
                   </span>
                 </div>
-                <div className={styles.feature}>
+                <div className={landingStyles.feature}>
                   <span className={validationErrors.number ? '✓' : '×'}>
                     Al menos un número
                   </span>
                 </div>
-                <div className={styles.feature}>
+                <div className={landingStyles.feature}>
                   <span className={validationErrors.uppercase ? '✓' : '×'}>
                     Al menos una mayúscula
                   </span>
                 </div>
-                <div className={styles.feature}>
+                <div className={landingStyles.feature}>
                   <span className={validationErrors.lowercase ? '✓' : '×'}>
                     Al menos una minúscula
                   </span>
                 </div>
-                <div className={styles.feature}>
+                <div className={landingStyles.feature}>
                   <span className={validationErrors.special ? '✓' : '×'}>
-                    Al menos un carácter especial
+                    Al menos un carácter especial (!@#$%^&amp;*(),.?&quot;:{}|&lt;&gt;)
                   </span>
                 </div>
               </div>
             </div>
-  
+
             {error && (
               <div style={{
                 color: '#ff4444',
@@ -147,21 +145,18 @@ const FinalizePage: React.FC = () => {
                 {error}
               </div>
             )}
-  
-            <div className={styles.ctaSection}>
+
+            <div className={styles.buttonContainer}>
               <button 
                 type="submit" 
-                disabled={isLoading || !Object.values(validationErrors).every(Boolean)}
                 className={styles.submitButton}
+                disabled={isLoading}
               >
-                {isLoading ? 'Sellando Tu Futuro...' : 'Terminar'}
+                {isLoading ? 'Creando Perfil...' : 'Comienza'}
               </button>
-  
-              <p className={styles.calmText}>
-                Escoge una fuerte contraseña que proteja tu santuario
-              </p>
             </div>
           </form>
+        </div>
       </div>
     </>
   );

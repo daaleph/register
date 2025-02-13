@@ -1,5 +1,4 @@
 /* frontend/src/styles/register.module.css */
-
 .registrationContainer {
   width: auto;
   min-height: 100vh;
@@ -13,6 +12,24 @@
   border: 1px solid var(--border-color);
   box-shadow: 0 0 20px rgba(255, 255, 0, 0.1);
   border-radius: 8px;
+  animation: fadeIn 1s ease-out;
+  position: relative;
+}
+
+.registrationContainer:after {
+  content: '';
+  position: fixed;
+  left: 10%;
+  bottom: 0;
+  width: 80%;
+  height: 1px;
+  background: var(--secondary-color);
+  box-shadow: 
+    0 0 5px var(--secondary-color),
+    0 0 10px var(--secondary-color),
+    0 0 15px var(--secondary-color);
+  animation: glowPulse 2s ease-in-out infinite;
+  z-index: 1000;
 }
 
 .welcomeSection {
@@ -22,23 +39,32 @@
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 3rem;
   font-weight: 600;
   margin: 10rem 0 10rem;
-  line-height: 1.4;
-  font-family: 'Montserrat', 'Playfair Display', 'Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', Arial, sans-serif;
-  letter-spacing: -0.02em;
+  line-height: 1.2;
+  font-family: 'Montserrat', Sans-Serif;
   color: var(--secondary-color);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.hardText {
+.subTitle {
+  font-size: 2rem;
+  font-weight: 100;
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--forth-color);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.gothicText {
   margin: 1.5rem 0;
-  font-weight: 500;
-  font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
-  opacity: 0.8;
+  font-weight: 100;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
   color: var(--forth-color);
 }
 
@@ -53,13 +79,14 @@
 
 .privacyTitle {
   padding-bottom: 1rem;
-  font-family: 'Cinzel', serif;
+  font-family: 'Montserrat', sans-serif;
   color: var(--text-primary-color);
   font-size: 1.2rem;
 }
 
 .privacyText {
   color: var(--forth-color);
+  font-family: 'IBM Mono Space', monospace;
   font-size: 0.9rem;
   line-height: 1.6;
 }
@@ -71,6 +98,7 @@
   width: 100%;
   max-width: 600px;
   position: relative;
+  
 }
 
 .formWrapper {
@@ -90,36 +118,18 @@
 }
 
 .formGroup label {
-  color: var(--text-primary-color);
-  font-family: 'Cinzel', serif;
-  margin-bottom: 0.5rem;
-  display: block;
-  text-align: left;
+  font-family: 'Merryweather', sans-serif;
 }
 
 .formGroup input {
+  font-family: 'IBM Mono Space', monospace;
   width: 100%;
   padding: 0.8rem;
   border: 1px solid var(--secondary-color);
   border-radius: 4px;
   background: transparent;
   color: var(--text-primary-color);
-  font-family: 'Arial', sans-serif;
   font-size: 1rem;
-}
-
-.buttonContainer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-}
-
-.formGroup label {
-  color: var(--text-primary-color);
-  font-family: 'Cinzel', serif;
-  margin-bottom: 0.5rem;
-  display: block;
-  text-align: left;
 }
 
 .formGroup input:focus {
@@ -128,11 +138,15 @@
   box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
 }
 
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
 .gothicText {
-  font-family: 'Cinzel', serif;
-  color: var(--text-primary-color);
-  font-style: italic;
-  font-weight: 600;
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--forth-color);
   letter-spacing: 2px;
   animation: glowPulse 3s infinite ease-in-out;
 }
@@ -150,13 +164,13 @@
 
 .submitButton {
   width: fit-content;
-  margin-top: 2rem;
   padding: 1.2rem;
   background: transparent;
   border: 1px solid var(--border-color);
   color: var(--text-primary-color);
-  font-family: 'Cinzel', serif;
-  font-size: 1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: bolder;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
@@ -176,16 +190,17 @@
 }
 
 .formFooter {
-  margin-top: 2rem;
+  font-size: 1rem;
+  font-family: 'IBM Mono Space', monospace;
+  margin-top: 1rem;
   text-align: left;
-  text-align: left; /* Aligns footer text to the left */
+  text-align: left;
 }
 
 .calmText {
   color: var(--forth-color);
-  font-size: 0.9rem;
-  font-style: italic;
-  text-align: left; /* Aligns the text to the left */
+  font-size: 1rem;
+  text-align: right;
 }
 
 @keyframes fadeIn {
