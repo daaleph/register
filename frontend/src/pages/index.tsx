@@ -9,15 +9,16 @@ export default function LandingPage() {
     <>
       <Head>
         <title>Aleph Space</title>
-        <meta name="title" content="Aleph Space - Increasing universal wisdom" />
-        <meta name="description" content="Where eternity tends to converge." />
+        <meta name="title" content="Aleph Space" />
+        <meta name="keywords" content="Aleph Space, Educación eficiente, Aprendizaje eficiente, Aprendizaje personalizado, Educacion eficiente" />
+        <meta name="description" content="Increasing universal wisdom - Where eternity tends to converge." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.aleph-space.org/" />
-        <meta property="og:title" content="Aleph Space - Increasing universal wisdom" />
-        <meta property="og:description" content="Where eternity tends to converge." />
+        <meta property="og:title" content="Aleph Space" />
+        <meta property="og:description" content="Increasing universal wisdom - Where eternity tends to converge." />
         <meta property="twitter:url" content="https://www.aleph-space.org/" />
-        <meta property="twitter:title" content="Aleph Space - Increasing universal wisdom" />
-        <meta property="twitter:description" content="Where eternity tends to converge." />
+        <meta property="twitter:title" content="Aleph Space" />
+        <meta property="twitter:description" content="Increasing universal wisdom - Where eternity tends to converge." />
       </Head>
       
       <div className={styles.landingContainer}>
@@ -35,14 +36,14 @@ export default function LandingPage() {
             <h3 className={styles.gothicText}>Tú</h3>
             <p className={styles.calmText}>
               Eres alguien que quiere más. <b>Más</b> para tu <b>familia</b>, más para tu <b>futuro</b>, más para el <b>mundo</b>. 
-              Pero a veces, el camino parece imposible.
+              Pero a veces, el camino parece imposible sin aprendizaje eficiente.
             </p>
           </div>
 
           <div className={styles.characterCard}>
             <h3 className={styles.gothicText}>Nosotros</h3>
             <p className={styles.calmText}>
-              Liberaremos tu <b>potencial</b> garantizadamente ayudándote a crecer con <b>menos esfuerzo</b> convertiendo tus sueños en realidades tangibles si y solo si sigues nuestros <b>algoritmos verificados</b>.
+              Liberaremos tu <b>potencial</b> garantizadamente ayudándote a crecer con <b>menos esfuerzo</b> convertiendo tus sueños en realidades tangibles si y solo si sigues nuestros <b>algoritmos verificados</b> de educación eficiente.
             </p>
           </div>
         </section>
@@ -68,7 +69,7 @@ export default function LandingPage() {
           <p className={styles.visionText}>
             Imagina tus pasos <b>impactando mejor</b> el presente y <b>a tí</b>. 
             <b> Menos esfuerzo</b> impactando a quienes amas y al mundo entero.
-            Siguiendo caminos claros y <b>garantizados</b>.
+            Siguiendo caminos claros, <b>garantizados</b> placenteros con aprendizaje personalizado.
           </p>
         </section>
 
