@@ -1,4 +1,4 @@
-// frontend/src/pages/landing.tsx
+// frontend/src/pages/index.tsx
 import styles from '@/styles/landing.module.css';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -8,17 +8,17 @@ export default function LandingPage() {
   return (
     <>
       <Head>
-        <title>Aleph Space</title>
+        <title>Aleph Space - Educación Eficiente</title>
         <meta name="title" content="Aleph Space" />
         <meta name="keywords" content="Aleph Space, Educación eficiente, Aprendizaje eficiente, Aprendizaje personalizado, Educacion eficiente" />
-        <meta name="description" content="Increasing universal wisdom - Where eternity tends to converge." />
+        <meta name="description" content="Educación eficiente y personalizada elevando tu vida con simples clics: Increasing universal wisdom - Where eternity tends to converge" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.aleph-space.org/" />
+        <meta property="og:url" content="https://aleph-space.org/" />
         <meta property="og:title" content="Aleph Space" />
-        <meta property="og:description" content="Increasing universal wisdom - Where eternity tends to converge." />
-        <meta property="twitter:url" content="https://www.aleph-space.org/" />
+        <meta property="og:description" content="Educación eficiente y personalizada elevando tu vida con simples clics: Increasing universal wisdom - Where eternity tends to converge" />
+        <meta property="twitter:url" content="https://aleph-space.org/" />
         <meta property="twitter:title" content="Aleph Space" />
-        <meta property="twitter:description" content="Increasing universal wisdom - Where eternity tends to converge." />
+        <meta property="twitter:description" content="Educación eficiente y personalizada elevando tu vida con simples clics: Increasing universal wisdom - Where eternity tends to converge" />
       </Head>
       
       <div className={styles.landingContainer}>
