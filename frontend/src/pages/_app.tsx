@@ -1,4 +1,4 @@
-// src/pages/_app.tsx
+// frontend/src/pages/_app.tsx
 import type { AppProps } from 'next/app';
 import { UserProvider } from '../context/UserContext';
 import '../styles/globals.css';
