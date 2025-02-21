@@ -1,6 +1,6 @@
 // frontend/src/controllers/QuestionController.ts
 
-import { Phases } from "@/context/UserContext";
+import { Phases } from "@/contexts/User";
 import { Question, QuestionOption, QuestionWithOptions } from "@/models/interfaces";
 
 export interface QuestionState {

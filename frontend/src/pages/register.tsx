@@ -2,7 +2,7 @@
 import styles from '../styles/register.module.css';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useUser } from '../context/UserContext';
+import { useUser } from '../contexts/User';
 import { ProfileService } from '../services/ProfileService';
 import AuthService from '../services/AuthService';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';

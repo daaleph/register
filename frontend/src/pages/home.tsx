@@ -1,7 +1,7 @@
 // frontend/src/pages/home.tsx
 import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useUser } from '@/context/UserContext';
+import { useUser } from '@/contexts/User';
 import AuthGuard from '@/components/auth/AuthGuard';
 import styles from '@/styles/home.module.css';
 import Head from 'next/head';

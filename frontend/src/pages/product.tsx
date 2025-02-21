@@ -1,7 +1,7 @@
 // frontend/src/pages/product.tsx
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { Phases, useUser } from '../context/UserContext';
+import { Phases, useUser } from '../contexts/User';
 import { QuestionForm } from '../components/common/QuestionForm';
 import { ErrorDisplay } from '../components/common/ErrorDisplay';
 import { QuestionController, QuestionState } from '@/controllers';

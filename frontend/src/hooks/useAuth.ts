@@ -1,5 +1,5 @@
 // frontend/src/hooks/useAuth.ts
-import { useUser } from '@/context/UserContext';
+import { useUser } from '@/contexts/User';
 import AuthService from '@/services/AuthService';
 import { AccessToken } from '@/types/security';
 

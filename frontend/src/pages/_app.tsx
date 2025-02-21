@@ -1,6 +1,6 @@
 // frontend/src/pages/_app.tsx
 import type { AppProps } from 'next/app';
-import { UserProvider } from '../context/UserContext';
+import { UserProvider } from '../contexts/User';
 import '../styles/globals.css';
 
 function App({ Component, pageProps }: AppProps) {
